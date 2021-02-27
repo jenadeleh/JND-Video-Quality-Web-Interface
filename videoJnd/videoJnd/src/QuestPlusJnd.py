@@ -3,22 +3,18 @@ import numpy as np
 
 class QuestPlusJnd():
     def __init__(self
-                , CALC_UPPER_NUM:int
-                , uu_id:str
+                , calc_upper_num:int
                 , group:int
                 , src_video:int) -> None:
 
-        self.param = self.construct_parameters_obj()
+        self.param = self._construct_parameters_obj()
         self.next_stim = self.param.next_stim
         self.isActive = True
-        self.isOccupied = True
-        self.CALC_UPPER_NUM = CALC_UPPER_NUM
+        self.calc_upper_num = calc_upper_num
         self.count = 0
-        self.uu_id = uu_id
-        self.group = group
-        self.src_video = src_video
+        self.gp_src_id = "%d-%d" % (group, src_video)
 
-    def construct_parameters_obj(self):
+    def _construct_parameters_obj(self):
         # Stimulus domain.
         intensities = np.arange(start=1, stop=51, step=1)
         stim_domain = dict(intensity=intensities)
@@ -57,7 +53,7 @@ class QuestPlusJnd():
 
         return param
 
-    def update_params(self, decision:str):
+    def update_params(self, decision:str) -> None:
         """ 
         decision = 1, left side
         decision = 2, right side
@@ -66,33 +62,50 @@ class QuestPlusJnd():
         """
 
         if self.isActive == True:
-            next_stim = self.param.next_stim
+            
 
             self.param.answer_history.append(dict(answer=decision))
 
             if decision == '1':
                 outcome = dict(response='No')
-                self.param.update(stim = next_stim, outcome = outcome)
-                self.param.update(stim = next_stim, outcome = outcome)
+                self.param.update(stim = self.next_stim, outcome = outcome)
+                self.param.update(stim = self.next_stim, outcome = outcome)
 
             elif decision == '2':
                 outcome = dict(response='Yes')
-                self.param.update(stim = next_stim, outcome = outcome)
+                self.param.update(stim = self.next_stim, outcome = outcome)
 
             elif decision == '3':
                 outcome = dict(response = 'Yes')
-                self.param.update(stim = next_stim, outcome = outcome)
+                self.param.update(stim = self.next_stim, outcome = outcome)
                 outcome = dict(response='No')
-                self.param.update(stim = next_stim, outcome = outcome)
+                self.param.update(stim = self.next_stim, outcome = outcome)
 
             elif decision == '4':
                 None
 
+            self.next_stim = self.param.next_stim
+            
             self.count += 1
-            if self.count > self.CALC_UPPER_NUM:
+            if self.count > self.calc_upper_num:
                 self.isActive = False
 
-            return next_stim
+        return None     
+
 
 if __name__ == "__main__":
-    pass
+    qp_obj = QuestPlusJnd(3,2,2)
+
+    print(qp_obj.next_stim)
+    qp_obj.update_params("2")
+    print(qp_obj.next_stim)
+    qp_obj.update_params("2")
+    print(qp_obj.next_stim)
+    qp_obj.update_params("2")
+    print(qp_obj.next_stim)
+    qp_obj.update_params("1")
+    print(qp_obj.next_stim)
+    qp_obj.update_params("2")
+    print(qp_obj.next_stim)
+    qp_obj.update_params("1")
+    print(qp_obj.next_stim)
