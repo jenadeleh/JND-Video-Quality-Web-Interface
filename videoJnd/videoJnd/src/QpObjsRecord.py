@@ -11,7 +11,10 @@ from videoJnd.src.GetConfig import get_config
 
 class QpObjsRecord():
     def __init__(self) -> None:
-        self.calc_upper_num, self.group_num, self.src_video_num = get_config()
+        config = get_config()
+        self.calc_upper_num = config["CALC_UPPER_NUM"]
+        self.group_num = config["GROUP_NUM"]
+        self.src_video_num = config["SRC_VIDEO_NUM"]
         self.qp_objs = {}
         self.gp_isAvailable = [True for _ in range(self.group_num)]
         self.gp_info = {}
