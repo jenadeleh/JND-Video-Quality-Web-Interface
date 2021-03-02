@@ -94,18 +94,17 @@ class QuestPlusJnd():
 
 
 if __name__ == "__main__":
-    qp_obj = QuestPlusJnd(3,2,2)
+    import time
+    from random import randint
 
-    print(qp_obj.next_stim)
-    qp_obj.update_params("2")
-    print(qp_obj.next_stim)
-    qp_obj.update_params("2")
-    print(qp_obj.next_stim)
-    qp_obj.update_params("2")
-    print(qp_obj.next_stim)
-    qp_obj.update_params("1")
-    print(qp_obj.next_stim)
-    qp_obj.update_params("2")
-    print(qp_obj.next_stim)
-    qp_obj.update_params("1")
-    print(qp_obj.next_stim)
+    t1 = time.process_time()
+    qp_obj = QuestPlusJnd(100,2,2)
+    t2 = time.process_time()
+
+    for i in range(10):
+        # print(qp_obj.next_stim)
+        qp_obj.update_params(str(randint(1,3)))
+
+    t3 = time.process_time()
+
+    print((t2-t1)*1000, (t3-t2)*1000)

@@ -1,6 +1,12 @@
 {
     "CALC_UPPER_NUM" : 4, 
-    "SRC_VIDEO_NUM" : 3, 
-    "GROUP_NUM" : 2,
-    "URL_PREFIX": "https://datasets.vqa.mmsp-kn.de/JND_datasets/Video_JND_dataset/JND_264_640x480/"
+    "SRC_VIDEO_NUM" : 10, 
+    "RATING_TIMES_PER_SRC": 10,
+    "VIDEO_PER_GROUP": 5,
+    "SRC_NAME" : ["001", "006", "074", "089", "105", "111", "121", "135", "155",  "173"],
+    "URL_PREFIX": ["https://datasets.vqa.mmsp-kn.de/JND_datasets/Video_JND_dataset/JND_264_640x480/"],
+    "FRAME_RATE": ["30", "24"],
+    "CRF": ["05", "12"]
 }
+
+
