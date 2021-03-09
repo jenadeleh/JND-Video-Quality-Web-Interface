@@ -1,110 +1,82 @@
 import questplus as qp
 import numpy as np
+import copy
 
 class QuestPlusJnd():
-    def __init__(self
-                , calc_upper_num:int
-                , group:int
-                , src_video:int) -> None:
+    def __init__(self) -> None:
+        self.QpParam266 = self._qp_obj("266")
+        self.QpParam264 = self._qp_obj("264")
 
-        self.param = self._construct_parameters_obj()
-        self.next_stim = self.param.next_stim
-        self.isActive = True
-        self.calc_upper_num = calc_upper_num
-        self.count = 0
-        self.gp_src_id = "%d-%d" % (group, src_video)
-
-    def _construct_parameters_obj(self):
+    def _qp_obj(self, codec:str):
         # Stimulus domain.
-        intensities = np.arange(start=1, stop=51, step=1)
-        stim_domain = dict(intensity=intensities)
+        intensities = np.arange(start=1, stop=self._intensities_max(codec), step=1)
+        stim_domain = {"intensity":intensities}
 
         # Parameter domain.
-        thresholds = intensities.copy()
-        slopes = np.linspace(1.1, 10, 90)
-        lower_asymptotes = 0.5#np.linspace(0.01, 0.5, 5)
-        lapse_rate = 0.01
-
-        param_domain = dict(threshold=thresholds,
-                            slope=slopes,
-                            lower_asymptote=lower_asymptotes,
-                            lapse_rate=lapse_rate)
+        param_domain = {"threshold": intensities
+                        , "slope": np.linspace(1.1, 10, 90)
+                        , "lower_asymptote": 0.5 #np.linspace(0.01, 0.5, 5)
+                        , "lapse_rate":0.01}
 
         # Outcome (response) domain.
-        responses = ['Yes', 'No']
-        outcome_domain = dict(response=responses)
-        # Further parameters.
-        func = 'weibull'
-        stim_scale = 'log10'#'linear' #'dB'
-        stim_selection_method = 'min_entropy'
-        param_estimation_method = 'mean'
-
+        outcome_domain = {"response": ['Yes', 'No']}
 
         # Initialize the QUEST+ staircase.
         param = qp.QuestPlus(stim_domain = stim_domain,
-                    func = func,
-                    stim_scale = stim_scale,
+                    func = 'weibull',
+                    stim_scale = 'log10', #'linear' #'dB'
                     param_domain = param_domain,
                     outcome_domain = outcome_domain,
-                    stim_selection_method = stim_selection_method,
-                    param_estimation_method = param_estimation_method)
-        
-        param.answer_history = []
+                    stim_selection_method = 'min_entropy',
+                    param_estimation_method = 'mean')
 
         return param
 
-    def update_params(self, decision:str) -> None:
-        """ 
-        decision = 1, left side
-        decision = 2, right side
-        decision = 3, not sure
-        decision = 4, no decistion
-        """
+    def _intensities_max(self, codec:str) -> int:
+        return {"264":51, "266":63}[codec]
 
-        if self.isActive == True:
-            
+    def gen_qp_param(self, codec:str):
+        qp_param_dict = {"264":self.QpParam264, "266":self.QpParam266}
+        return copy.deepcopy(qp_param_dict[codec])
 
-            self.param.answer_history.append(dict(answer=decision))
+    def update_params(self, qp_param: object, decisions:list) -> str:
+        for d in decisions:
+            next_stim = qp_param.next_stim
 
-            if decision == '1':
-                outcome = dict(response='No')
-                self.param.update(stim = self.next_stim, outcome = outcome)
-                self.param.update(stim = self.next_stim, outcome = outcome)
+            if d == '1': # left side
+                qp_param.update(stim = next_stim, outcome = {"response":"No"})
+                qp_param.update(stim = next_stim, outcome = {"response":"No"})
 
-            elif decision == '2':
-                outcome = dict(response='Yes')
-                self.param.update(stim = self.next_stim, outcome = outcome)
+            elif d == '2': # right side
+                qp_param.update(stim = next_stim, outcome = {"response":"Yes"})
 
-            elif decision == '3':
-                outcome = dict(response = 'Yes')
-                self.param.update(stim = self.next_stim, outcome = outcome)
-                outcome = dict(response='No')
-                self.param.update(stim = self.next_stim, outcome = outcome)
+            elif d == '3': # not sure
+                qp_param.update(stim = next_stim, outcome = {"response":"Yes"})
+                qp_param.update(stim = next_stim, outcome = {"response":"No"})
 
-            elif decision == '4':
+            elif d == '4': # no decistion
                 None
 
-            self.next_stim = self.param.next_stim
-            
-            self.count += 1
-            if self.count > self.calc_upper_num:
-                self.isActive = False
+            # print(d, qp_param.next_stim)
 
-        return None     
+        return qp_param.next_stim["intensity"]
 
 
 if __name__ == "__main__":
     import time
     from random import randint
+    import copy
+
+    decisions = [str(randint(1,3)) for _ in range(30)]
+    # decisions = ['1', '3', '2']
+
+    qp_obj = QuestPlusJnd()
+
+    codec = "264"
 
     t1 = time.process_time()
-    qp_obj = QuestPlusJnd(100,2,2)
+    for _ in range(10):
+        next_stim = qp_obj.update_params(qp_obj.gen_qp_param(codec), decisions)
+    # print(next_stim)
     t2 = time.process_time()
-
-    for i in range(10):
-        # print(qp_obj.next_stim)
-        qp_obj.update_params(str(randint(1,3)))
-
-    t3 = time.process_time()
-
-    print((t2-t1)*1000, (t3-t2)*1000)
+    print((t2-t1)*1000)

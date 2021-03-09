@@ -149,34 +149,34 @@ class QpObjsRecord():
 
 if __name__ == "__main__":
     qpr = QpObjsRecord()
-    # print(qpr._gp_src_url_mapping(2))
+    print(qpr._gp_src_url_mapping(2))
 
 
-    # print("-- init video --")
-    # print(qpr.get_gp_next_stim())
+    print("-- init video --")
+    print(qpr.get_gp_next_stim())
 
-    # print("-- 1st update --")
-    # gp_decision = [("0-0", "1"), ("0-1", "1"), ("0-2", "2")]
-    # qpr.update_gp_qp_params(gp_decision)
-    # print(qpr.get_gp_next_stim())
+    print("-- 1st update --")
+    gp_decision = [("0-0", "1"), ("0-1", "1"), ("0-2", "2")]
+    qpr.update_gp_qp_params(gp_decision)
+    print(qpr.get_gp_next_stim())
 
-    # print("-- 2nd update --")
-    # gp_decision = [("0-0", "2"), ("0-1", "1"), ("0-2", "1")]
-    # qpr.update_gp_qp_params(gp_decision)
-    # print(qpr.get_gp_next_stim())
+    print("-- 2nd update --")
+    gp_decision = [("0-0", "2"), ("0-1", "1"), ("0-2", "1")]
+    qpr.update_gp_qp_params(gp_decision)
+    print(qpr.get_gp_next_stim())
 
-    # print("-- 3rd update --")
-    # gp_decision = [("0-0", "1"), ("0-1", "2"), ("0-2", "1")]
-    # qpr.update_gp_qp_params(gp_decision)
-    # print(qpr.get_gp_next_stim())
+    print("-- 3rd update --")
+    gp_decision = [("0-0", "1"), ("0-1", "2"), ("0-2", "1")]
+    qpr.update_gp_qp_params(gp_decision)
+    print(qpr.get_gp_next_stim())
 
-    # print("-- 4th update --")
-    # gp_decision = [("0-0", "3"), ("0-1", "1"), ("0-2", "1")]
-    # qpr.update_gp_qp_params(gp_decision)
-    # print(qpr.get_gp_next_stim())
+    print("-- 4th update --")
+    gp_decision = [("0-0", "3"), ("0-1", "1"), ("0-2", "1")]
+    qpr.update_gp_qp_params(gp_decision)
+    print(qpr.get_gp_next_stim())
 
-    # print("-- 5th update --")
-    # gp_decision = [("1-0", "3"), ("1-1", "1"), ("1-2", "1")]
-    # qpr.update_gp_qp_params(gp_decision)
-    # print(qpr.get_gp_next_stim())
+    print("-- 5th update --")
+    gp_decision = [("1-0", "3"), ("1-1", "1"), ("1-2", "1")]
+    qpr.update_gp_qp_params(gp_decision)
+    print(qpr.get_gp_next_stim())
 
