@@ -3,9 +3,6 @@ from videoJnd.src.GetConfig import get_config
 import uuid
 from django.utils import timezone
 
-
-
-
 config = get_config()
 
 exp_name = config["EXP"]
