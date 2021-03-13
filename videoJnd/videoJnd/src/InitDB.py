@@ -1,7 +1,6 @@
 from videoJnd.models import VideoObj, Experiment
 from videoJnd.src.GetConfig import get_config
 import uuid
-from django.utils import timezone
 
 config = get_config()
 
@@ -15,7 +14,7 @@ f_24_videos = frame_rate["24"]
 f_30_videos = frame_rate["30"]
 
     
-def init_db():
+def init_db() -> None:
     if _isNewExpExists() == False:
         exp_db_obj = _create_exp_db()
         _create_videos_db(exp_db_obj)
@@ -29,22 +28,21 @@ def _create_videos_db(exp_db_obj) -> None:
 
         for _crf in crf:
             for _codec in codec:
-                for rt in range(rating):
+                for _rating in range(rating):
 
-                    VideoObj(id = uuid.uuid4()
+                    VideoObj(vuid = uuid.uuid4()
                             , exp = exp_db_obj
                             , source_video = _source_video
                             , codec = _codec
                             , frame_rate = _frame_rate
-                            , crf = _crf
-                            , rating = rt+1).save()
+                            , crf = ("0"+_crf)[-2:]
+                            , rating = _rating+1).save()
 
 def _create_exp_db() -> object:
-    exp_db_obj = Experiment(id = uuid.uuid4()
+    exp_db_obj = Experiment(euid = uuid.uuid4()
                 , name = exp_name
                 , source_video = source_video
-                , rating = rating
-                , pub_date = timezone.now())
+                , rating = rating)
     exp_db_obj.save()
     
     return exp_db_obj

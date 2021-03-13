@@ -7,8 +7,8 @@
 
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
-*/*.sqlite3
-*/migrations
+*.sqlite3
+migrations/
 
 
 # IPython

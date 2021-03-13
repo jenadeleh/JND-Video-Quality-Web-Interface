@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.http import HttpResponse
-from .models import Instruction, VideoObj, Experiment
+from .models import Instruction, VideoObj, Experiment, Participant
 
 admin.site.site_header = "JND Video Study"
 admin.site.site_title = "JND Video Study"
@@ -47,10 +47,14 @@ class VideoObj(admin.ModelAdmin):
                     , "crf"
                     , "rating"
                     , "ongoing"
+                    , "curr_participant"
+                    , "curr_participant_uid"
+                    , "participant_start_date"
                     , "qp_count"
-                    , "codec")
+                    , "decisions"
+                    , "codec"
+                    , "is_fihished")
 
-    list_per_page = 200
     search_fields = ["source_video"
                     , "exp"
                     , "frame_rate"
@@ -71,7 +75,8 @@ class VideoObj(admin.ModelAdmin):
 
     actions = ["export_as_csv"]
 
-
+    list_per_page = 200
+    
     def export_as_csv(self, request, queryset):
         try:
             csv_name = "JND_Video_" + time.strftime("%Y-%m-%d_%H-%M-%S")
@@ -97,3 +102,22 @@ class VideoObj(admin.ModelAdmin):
     def has_add_permission(self, request, obj=None):
         return False
 
+@admin.register(Participant)
+class Participant(admin.ModelAdmin):
+    list_display = ("name"
+                    , "exp"
+                    , "ongoing"
+                    , "start_date"
+                    , "videos"
+                    , "history"
+                    , "puid")
+
+    # list_editable = ("ongoing",)
+
+    list_per_page = 200
+
+    # def has_delete_permission(self, request, obj=None):
+    #     return False
+
+    def has_add_permission(self, request, obj=None):
+        return False

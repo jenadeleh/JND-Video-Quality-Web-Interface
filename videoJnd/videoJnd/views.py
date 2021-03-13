@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django.utils import timezone
 
 from videoJnd.src.InitDB import init_db
-from videoJnd.src.ProcessRequests import process_requests
+from videoJnd.src.ProcessRequest import process_request
 
 # home page
 def home(request):
@@ -19,7 +19,4 @@ print("\n-- Initialization Done --\n")
 
 @csrf_exempt
 def scheduler(request):
-    return JsonResponse(process_requests(request), safe=False)
-
-
-        
+    return JsonResponse(process_request(request), safe=False)
