@@ -1,10 +1,9 @@
-
 from django.utils import timezone
 
 from videoJnd.src.QuestPlusJnd import QuestPlusJnd
 from videoJnd.models import VideoObj, Experiment, Participant
 from videoJnd.src.GetConfig import get_config
-from videoJnd.src.GenUrl import gen_video_url
+from videoJnd.src.GenUrl import gen_video_url, random_side
 
 
 import random
@@ -13,17 +12,19 @@ import copy
 import ast
 
 config = get_config()
-VIDEO__NUM_PER_HIT = config["VIDEO__NUM_PER_HIT"]
+VIDEO_NUM_PER_HIT = config["VIDEO_NUM_PER_HIT"]
 RATING_PER_SRC = config["RATING_PER_SRC"]
 URL_PREFIX = config["URL_PREFIX"]
 SRC_NAME = config["SRC_NAME"]
 
 qp_obj = QuestPlusJnd()
 
+#TODO: threading blocking
+#TODO: Class
 
 def select_videos(recv_data:dict) -> dict:
     """
-    select <VIDEO__NUM_PER_HIT> videos which are not ongoing(ongoing=False).
+    select <VIDEO_NUM_PER_HIT> videos which are not ongoing(ongoing=False).
     """
 
     curr_exp_obj = Experiment.objects.filter(name=recv_data["exp"])[0]
@@ -72,10 +73,10 @@ def select_videos(recv_data:dict) -> dict:
                 elif curr_p.ongoing == False:# not ongoing, return new videos
                     _response = {"videos":[]}
                     _p_start_date = str(timezone.now())
-                    videos_info = _extract_info_avl_videos(recv_data["pname"]
-                                                        , recv_data["puid"]
-                                                        , _p_start_date
-                                                        , avl_videos)
+                    videos_info = _extract_info_avl_videos(recv_data["pname"], 
+                                                            recv_data["puid"], 
+                                                            _p_start_date, 
+                                                            avl_videos)
                     
                     curr_p.start_date = _p_start_date
                     curr_p.ongoing = True
@@ -94,11 +95,12 @@ def _select_videos(curr_exp_obj:object) -> list:
     avl_videos_pool = VideoObj.objects.filter(
                                         exp=curr_exp_obj
                                     ).filter(
-                                        is_fihished=False
+                                        is_finished=False
                                     ).filter(
                                         ongoing=False
                                     )
 
+    
     # filter videos that have different content
     avl_src = copy.deepcopy(SRC_NAME)
     avl_videos = []
@@ -113,40 +115,45 @@ def _select_videos(curr_exp_obj:object) -> list:
         if src_name in avl_src:
             avl_videos.append(video)
             avl_src.remove(src_name)
-    
-        if len(avl_videos) == VIDEO__NUM_PER_HIT:
+
+        if len(avl_videos) == VIDEO_NUM_PER_HIT:
             return avl_videos
 
-    # if number of available videos is less than VIDEO__NUM_PER_HIT, then return []
+    # if number of available videos is less than VIDEO_NUM_PER_HIT, then return []
     return []
 
-def _extract_info_avl_videos(pname:str
-                            , puid:str
-                            , pstart_date:str
-                            , avl_videos:list) -> list:
-
+def _extract_info_avl_videos(pname:str, puid:str, pstart_date:str, avl_videos:list) -> list:
     output = []
-    for video in avl_videos:
-        codec = video.codec
-        decisions = video.decisions
-        video_uuid = video.vuid
-        frame_rate = video.frame_rate
-        crf = video.crf
-        src_name = video.source_video
-        
-        decisions = []
-        # generate qp value
-        qp = qp_obj.update_params(qp_obj.gen_qp_param(codec), decisions)
-        # generate url
-        url, side = gen_video_url(codec, src_name, frame_rate, crf, qp)
-
+    for video_obj in avl_videos:
         # update video
-        video.ongoing = True
-        video.curr_participant = pname
-        video.curr_participant_uid = puid
-        video.participant_start_date = pstart_date
-        video.save()
-
+        _add_p_to_video(video_obj, pname, puid, pstart_date)
+        video_uuid, side, qp, url = _gen_video_url(video_obj)
         output.append({"vuid":str(video_uuid), "side":side, "qp":str(qp), "url":url})
     
     return output
+
+def _gen_video_url(video_obj:object) -> tuple:
+    if video_obj.result_code:
+        result_code = video_obj.result_code.split(",")
+    else:
+        result_code = []
+
+    # generate qp value
+    qp = qp_obj.update_params(qp_obj.gen_qp_param(video_obj.codec), result_code)
+    # generate url
+    side  = random_side()
+    url = gen_video_url(video_obj.codec, 
+                        video_obj.source_video, 
+                        video_obj.frame_rate, 
+                        video_obj.crf, 
+                        qp, 
+                        side)
+
+    return (str(video_obj.vuid), side, qp, url)
+
+def _add_p_to_video(video_obj:object, pname:str, puid:str, pstart_date:str) -> None:
+    video_obj.ongoing = True
+    video_obj.curr_participant = pname
+    video_obj.curr_participant_uid = puid
+    video_obj.participant_start_date = pstart_date
+    video_obj.save()

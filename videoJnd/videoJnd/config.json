@@ -1,9 +1,9 @@
 {
-    "CALC_UPPER_NUM" : 4, 
-    "SRC_VIDEO_NUM" : 10, 
-    "RATING_PER_SRC": 3,
-    "VIDEO__NUM_PER_HIT": 5,
-    "SRC_NAME" : ["001", "006", "074", "089", "105", "111", "121", "135", "155",  "173"],
+    "QP_TRIAL_NUM" : 3, 
+    "SRC_VIDEO_NUM" : 2, 
+    "RATING_PER_SRC": 1,
+    "VIDEO_NUM_PER_HIT": 2,
+    "SRC_NAME" : ["001", "105"],
     "URL_PREFIX": "https://datasets.vqa.mmsp-kn.de/JND_datasets/Video_JND_dataset/",
     "URL_POSTFIX": "JND_{codec}_640x480/SRC{src_name}_640x480_{frame_rate}/crf_{crf}/videoSRC{src_name}_640x480_{frame_rate}_qp_00_{qp}_{side}_crf_{crf}.mp4",
     "FRAME_RATE": {"30":["001", "006", "074", "089", "121", "135", "155"], "24":["105", "111", "173"]},
@@ -11,5 +11,3 @@
     "CODEC": ["264", "266"],
     "EXP":"round1"
 }
-
-

@@ -13,23 +13,24 @@ def gen_video_url(codec:str
                 , src_name:str
                 , frame_rate:str
                 , crf:str
-                , qp:str) -> tuple:
+                , qp:str
+                , side) -> str:
     """
     input: the parameters of the video
     output: the URL of this video, and its side
     """
-    _side = side()
+
     postfix = url_postfix.format(codec = codec
                             , src_name = src_name
                             , frame_rate = frame_rate
                             , qp = qp
                             , crf = crf
-                            , side = _side)
+                            , side = side)
 
     url = URL_PREFIX + postfix
-    return (url, _side)
+    return url
 
-def side() -> str:
+def random_side() -> str:
     return ["L", "R"][random.randint(0,1)]
 
 
