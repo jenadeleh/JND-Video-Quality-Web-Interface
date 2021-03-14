@@ -14,7 +14,7 @@ class QuestPlusJnd():
 
         # Parameter domain.
         param_domain = {"threshold": intensities
-                        , "slope": np.linspace(1.1, 10, 90)
+                        , "slope": np.linspace(1.1, 5, 40)
                         , "lower_asymptote": 0.5 #np.linspace(0.01, 0.5, 5)
                         , "lapse_rate":0.01}
 
@@ -49,13 +49,14 @@ class QuestPlusJnd():
 
             elif d == '2': # right side
                 qp_param.update(stim = next_stim, outcome = {"response":"Yes"})
+                qp_param.update(stim = next_stim, outcome = {"response":"Yes"})
 
             elif d == '3': # not sure
                 qp_param.update(stim = next_stim, outcome = {"response":"Yes"})
                 qp_param.update(stim = next_stim, outcome = {"response":"No"})
 
-            elif d == '4': # no decistion
-                None
+            elif d == '4': # no decision
+                pass
 
             # print(d, qp_param.next_stim)
 

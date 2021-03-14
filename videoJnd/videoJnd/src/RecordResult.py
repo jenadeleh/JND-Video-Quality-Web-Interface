@@ -28,6 +28,7 @@ def record_result(recv_data:dict) -> dict:
                     _update_video_db(video_result, video_obj)
                     # TODO: add history, for each request or each video?
                     # TODO: participant DB, change to task DB, 
+                    # TODO: record gt-side, reported side
 
                 else:
                     return {"status":"failed", 
