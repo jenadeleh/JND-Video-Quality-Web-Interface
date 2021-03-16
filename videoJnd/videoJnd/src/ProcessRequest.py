@@ -30,13 +30,13 @@ def process_request(request):
                     elif recv_data["action"] == "record_result":
                         response = record_result(recv_data)
             else:
-                response = {"status":"failed", "data":"empty request body"}
+                response = {"status":"failed", "restype":"request-body", "data":"empty request body"}
         else:
-            response = {"status":"failed", "data":"bad method"}
+            response = {"status":"failed", "restype":"request-method", "data":"bad method"}
 
     except Exception as e:
         print(str(e))
-        response = {"status":"failed", "data":"errors"}
+        response = {"status":"failed", "restype":"request-send", "data":"errors"}
 
     return response
 

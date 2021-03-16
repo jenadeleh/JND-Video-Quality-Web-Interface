@@ -32,20 +32,23 @@ def record_result(recv_data:dict) -> dict:
 
                 else:
                     return {"status":"failed", 
+                            "restype": "record_result",
                             "data":"video %s is not ongoing" % video_result["vuid"]}
             else:
                 return {"status":"failed", 
-                            "data":"video %s is not exist" % video_result["vuid"]}
+                        "restype": "record_result",
+                        "data":"video %s is not exist" % video_result["vuid"]}
 
         _set_p_onging_false(p_obj)
 
-        return {"status":"successful"}
+        return {"status":"successful", "restype": "record_result",}
     else:
-        return {"status":"failed", "data":"participant is not exist"}
+        return {"status":"failed", "restype": "record_result", "data":"participant is not exist"}
 
 def _update_video_db(video_result:dict, video_obj:object) -> None:
     decision_code = _encode_decision(video_result["side"], video_result["decision"])
-    video_obj.result_code = _add_new_item(video_obj.result_code, decision_code)
+    video_obj.result_code = _add_new_item(video_obj.result_code, 
+                                            decision_code + "-" + video_result["side"] + "-" + video_result["decision"])
     video_obj.qp = _add_new_item(video_obj.qp, video_result["qp"])
     video_obj.ongoing = False
     
@@ -53,8 +56,8 @@ def _update_video_db(video_result:dict, video_obj:object) -> None:
     if video_obj.qp_count == QP_TRIAL_NUM:
         video_obj.is_finished = True
     
-    video_obj.curr_participant = None
-    video_obj.curr_participant_uid = None
+    video_obj.cur_participant = None
+    video_obj.cur_participant_uid = None
     video_obj.participant_start_date = None
 
     video_obj.save()

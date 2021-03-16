@@ -1,7 +1,6 @@
 import * as $ from 'jquery';
-import { UpdateVideo } from "./UpdateVideo"
 
-export function SendMsg(data) {
+export function sendMsg(data) {
     $.ajax({
         type: 'POST',
         url: "/scheduler",
@@ -9,12 +8,6 @@ export function SendMsg(data) {
         contentType: 'application/json; charset=UTF-8',
         dataType: 'json', 
     }).done((response) => {
-        console.log(JSON.stringify(response));
-        responseAction(response)
+        return response;
     });
-}
-
-function responseAction(response) {
-    // TODO:
-    UpdateVideo(response["url"])
 }

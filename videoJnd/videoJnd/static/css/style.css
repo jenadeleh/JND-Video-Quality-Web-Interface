@@ -43,3 +43,6 @@
     font-size: 28px;
 }
 
+.not-sure-btn {
+    visibility: hidden;
+}

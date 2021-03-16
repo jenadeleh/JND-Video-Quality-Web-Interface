@@ -31,8 +31,8 @@ class VideoObj(models.Model):
     result_code = models.TextField(max_length=4096, editable=False, null=True, blank=True)
     participant_result = models.TextField(max_length=4096, editable=False, null=False, blank=False)
     is_finished = models.BooleanField(default=False, editable=False)
-    curr_participant = models.CharField(max_length=20, editable=False, null=True, blank=True)
-    curr_participant_uid = models.CharField(max_length=50, editable=False, null=True, blank=True)
+    cur_participant = models.CharField(max_length=20, editable=False, null=True, blank=True)
+    cur_participant_uid = models.CharField(max_length=50, editable=False, null=True, blank=True)
 
     # only for displaying the time when the user start the experiment
     participant_start_date = models.CharField(max_length=20, editable=False, null=True, blank=True) 

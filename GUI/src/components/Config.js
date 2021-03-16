@@ -1,1 +1,4 @@
-export const NUMERIC_DECISION = {"left":1, "right":2, "notsure":3, "nodecision":4};
+export const config = {
+    "first_duration": 5000,
+    "second_duration": 3000,
+};

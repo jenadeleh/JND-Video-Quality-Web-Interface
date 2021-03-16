@@ -1,14 +1,8 @@
-export const timeStampRecord = {
-    "start_time":0
-    , "end_time":0
-}
-
-export const timeoutRecord = {
-    "Sec5":Object
-    , "Sec3":Object
-}
-
-export const taskRecord = {
-    "TASK_NUM":3
-    , "finish_num":0
+export const globalStatus = {
+    "first_duration_timer":Object,
+    "second_duration_timer":Object,
+    "task_num":0,
+    "task_finished_num":0,
+    "result": [],
+    "os_info": {},
 }

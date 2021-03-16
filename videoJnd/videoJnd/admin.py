@@ -47,8 +47,8 @@ class VideoObj(admin.ModelAdmin):
                     , "crf"
                     , "rating"
                     , "ongoing"
-                    , "curr_participant"
-                    # , "curr_participant_uid"
+                    , "cur_participant"
+                    # , "cur_participant_uid"
                     # , "participant_start_date"
                     , "qp"
                     , "qp_count"
@@ -80,7 +80,7 @@ class VideoObj(admin.ModelAdmin):
 
     def export_as_csv(self, request, queryset):
         try:
-            csv_name = "JND_Video_" + time.strftime("%Y-%m-%d_%H-%M-%S")
+            csv_name = "JND_Video_Result_" + time.strftime("%Y-%m-%d_%H-%M-%S")
             meta = self.model._meta
             column_names = [field.name for field in meta.fields if field.name not in ["id"]]
             response = HttpResponse(content_type='text/csv')
@@ -134,7 +134,7 @@ class RatingHistory(admin.ModelAdmin):
 
     def export_as_csv(self, request, queryset):
         try:
-            csv_name = "JND_Video_Rating_History" + time.strftime("%Y-%m-%d_%H-%M-%S")
+            csv_name = "JND_Video_Rating_History_" + time.strftime("%Y-%m-%d_%H-%M-%S")
             meta = self.model._meta
             column_names = [field.name for field in meta.fields]
             response = HttpResponse(content_type='text/csv')
@@ -143,7 +143,7 @@ class RatingHistory(admin.ModelAdmin):
             writer.writerow(column_names)
 
             for obj in queryset:
-                writer.writerow([getattr(obj, field) for field in column_names])
+                writer.writerow([str(getattr(obj, field)) for field in column_names])
 
             return response
         except Exception as e:

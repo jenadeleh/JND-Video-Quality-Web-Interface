@@ -27,9 +27,9 @@ def select_videos(recv_data:dict) -> dict:
     select <VIDEO_NUM_PER_HIT> videos which are not ongoing(ongoing=False).
     """
 
-    curr_exp_obj = Experiment.objects.filter(name=recv_data["exp"])[0]
+    cur_exp_obj = Experiment.objects.all()[0]
 
-    avl_videos  = _select_videos(curr_exp_obj)
+    avl_videos  = _select_videos(cur_exp_obj)
 
     if avl_videos:
         if recv_data["puid"] == "": # new participant
@@ -50,12 +50,12 @@ def select_videos(recv_data:dict) -> dict:
             # add a new participant
             Participant(puid = _puid
                 , name = recv_data["pname"]
-                , exp = curr_exp_obj
+                , exp = cur_exp_obj
                 , start_date = _p_start_date
                 , ongoing = True
                 , videos = str(_response["videos"])).save()
 
-            return {"status":"successful", "data":_response}
+            return {"status":"successful", "restype": "select_videos", "data":_response}
 
         else: # not a new user
             _puid = recv_data["puid"]
@@ -67,8 +67,8 @@ def select_videos(recv_data:dict) -> dict:
                             
                     videos = ast.literal_eval(curr_p.videos)
                     random.shuffle(videos)
-                    _response = {"videos":videos}
-                    return {"status":"successful", "data":_response}
+                    _response = {"videos":videos, "exp":cur_exp_obj.name}
+                    return {"status":"successful", "restype": "select_videos", "data":_response}
 
                 elif curr_p.ongoing == False:# not ongoing, return new videos
                     _response = {"videos":[]}
@@ -84,16 +84,16 @@ def select_videos(recv_data:dict) -> dict:
                     curr_p.save()
 
                     _response["videos"] = videos_info
-                    return {"status":"successful", "data":_response}
+                    return {"status":"successful", "restype": "select_videos", "data":_response}
             else:
-                return {"status":"failed", "data":"participant is not exist"}
+                return {"status":"failed", "restype": "select_videos", "data":"participant is not exist"}
     else:
-        return {"status":"failed", "data":"no videos are available"}
+        return {"status":"failed", "restype": "select_videos", "data":"no videos are available"}
     
-def _select_videos(curr_exp_obj:object) -> list:
+def _select_videos(cur_exp_obj:object) -> list:
     # filter videos that are not finished and not ongoing
     avl_videos_pool = VideoObj.objects.filter(
-                                        exp=curr_exp_obj
+                                        exp=cur_exp_obj
                                     ).filter(
                                         is_finished=False
                                     ).filter(
@@ -153,7 +153,7 @@ def _gen_video_url(video_obj:object) -> tuple:
 
 def _add_p_to_video(video_obj:object, pname:str, puid:str, pstart_date:str) -> None:
     video_obj.ongoing = True
-    video_obj.curr_participant = pname
-    video_obj.curr_participant_uid = puid
+    video_obj.cur_participant = pname
+    video_obj.cur_participant_uid = puid
     video_obj.participant_start_date = pstart_date
     video_obj.save()

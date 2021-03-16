@@ -1,25 +1,23 @@
 import * as $ from 'jquery';
 import { DecisionAction } from "./DecisionAction"
-import { NUMERIC_DECISION } from "./Config"
-import { timeoutRecord } from "./GlobalStatus"
+import { config } from "./Config"
+import { globalStatus } from "./GlobalStatus"
 
-const firstTimer = 5000;
-const secondTimer = 3000;
-
-export function TimeCounter() {
-    timeoutRecord.Sec5 = setTimeout(()=> { 
-        DisplayWarningInfo();
-        Timer3Sec();
-    }, firstTimer);
+export function setTimer() {
+    globalStatus.first_duration_timer = setTimeout(()=> { 
+        _display_warning_info();
+        _second_duration_timer();
+    }, config.first_duration);
 }
 
-function Timer3Sec() {
-    timeoutRecord.Sec3 = setTimeout(()=> { 
-        DecisionAction(NUMERIC_DECISION["nodecision"]);
-    }, secondTimer);  
+function _second_duration_timer() {
+    globalStatus.second_duration_timer = setTimeout(()=> { 
+        //TODO:
+        // DecisionAction(NUMERIC_DECISION["nodecision"]); 
+    }, config.second_duration);  
 }
 
-function DisplayWarningInfo() {
+function _display_warning_info() {
     $("#video").css("display", "none");
     $("#warning-cover").css("display", "inline-block");
 }
