@@ -1,5 +1,5 @@
 import * as $ from 'jquery';
-import { DecisionAction } from "./DecisionAction"
+import { processDecision } from "./ProcessDecision"
 import { config } from "./Config"
 import { globalStatus } from "./GlobalStatus"
 
@@ -12,8 +12,7 @@ export function setTimer() {
 
 function _second_duration_timer() {
     globalStatus.second_duration_timer = setTimeout(()=> { 
-        //TODO:
-        // DecisionAction(NUMERIC_DECISION["nodecision"]); 
+        processDecision("no decision"); 
     }, config.second_duration);  
 }
 

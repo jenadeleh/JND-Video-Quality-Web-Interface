@@ -8,4 +8,3 @@ import { initDoms } from "./components/InitDoms"
 
 initDoms();
 initGUI();
-

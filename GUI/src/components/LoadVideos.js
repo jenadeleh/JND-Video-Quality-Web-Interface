@@ -1,12 +1,12 @@
 import * as $ from 'jquery';
 import { globalStatus } from "./GlobalStatus"
 import { setTimer } from "./Timer"
-import { endExpAction } from "./DecisionAction"
+import { endExpAction } from "./ProcessDecision"
+import { displayView } from "./DisplayVideo"
 
 export function loadVideos(videos) {
     _load_all_videos_into_dom(videos);
-    _display_panel();
-
+    displayVideo();
 }
 
 function _load_all_videos_into_dom(videos) {
@@ -18,9 +18,4 @@ function _load_all_videos_into_dom(videos) {
     return
 }
 
-function _display_panel(){
-    /**
-     * after all videos are loaded, display the first video, and enable buttons
-     */
-    return
-}
+
