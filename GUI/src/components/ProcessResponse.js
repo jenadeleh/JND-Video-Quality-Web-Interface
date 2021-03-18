@@ -5,7 +5,10 @@ import { loadVideos } from "./LoadVideos"
 
 export function processResponse(response) {
     if (response["status"] == "successful") {
-        if (response["restype"] == "select_videos") {
+        if (response["restype"] == "get_instruction") {
+            return response["data"]["instruction"]
+
+        } else if (response["restype"] == "select_videos") {
             storeLocalData("exp", data["exp"]);
             storeLocalData("puid", data["puid"]);
             loadVideos(response["data"]["videos"]);

@@ -4,6 +4,7 @@ import { globalStatus} from "./GlobalStatus"
 import { updateProgressBar } from "./ProgressBar"
 import { displayVideo } from "./LoadVideos"
 
+
 export function processDecision(decision) {
 
     // clear timer
@@ -24,7 +25,7 @@ export function processDecision(decision) {
 
     // check experiment is finished or not
     if (globalStatus.task_finished_num < globalStatus.task_num) {
-
+        
     } else if (globalStatus.task_finished_num == globalStatus.task_num) {
         _end_exp();
     }

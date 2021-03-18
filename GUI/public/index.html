@@ -21,7 +21,7 @@
     <div class="video-panel">
         <!-- TODO: -->
         <video id="video" 
-                loop="loop" 
+                loop="loop"
                 muted>
             <source id="video_src" type='video/mp4' 
                 src="https://datasets.vqa.mmsp-kn.de/JND_datasets/Video_JND_dataset/JND_264_640x480/SRC089_640x480_30/crf_10/videoSRC089_640x480_30_qp_00_50_R_crf_10.mp4">
@@ -78,18 +78,7 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>  
 
-            <div class="modal-body">
-              <p dir="ltr">1. Once a rating window pops up, select the preferred video from the video pair. Select the "left" button if the left video is preferred, select the "right" button if the right video is preferred, and select "not sure" if you have no preference between two videos. When you have selected the preferred video, click the "Next" button.</p>
-
-              <p dir="ltr">2. If you do not select the preferred video within 5 seconds, a window pops up, asking you to make your choice within 3 seconds. You must select one of the options ("left", "right", or "not sure"). If you do not make your choice, the question will remain unanswered, and you will be redirected to the next question.</p>
-
-              <p dir="ltr">3. There are some test questions in each hit to control the quality of the subjective test. Please answer all questions carefully.</p>
-
-              <p dir="ltr">4. If you fail to answer more than two questions or answer a test question incorrectly, the entire hit will be rejected.</p>
-
-              <p dir="ltr">5. After the subjective test is completed in the current hit, submit the result. Then you can start with the next hit.</p>
-
-            </div>
+            <div class="modal-body instruction-content"></div>
 
             <div class="modal-footer">  
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>  
