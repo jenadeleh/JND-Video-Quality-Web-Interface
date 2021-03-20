@@ -5,4 +5,6 @@ export const globalStatus = {
     "task_finished_num":0,
     "result": [],
     "os_info": {},
+    "video_h": 480,
+    "video_w":640,
 }

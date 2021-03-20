@@ -1,63 +1,75 @@
 import * as $ from 'jquery';
 import { storeLocalData, getLocalData } from "../utils/ManageLocalData"
-import { displayConsentForm } from "./DisplayConsentForm"
-import { requestVideos } from "./RequestVideos"
-import { processResponse } from "./ProcessResponse"
 import { initDoms } from "./InitDoms"
-import { sendMsg } from "./Connection"
+import { processResponse } from "./ProcessResponse"
+import ConsentForm from "./ConsentForm"
+import Videos from "./Videos"
+
+
 
 export function initGUI() {
-    sendMsg({"action":"get_instruction"}).then(response => {
-        _init_gui(response)
-    }).catch(err => {
-        console.log("get_instruction errors");  
-    })
-}
-
-function _init_gui(response) {
-    _init_instruction(response)
     _init_doms();
     _init_local_storage();
 
-    // let didConsentForm  = getLocalData("didConsentForm");
-    // if (didConsentForm === null) {
-    //     storeLocalData("didConsentForm", "false");
-    //     displayConsentForm();
-    // } else if (didConsentForm == "false") {
-    //     displayConsentForm();
-    // } else if (didConsentForm == "true") {
-    //     // TODO: calibration
-    // }
+    const consent_form = new ConsentForm();
+    const videos = new Videos();
 
-    // storeLocalData("pname", "guangan"); //TODO: remove later
+    // request instruction and consent form
+    consent_form.req_ins_consent_f().then(response => {
+        let [inst, cf] = processResponse(response)
+        consent_form.render_instruction(inst);
 
-    // // request videos information
-    // processResponse(requestVideos(getLocalData("pname"), getLocalData("puid")));
+        if (getLocalData("hasSignedCF") === "false") {
+            consent_form.render_consent_form(cf);
+        } else if (getLocalData("hasSignedCF") === "true") {
+            $("#cf-panel").css("display", "none");
+            $("#exp-panel").css("display", "inline"); 
+            // request and load videos
+            videos.reqLoadVideos(getLocalData("pname"), getLocalData("puid"));
+        }
 
+    }).catch(err => {
+        console.log("req_ins_consent_f errors: " + err.message);  
+    })
 
-    // updateProgressBar(taskRecord.finish_num, taskRecord.TASK_NUM);
+    // submit the consent form
+    let $cf_form = $("#cf-form");
+    $cf_form.on("submit", () =>{ 
+        let params = {};
+        $cf_form.serializeArray().forEach((element)=>{
+            params[element.name] = element.value;
+        });
+        storeLocalData("pname", params.pname);
+
+        consent_form.submitCfResult(params.pname, params.pemail).then(response => {
+            let { puid, exp } = processResponse(response);
+            storeLocalData("exp", exp);
+            storeLocalData("puid", puid);
+            
+            storeLocalData("hasSignedCF", "true");
+            $("#cf-panel").css("display", "none");
+            $("#exp-panel").css("display", "inline");
+
+            // request and load videos
+            videos.reqLoadVideos(getLocalData("pname"), getLocalData("puid"));
+
+        }).catch(err => {
+            console.log("submitCfResult errors: " + err.message);  
+        });
+        return false;
+    })
 }
 
 function _init_local_storage() {
     let exp  = getLocalData("exp");
-    if (exp === null) {
+    if (exp == null) {
         storeLocalData("pname", "");
         storeLocalData("puid", "");
         storeLocalData("exp", "");
+        storeLocalData("hasSignedCF", "false");
     } 
-    return
 }
 
 function _init_doms() {
     initDoms();
-}
-
-function _init_instruction(response) {
-    let instruction = processResponse(response);
-    _render_instruction(instruction);
-    $("#instruction-modal").modal("show");
-}
-
-function _render_instruction(instruction) {
-    $(".instruction-content").html(instruction);
 }

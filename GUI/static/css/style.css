@@ -3,9 +3,32 @@
     width: 640px;
 } 
 
-#video {
-    width: 640px;
-    height: 480px;
+.video-pool {
+    position:absolute;
+    z-index: -1;
+}
+
+#spinner-lv-panel {
+    display: -webkit-flex; /* Safari */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position:absolute;
+    background-color: #FFFFFF;
+    z-index: 1;
+}
+
+.video-cover {
+    width: 100%;
+    height: 100%;
+    position:absolute;
+    background-color: #FFFFFF;
+    /* visibility: hidden; */
+  }
+
+.cur-display{
     z-index: 1;
 }
 
@@ -43,6 +66,22 @@
     font-size: 28px;
 }
 
-.not-sure-btn {
-    visibility: hidden;
+#exp-panel,
+#cf-panel,
+#instruction-modal {
+    display: none;
+}
+
+input#cf-submit-btn{
+    padding:5px 15px; 
+    background:rgb(0, 156, 34); 
+    border:0 none;
+    cursor:pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px; 
+    color: white;
+}
+
+#instruction-modal {
+    display: none;
 }

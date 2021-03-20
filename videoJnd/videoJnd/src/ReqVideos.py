@@ -22,73 +22,46 @@ qp_obj = QuestPlusJnd()
 #TODO: threading blocking
 #TODO: Class
 
-def select_videos(recv_data:dict) -> dict:
+def req_videos(recv_data:dict) -> dict:
     """
     select <VIDEO_NUM_PER_HIT> videos which are not ongoing(ongoing=False).
     """
-
     cur_exp_obj = Experiment.objects.all()[0]
-
     avl_videos  = _select_videos(cur_exp_obj)
 
     if avl_videos:
-        if recv_data["puid"] == "": # new participant
+        cur_p = Participant.objects.filter(puid=recv_data["puid"])
+        
+        if cur_p:
+            cur_p = cur_p[0]
+            if cur_p.ongoing == True:# ongoing, return current videos      
+                        
+                videos = ast.literal_eval(cur_p.videos)
+                random.shuffle(videos)
+                _response = {"videos":videos}
 
-            _response = {"puid":"", "videos":[]}
-            _puid = uuid.uuid4()
-            _p_start_date = str(timezone.now())
+                return {"status":"successful", "restype": "req_videos", "data":_response}
 
-            _response["puid"] = _puid
-
-            videos_info = _extract_info_avl_videos(recv_data["pname"]
-                                                , _puid
-                                                , _p_start_date
-                                                , avl_videos)
-
-            _response["videos"] = videos_info
+            elif cur_p.ongoing == False:# not ongoing, return new videos
+                _response = {"videos":[]}
+                _p_start_date = str(timezone.now())
+                videos_info = _extract_info_avl_videos(recv_data["pname"], 
+                                                        recv_data["puid"], 
+                                                        _p_start_date, 
+                                                        avl_videos)
                 
-            # add a new participant
-            Participant(puid = _puid
-                , name = recv_data["pname"]
-                , exp = cur_exp_obj
-                , start_date = _p_start_date
-                , ongoing = True
-                , videos = str(_response["videos"])).save()
+                cur_p.start_date = _p_start_date
+                cur_p.ongoing = True
+                cur_p.videos = str(videos_info)
+                cur_p.save()
 
-            return {"status":"successful", "restype": "select_videos", "data":_response}
+                _response["videos"] =  {"videos":videos_info}
 
-        else: # not a new user
-            _puid = recv_data["puid"]
-            curr_p = Participant.objects.filter(puid=_puid)
-            
-            if curr_p:
-                curr_p = curr_p[0]
-                if curr_p.ongoing == True:# ongoing, return current videos      
-                            
-                    videos = ast.literal_eval(curr_p.videos)
-                    random.shuffle(videos)
-                    _response = {"videos":videos, "exp":cur_exp_obj.name}
-                    return {"status":"successful", "restype": "select_videos", "data":_response}
-
-                elif curr_p.ongoing == False:# not ongoing, return new videos
-                    _response = {"videos":[]}
-                    _p_start_date = str(timezone.now())
-                    videos_info = _extract_info_avl_videos(recv_data["pname"], 
-                                                            recv_data["puid"], 
-                                                            _p_start_date, 
-                                                            avl_videos)
-                    
-                    curr_p.start_date = _p_start_date
-                    curr_p.ongoing = True
-                    curr_p.videos = str(videos_info)
-                    curr_p.save()
-
-                    _response["videos"] = videos_info
-                    return {"status":"successful", "restype": "select_videos", "data":_response}
-            else:
-                return {"status":"failed", "restype": "select_videos", "data":"participant is not exist"}
+                return {"status":"successful", "restype": "req_videos", "data":_response}
+        else:
+            return {"status":"failed", "restype": "req_videos", "data":"participant is not exist"}
     else:
-        return {"status":"failed", "restype": "select_videos", "data":"no videos are available"}
+        return {"status":"failed", "restype": "req_videos", "data":"no videos are available"}
     
 def _select_videos(cur_exp_obj:object) -> list:
     # filter videos that are not finished and not ongoing

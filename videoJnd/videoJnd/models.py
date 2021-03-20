@@ -7,6 +7,10 @@ class Instruction(models.Model):
     title = models.CharField(max_length=20, default="Instruction", editable=False)
     description = RichTextField()
 
+class ConsentForm(models.Model):
+    title = models.CharField(max_length=20, default="Consent Form", editable=False)
+    description = RichTextField()
+
 class Experiment(models.Model):
     euid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=20, default="", editable=False, null=False, blank=False)
@@ -43,6 +47,7 @@ class VideoObj(models.Model):
 class Participant(models.Model):
     puid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=20, default="", editable=False, null=False, blank=False)
+    email = models.EmailField(max_length=30, editable=False, default="", null=False, blank=False)
     exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
     start_date = models.DateTimeField(editable=False, blank=True, null=True)
     videos = models.TextField(max_length=4096, default="", editable=False)

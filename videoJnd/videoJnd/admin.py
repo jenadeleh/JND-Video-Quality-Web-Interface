@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.http import HttpResponse
-from .models import Instruction, VideoObj, Experiment, Participant, RatingHistory
+from .models import Instruction, ConsentForm, VideoObj, Experiment, Participant, RatingHistory
 
 admin.site.site_header = "JND Video Study"
 admin.site.site_title = "JND Video Study"
@@ -22,6 +22,19 @@ class Instruction(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+@admin.register(ConsentForm)
+class ConsentForm(admin.ModelAdmin):
+    list_display = ("title",)
+    def has_add_permission(self, request):
+        """ only one 'ConsentForm' object can be created """
+        if self.model.objects.count() > 0:
+            return False
+        else:
+            return True
+
+    def has_delete_permission(self, request, obj=None):
+        return False 
 
 @admin.register(Experiment)
 class Experiment(admin.ModelAdmin):
@@ -103,6 +116,7 @@ class VideoObj(admin.ModelAdmin):
 @admin.register(Participant)
 class Participant(admin.ModelAdmin):
     list_display = ("name"
+                    , "email"
                     , "exp"
                     , "ongoing"
                     , "start_date"

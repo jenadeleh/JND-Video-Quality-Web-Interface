@@ -1,19 +1,28 @@
-import * as $ from 'jquery';
-import { UpdateVideo } from "./LoadVideos"
 import { storeLocalData, getLocalData } from "../utils/ManageLocalData"
-import { loadVideos } from "./LoadVideos"
 
 export function processResponse(response) {
-    if (response["status"] == "successful") {
-        if (response["restype"] == "get_instruction") {
-            return response["data"]["instruction"]
 
-        } else if (response["restype"] == "select_videos") {
-            storeLocalData("exp", data["exp"]);
-            storeLocalData("puid", data["puid"]);
-            loadVideos(response["data"]["videos"]);
+    console.log(response)
+    if (response["status"] == "successful") {
+
+        // req_videos
+        if (response["restype"] == "req_videos") {
+            let videos_info = (response["data"]["videos"]);
+            return videos_info;
+
+        // req_inst_cf
+        } else if (response["restype"] == "req_inst_cf") {
+            let [instruction, consent_form] = [response["data"]["instruction"], 
+                                            response["data"]["consent_form"]]
+
+            return [instruction, consent_form];
+
+        // user_register
+        } else if (response["restype"] == "user_register") {
+            return response["data"]
         }
+
     } else if (response["status"] == "failed") {
-        console.log(response["data"]);
+            return response["data"];
     }
 }

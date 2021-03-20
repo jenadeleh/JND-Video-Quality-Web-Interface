@@ -11,9 +11,10 @@ import copy
 import ast
 
 
-from videoJnd.src.SelectVideos import select_videos
+from videoJnd.src.ReqVideos import req_videos
 from videoJnd.src.RecordResult import record_result
-from videoJnd.src.GetInstruction import get_instruction
+from videoJnd.src.ReqInstConsentF import req_inst_cf
+from videoJnd.src.UserRegister import user_register
 
 def process_request(request):
     # try:
@@ -23,11 +24,14 @@ def process_request(request):
                 print("---------------------")
                 print(recv_data)
                 print("---------------------")
-                if recv_data["action"] == "get_instruction":
-                    response = get_instruction(recv_data)
+                if recv_data["action"] == "req_inst_cf":
+                    response = req_inst_cf()
+                
+                elif recv_data["action"] == "user_register":
+                    response = user_register(recv_data)
 
-                elif recv_data["action"] == "select_videos":
-                    response = select_videos(recv_data)
+                elif recv_data["action"] == "req_videos":
+                    response = req_videos(recv_data)
 
                 elif recv_data["action"] == "record_result":
                     response = record_result(recv_data)
