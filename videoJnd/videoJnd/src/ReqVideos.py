@@ -43,7 +43,7 @@ def req_videos(recv_data:dict) -> dict:
                 return {"status":"successful", "restype": "req_videos", "data":_response}
 
             elif cur_p.ongoing == False:# not ongoing, return new videos
-                _response = {"videos":[]}
+                _response = {}
                 _p_start_date = str(timezone.now())
                 videos_info = _extract_info_avl_videos(recv_data["pname"], 
                                                         recv_data["puid"], 
@@ -55,7 +55,7 @@ def req_videos(recv_data:dict) -> dict:
                 cur_p.videos = str(videos_info)
                 cur_p.save()
 
-                _response["videos"] =  {"videos":videos_info}
+                _response["videos"] =  videos_info
 
                 return {"status":"successful", "restype": "req_videos", "data":_response}
         else:
