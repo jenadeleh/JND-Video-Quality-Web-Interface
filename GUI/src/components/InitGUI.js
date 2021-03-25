@@ -4,7 +4,7 @@ import { initDoms } from "./InitDoms"
 import { processResponse } from "./ProcessResponse"
 import ConsentForm from "./ConsentForm"
 import Videos from "./Videos"
-
+import { globalStatus } from "./GlobalStatus"
 
 
 export function initGUI() {
@@ -25,6 +25,9 @@ export function initGUI() {
             $("#cf-panel").css("display", "none");
             $("#exp-panel").css("display", "inline"); 
             // request and load videos
+            $("#video-spinner, #video-pool").css("height", globalStatus.video_h)
+                                            .css("width", globalStatus.video_w);
+
             videos.reqLoadVideos(getLocalData("pname"), getLocalData("puid"));
         }
 
@@ -49,6 +52,11 @@ export function initGUI() {
             storeLocalData("hasSignedCF", "true");
             $("#cf-panel").css("display", "none");
             $("#exp-panel").css("display", "inline");
+
+
+            // TODO: calibration
+            $("#video-spinner, #video-pool").css("height", globalStatus.video_h)
+                                            .css("width", globalStatus.video_w);
 
             // request and load videos
             videos.reqLoadVideos(getLocalData("pname"), getLocalData("puid"));

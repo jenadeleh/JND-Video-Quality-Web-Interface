@@ -60,20 +60,23 @@
         </div>
         <br>
 
-        <!-- <div id="spinner-lv-panel" class="flex-container">
-            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+        <!-- <div id="warning-cover">Please make your decision.</div> -->
+
+
+        <div id="video-spinner" >
+            <div class="spinner-border" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
-        </div> -->
+        </div>
 
-        <div id="warning-cover">Please make your decision.</div>
+        <div id="video-pool" ></div>
 
-        <div id="video-pool"></div>
         <br/>
         <div class="guide">
             <div class="row">
                 <div class="col-5">
-                    <button class="decision-btn btn btn-primary ctl btn-sm" 
+                    <button class="decision-btn btn btn-primary ctl btn-sm"
+                            id = "left-btn"
                             disabled="true"
                             data-decision="left"
                             id="left">
@@ -82,7 +85,8 @@
                 </div>
     
                 <div class="col-2">
-                    <button class="decision-btn not-sure-btn btn btn-primary ctl btn-sm" 
+                    <button class="decision-btn btn btn-primary ctl btn-sm" 
+                            id = "not-sure-btn"
                             disabled="true"
                             data-decision="notsure">
                         not sure
@@ -91,6 +95,7 @@
     
                 <div class="col-4">
                     <button class="decision-btn btn btn-primary ctl btn-sm" 
+                            id = "right-btn"
                             disabled="true"
                             data-decision="right">
                         right

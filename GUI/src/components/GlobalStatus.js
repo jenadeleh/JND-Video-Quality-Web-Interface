@@ -7,4 +7,6 @@ export const globalStatus = {
     "os_info": {},
     "video_h": 480,
     "video_w":640,
+    "videos": [],
+    "cur_video": {},
 }
