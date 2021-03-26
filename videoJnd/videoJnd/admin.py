@@ -63,6 +63,7 @@ class VideoObj(admin.ModelAdmin):
                     , "cur_participant"
                     # , "cur_participant_uid"
                     # , "participant_start_date"
+                    , "vuid"
                     , "qp"
                     , "qp_count"
                     , "result_code"

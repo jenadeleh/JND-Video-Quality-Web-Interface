@@ -23,6 +23,7 @@ export function processResponse(response) {
         }
 
     } else if (response["status"] == "failed") {
+            alert(response["data"]);
             return response["data"];
     }
 }

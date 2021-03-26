@@ -54,41 +54,46 @@
     </div>
 
     <div id="exp-panel" >
-        <div class="instruction-btn">
+        <div id="instruction-btn">
             <span><a data-toggle="modal" href="#instruction-modal">Instruction</a></span>
-            <span><button id="start-exp-btn" class="btn btn-success ctl btn-sm">Start Experiment</button></span>
+            <span><button id="start-exp-btn" class="btn btn-success ctl btn-sm" disabled="true">Start Experiment</button></span>
         </div>
         <br>
-
-        <!-- <div id="warning-cover">Please make your decision.</div> -->
-
-
-        <div id="video-spinner" >
-            <div class="spinner-border" role="status">
-                <span class="sr-only">Loading...</span>
+    
+        <div id="video-pool">
+            <div id="video-spinner" >
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
             </div>
+
+            <div id="exp-end-panel">
+                <span>Thank you for you participation!</span></br>
+                <button id='next-exp-btn' class='btn btn-success ctl btn-sm'>Next Experiment</button>
+            </div>
+
+            <div id="message-panel">Please make your decision.</div>
+
         </div>
 
-        <div id="video-pool" ></div>
-
         <br/>
-        <div class="guide">
+        <div id="guide-panel">
             <div class="row">
                 <div class="col-5">
                     <button class="decision-btn btn btn-primary ctl btn-sm"
                             id = "left-btn"
                             disabled="true"
-                            data-decision="left"
+                            data-decision="L"
                             id="left">
                         left
                     </button>
                 </div>
     
                 <div class="col-2">
-                    <button class="decision-btn btn btn-primary ctl btn-sm" 
+                    <button class="decision-btn btn btn-secondary ctl btn-sm" 
                             id = "not-sure-btn"
                             disabled="true"
-                            data-decision="notsure">
+                            data-decision="not sure">
                         not sure
                     </button>
                 </div>
@@ -97,18 +102,23 @@
                     <button class="decision-btn btn btn-primary ctl btn-sm" 
                             id = "right-btn"
                             disabled="true"
-                            data-decision="right">
+                            data-decision="R">
                         right
                     </button> 
                 </div>
               </div>
     
             <span class="question">Which side has flicker?</span>&nbsp;&nbsp;&nbsp;
-            
+
             <div class="progress">
-                <div class="task-progress progress-bar progress-bar-striped bg-info" role="progressbar" aria-valuemin="0"></div>
+                <div id="task-progressbar" 
+                    class="progress-bar bg-info" 
+                    role="progressbar" 
+                    aria-valuemin="0" 
+                    aria-valuenow="0">
+                </div>
             </div>
-    
+
           <!-- <button class="submit btn btn-success ctl">Submit Result</button>  -->
         </div>
     </div>

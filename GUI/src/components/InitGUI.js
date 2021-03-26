@@ -6,14 +6,12 @@ import ConsentForm from "./ConsentForm"
 import Videos from "./Videos"
 import { globalStatus } from "./GlobalStatus"
 
-
 export function initGUI() {
     _init_doms();
     _init_local_storage();
 
     const consent_form = new ConsentForm();
-    const videos = new Videos();
-
+    
     // request instruction and consent form
     consent_form.req_ins_consent_f().then(response => {
         let [inst, cf] = processResponse(response)
@@ -22,13 +20,10 @@ export function initGUI() {
         if (getLocalData("hasSignedCF") === "false") {
             consent_form.render_consent_form(cf);
         } else if (getLocalData("hasSignedCF") === "true") {
-            $("#cf-panel").css("display", "none");
-            $("#exp-panel").css("display", "inline"); 
-            // request and load videos
-            $("#video-spinner, #video-pool").css("height", globalStatus.video_h)
-                                            .css("width", globalStatus.video_w);
-
-            videos.reqLoadVideos(getLocalData("pname"), getLocalData("puid"));
+            console.log("----- hasSignedCF -----");
+            // TODO: calibration
+            // actions after calibration
+            _displayExpPanel();      
         }
 
     }).catch(err => {
@@ -50,22 +45,28 @@ export function initGUI() {
             storeLocalData("puid", puid);
             
             storeLocalData("hasSignedCF", "true");
-            $("#cf-panel").css("display", "none");
-            $("#exp-panel").css("display", "inline");
-
 
             // TODO: calibration
-            $("#video-spinner, #video-pool").css("height", globalStatus.video_h)
-                                            .css("width", globalStatus.video_w);
-
-            // request and load videos
-            videos.reqLoadVideos(getLocalData("pname"), getLocalData("puid"));
+            // actions after calibration
+            _displayExpPanel();
 
         }).catch(err => {
             console.log("submitCfResult errors: " + err.message);  
         });
         return false;
     })
+}
+function _displayExpPanel() {
+    const videos = new Videos();
+
+    $("#cf-panel").css("display", "none");
+    $("#exp-panel").css("display", "inline"); 
+
+    $("#video-spinner, #video-pool").css("height", globalStatus.video_h)
+                                    .css("width", globalStatus.video_w);
+
+    // request and load videos
+    videos.reqLoadVideos(getLocalData("pname"), getLocalData("puid"));
 }
 
 function _init_local_storage() {
@@ -81,3 +82,4 @@ function _init_local_storage() {
 function _init_doms() {
     initDoms();
 }
+

@@ -10,12 +10,8 @@
     background-color: #FFFFFF;
   }
 
-/* .cur-display{
-    z-index: 1;
-} */
-
-.guide
-, .instruction-btn {
+#guide-panel
+, #instruction-btn {
     text-align: center;
     position: relative;
     vertical-align:middle;
@@ -54,4 +50,20 @@ input#cf-submit-btn{
     display: flex;
     justify-content: center; 
     align-items: center;    
+}
+
+#task-progressbar {
+    color: #000000;
+    visibility: visible;
+}
+
+#video-pool {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+}
+
+#exp-end-panel,
+#message-panel {
+    display: none;
 }
