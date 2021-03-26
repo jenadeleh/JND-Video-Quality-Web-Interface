@@ -17,13 +17,16 @@ function _second_duration_timer() {
         $("#not-sure-btn").attr("disabled", true)
                         .removeClass("btn-primary")
                         .addClass("btn-secondary");
+        $(".video-cover").css("visibility", "visible");
+        $("#message-panel").css("display", "none");
         processExp();
 
     }, config.second_duration);  
 }
 
 function _display_warning_info() {
-    // $("#message-panel").css("display", "inline-block");
+    $("#message-panel").css("display", "inline-block");
+    $(".video-cover").css("visibility", "hidden");
     $("#not-sure-btn").attr("disabled", false)
                     .removeClass("btn-secondary")
                     .addClass("btn-primary");
