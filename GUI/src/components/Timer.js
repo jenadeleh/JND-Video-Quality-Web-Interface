@@ -13,14 +13,7 @@ export function setTimer() {
 function _second_duration_timer() {
     globalStatus.second_duration_timer = setTimeout(()=> { 
         addResultToCurVideo("no decision"); 
-        console.log("no decision");
-        $("#not-sure-btn").attr("disabled", true)
-                        .removeClass("btn-primary")
-                        .addClass("btn-secondary");
-        $(".video-cover").css("visibility", "visible");
-        $("#message-panel").css("display", "none");
         processExp();
-
     }, config.second_duration);  
 }
 

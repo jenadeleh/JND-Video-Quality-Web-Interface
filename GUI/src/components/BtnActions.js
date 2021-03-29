@@ -41,6 +41,12 @@ export function addResultToCurVideo(decision) {
 }
 
 export function processExp() {
+    $("#not-sure-btn").attr("disabled", true)
+                    .removeClass("btn-primary")
+                    .addClass("btn-secondary");
+    $(".video-cover").css("visibility", "visible");
+    $("#message-panel").css("display", "none");
+
     updateProgressBar(globalStatus.video_num - globalStatus.videos.length
                     , globalStatus.video_num);
 
