@@ -57,7 +57,7 @@ class QuestPlusJnd():
 
             elif d == '4': # no decision
                 pass
-
+            
             # print(d, qp_param.next_stim)
 
         return qp_param.next_stim["intensity"]

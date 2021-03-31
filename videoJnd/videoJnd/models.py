@@ -39,6 +39,7 @@ class VideoObj(models.Model):
     ongoing = models.BooleanField(default=False, editable=False)
     qp_count = models.IntegerField(default=0, editable=False)
     qp = models.TextField(max_length=4096, editable=False, null=True, blank=True)
+    result_orig = models.TextField(max_length=4096, editable=False, null=True, blank=True)
     result_code = models.TextField(max_length=4096, editable=False, null=True, blank=True)
     participant_result = models.TextField(max_length=4096, editable=False, null=False, blank=False)
     is_finished = models.BooleanField(default=False, editable=False)
@@ -68,7 +69,7 @@ class RatingHistory(models.Model):
     side = models.CharField(max_length=10, editable=False, null=False, blank=False)
     qp = models.CharField(max_length=10, editable=False, null=False, blank=False)
     decision = models.CharField(max_length=10, editable=False, null=False, blank=False)
-    result_code = models.CharField(max_length=10, editable=False, null=False, blank=False)
+    result_orig = models.CharField(max_length=10, editable=False, null=False, blank=False)
     update_time = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
 
 

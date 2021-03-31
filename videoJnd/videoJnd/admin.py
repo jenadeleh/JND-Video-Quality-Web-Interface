@@ -79,6 +79,7 @@ class VideoObj(admin.ModelAdmin):
                     , "vuid"
                     , "qp"
                     , "qp_count"
+                    , "result_orig"
                     , "result_code"
                     , "codec"
                     , "is_finished")
@@ -151,7 +152,7 @@ class RatingHistory(admin.ModelAdmin):
                     , "side"
                     , "qp"
                     , "decision"
-                    , "result_code"
+                    , "result_orig"
                     , "update_time")
 
     list_per_page = 200

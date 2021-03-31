@@ -47,8 +47,10 @@ def record_result(recv_data:dict) -> dict:
 
 def _update_video_db(video_result:dict, video_obj:object) -> None:
     decision_code = _encode_decision(video_result["side"], video_result["decision"])
-    video_obj.result_code = _add_new_item(video_obj.result_code, 
+    video_obj.result_orig = _add_new_item(video_obj.result_orig, 
                                             decision_code + "-" + video_result["side"] + "-" + video_result["decision"])
+
+    video_obj.result_code = _add_new_item(video_obj.result_code, decision_code)
     video_obj.qp = _add_new_item(video_obj.qp, video_result["qp"])
     video_obj.ongoing = False
     

@@ -27,6 +27,7 @@ export function actNextExpBtn() {
     $("#exp-end-panel").css("display", "none");
     $("#start-exp-btn").css("display", "inline");
     $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "visible");
+    $(".decision-btn").attr("disabled", true);
     // require new videos
     const videos = new Videos();
     videos.reqLoadVideos(getLocalData("pname"), getLocalData("puid"));

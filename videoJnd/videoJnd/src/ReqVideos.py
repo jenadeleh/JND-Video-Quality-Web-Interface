@@ -113,6 +113,7 @@ def _gen_video_url(video_obj:object) -> tuple:
 
     # generate qp value
     qp = qp_obj.update_params(qp_obj.gen_qp_param(video_obj.codec), result_code)
+
     # generate url
     side  = random_side()
     url = gen_video_url(video_obj.codec, 
