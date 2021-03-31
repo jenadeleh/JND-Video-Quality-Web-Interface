@@ -3,6 +3,13 @@ from ckeditor.fields import RichTextField
 import uuid
 from django.utils.timezone import now
 
+class InterfaceText(models.Model):
+    title = models.CharField(max_length=20, default="InterfaceText", editable=False)
+    question = RichTextField()
+    text_end_exp = RichTextField()
+    btn_text_end_exp = models.CharField(max_length=20, default="Next Experiment", editable=True, null=False, blank=False)
+    warning_msg = models.CharField(max_length=1024, default="On the admin page, you can customize this text.", editable=True, null=False, blank=False)
+
 class Instruction(models.Model):
     title = models.CharField(max_length=20, default="Instruction", editable=False)
     description = RichTextField()

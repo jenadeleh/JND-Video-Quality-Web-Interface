@@ -12,10 +12,14 @@ export function processResponse(response) {
 
         // req_inst_cf
         } else if (response["restype"] == "req_inst_cf") {
-            let [instruction, consent_form] = [response["data"]["instruction"], 
-                                            response["data"]["consent_form"]]
+            let [inst, cf, q_text, panel_text, btn_text, warning_msg] = [response["data"]["instruction"], 
+                                                                            response["data"]["consent_form"],
+                                                                            response["data"]["question"],
+                                                                            response["data"]["text_end_exp"],
+                                                                            response["data"]["btn_text_end_exp"],
+                                                                            response["data"]["warning_msg"]]
 
-            return [instruction, consent_form];
+            return [inst, cf, q_text, panel_text, btn_text, warning_msg];
 
         // user_register
         } else if (response["restype"] == "user_register") {

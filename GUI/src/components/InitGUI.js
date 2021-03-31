@@ -14,8 +14,11 @@ export function initGUI() {
     
     // request instruction and consent form
     consent_form.req_ins_consent_f().then(response => {
-        let [inst, cf] = processResponse(response)
+        let [inst, cf, q_text, panel_text, btn_text, warning_msg] = processResponse(response)
         consent_form.render_instruction(inst);
+        consent_form.render_exp_end_panel(panel_text, btn_text);
+        consent_form.render_question_text(q_text);
+        consent_form.render_warning_text(warning_msg);
 
         if (getLocalData("hasSignedCF") === "false") {
             consent_form.render_consent_form(cf);

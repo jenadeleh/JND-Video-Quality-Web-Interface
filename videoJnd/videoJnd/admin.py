@@ -1,13 +1,26 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.http import HttpResponse
-from .models import Instruction, ConsentForm, VideoObj, Experiment, Participant, RatingHistory
+from .models import Instruction, ConsentForm, VideoObj, Experiment, Participant, RatingHistory, InterfaceText
 
 admin.site.site_header = "JND Video Study"
 admin.site.site_title = "JND Video Study"
 admin.site.index_title = "Admin"
 import csv
 import time
+
+@admin.register(InterfaceText)
+class InterfaceText(admin.ModelAdmin):
+    list_display = ("title",)
+    def has_add_permission(self, request):
+        """ only one 'instruction' object can be created """
+        if self.model.objects.count() > 0:
+            return False
+        else:
+            return True
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(Instruction)
