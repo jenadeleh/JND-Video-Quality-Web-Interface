@@ -135,7 +135,6 @@ class Participant(admin.ModelAdmin):
                     , "exp"
                     , "ongoing"
                     , "start_date"
-                    , "videos"
                     , "puid")
 
 

@@ -5,10 +5,11 @@ from django.utils.timezone import now
 
 class InterfaceText(models.Model):
     title = models.CharField(max_length=20, default="InterfaceText", editable=False)
-    question = RichTextField()
-    text_end_exp = RichTextField()
-    btn_text_end_exp = models.CharField(max_length=20, default="Next Experiment", editable=True, null=False, blank=False)
-    warning_msg = models.CharField(max_length=1024, default="On the admin page, you can customize this text.", editable=True, null=False, blank=False)
+    question = RichTextField(default="", null=False, blank=False)
+    text_end_exp = RichTextField(default="", null=False, blank=False)
+    text_end_hit = RichTextField(default="", null=False, blank=False)
+    timeout_msg = RichTextField(default="", null=False, blank=False)
+    btn_text_end_hit = models.CharField(max_length=20, default="Next Group", editable=True, null=False, blank=False)
 
 class Instruction(models.Model):
     title = models.CharField(max_length=20, default="Instruction", editable=False)
@@ -55,7 +56,7 @@ class VideoObj(models.Model):
 class Participant(models.Model):
     puid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=20, default="", editable=False, null=False, blank=False)
-    email = models.EmailField(max_length=30, editable=False, default="", null=False, blank=False)
+    email = models.EmailField(max_length=30, editable=False, default="", null=True, blank=True)
     exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
     start_date = models.DateTimeField(editable=False, blank=True, null=True)
     videos = models.TextField(max_length=4096, default="", editable=False)

@@ -1,6 +1,7 @@
 import * as $ from 'jquery';
-import { globalStatus } from "./GlobalStatus"
-import { actStartExpBtn, actDecisionBtn, actNextExpBtn} from "./BtnActions"
+import { actStartExpBtn, actDecisionBtn, actNextHitBtn} from "./BtnActions"
+import { submitCf } from "./ConsentForm"
+import { storeLocalData } from "../utils/ManageLocalData"
 
 export function initDoms() {
     $('#start-exp-btn').on('click', ()=> {
@@ -11,8 +12,24 @@ export function initDoms() {
         actDecisionBtn(e);
     });
 
-    $('#next-exp-btn').on('click', ()=> {
-        actNextExpBtn();
+    $('#next-hit-btn').on('click', ()=> {
+        actNextHitBtn();
     });
+
+    let $cf_form = $("#cf-form");
+    $cf_form.on("submit", () =>{ 
+        let params = {};
+        $cf_form.serializeArray().forEach((element)=>{
+            params[element.name] = element.value;
+        });
+        storeLocalData("pname", params.pname);
+    
+        if (!params.pemail) {
+            params.pemail = "";
+        }
+    
+        submitCf(params.pname, params.pemail);
+        return false;
+    })
 }
 

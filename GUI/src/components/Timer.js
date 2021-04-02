@@ -1,7 +1,7 @@
 import * as $ from 'jquery';
 import { config } from "./Config"
 import { globalStatus } from "./GlobalStatus"
-import { addResultToCurVideo, processExp } from "./BtnActions"
+import { addResultToCurVideo, processHit } from "./BtnActions"
 
 export function setTimer() {
     globalStatus.first_duration_timer = setTimeout(()=> { 
@@ -13,12 +13,12 @@ export function setTimer() {
 function _second_duration_timer() {
     globalStatus.second_duration_timer = setTimeout(()=> { 
         addResultToCurVideo("no decision"); 
-        processExp();
+        processHit();
     }, config.second_duration);  
 }
 
 function _display_warning_info() {
-    $("#message-panel").css("display", "inline-block");
+    $("#timeout-msg").css("display", "inline-block");
     $(".video-cover").css("visibility", "hidden");
     $("#not-sure-btn").attr("disabled", false)
                     .removeClass("btn-secondary")

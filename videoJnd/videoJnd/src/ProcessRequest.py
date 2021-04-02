@@ -25,7 +25,7 @@ def process_request(request):
                 print(recv_data)
                 print("---------------------")
                 if recv_data["action"] == "req_inst_cf":
-                    response = req_inst_cf()
+                    response = req_inst_cf(recv_data["pname"])
                 
                 elif recv_data["action"] == "user_register":
                     response = user_register(recv_data)

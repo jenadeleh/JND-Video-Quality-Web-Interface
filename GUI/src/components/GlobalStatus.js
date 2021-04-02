@@ -8,4 +8,5 @@ export const globalStatus = {
     "videos": [],
     "video_num":0,
     "cur_video": {},
+    "mode": "development" // development or production
 }
