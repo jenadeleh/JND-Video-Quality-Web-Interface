@@ -8,6 +8,5 @@
     "URL_POSTFIX": "JND_{codec}_640x480/SRC{src_name}_640x480_{frame_rate}/crf_{crf}/videoSRC{src_name}_640x480_{frame_rate}_qp_00_{qp}_{side}_crf_{crf}.mp4",
     "FRAME_RATE": {"30":["001", "006", "015", "089", "121", "135", "155"], "24":["105", "111", "173"]},
     "CRF": ["05", "12"], 
-    "CODEC": ["264", "266"],
-    "EXP":"round1"
+    "CODEC": ["264", "266"]
 }

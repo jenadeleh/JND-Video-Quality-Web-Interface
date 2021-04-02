@@ -11,8 +11,8 @@ export function displayVideos() {
     $("#video-spinner").css("display", "none");
 }
 
-export function reqLoadVideos(pname, puid) {
-    let data = {"action":"req_videos", "pname": pname, "puid":puid}
+export function reqLoadVideos(pname, puid, euid) {
+    let data = {"action":"req_videos", "pname": pname, "puid":puid, "euid":euid}
 
     sendMsg(data).then(response => {
         if (response["status"] == "successful") {

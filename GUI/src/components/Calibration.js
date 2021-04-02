@@ -11,5 +11,5 @@ export function calibration() {
                                     .css("width", globalStatus.video_w);
 
     // request and load videos
-    reqLoadVideos(getLocalData("pname"), getLocalData("puid"));
+    reqLoadVideos(getLocalData("pname"), getLocalData("puid"), getLocalData("euid"));
 }

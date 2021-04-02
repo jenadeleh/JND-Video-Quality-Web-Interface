@@ -17,8 +17,8 @@ export function submitCf(pname, pemail) {
     let data = {"action":"user_register", "pname":pname, "pemail":pemail};
     sendMsg(data).then(response => {
         if (response["status"] == "successful") {
-            let { exp, puid } = response["data"];
-            storeLocalData("exp", exp);
+            let { euid, puid } = response["data"];
+            storeLocalData("euid", euid);
             storeLocalData("puid", puid);
             _passCF_action();
         } else if (response["status"] == "failed") {

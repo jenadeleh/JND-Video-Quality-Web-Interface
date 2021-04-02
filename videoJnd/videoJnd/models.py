@@ -2,14 +2,28 @@ from django.db import models
 from ckeditor.fields import RichTextField
 import uuid
 from django.utils.timezone import now
+import jsonfield
+from videoJnd.src.GetConfig import get_config
+
+class Experiment(models.Model):
+    euid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    active = models.BooleanField(default=False, editable=True)
+    name = models.CharField(max_length=20, default="", editable=True)
+    description = models.TextField(max_length=4096, default="", editable=True)
+    has_created_videos = models.BooleanField(default=False, editable=False)
+    configuration = jsonfield.JSONField(default=get_config())
+    pub_date = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
+
+    def __str__(self):
+        return self.name
 
 class InterfaceText(models.Model):
     title = models.CharField(max_length=20, default="InterfaceText", editable=False)
-    question = RichTextField(default="", null=False, blank=False)
+    question = models.TextField(max_length=4096, default="", null=False, blank=False)
     text_end_exp = RichTextField(default="", null=False, blank=False)
     text_end_hit = RichTextField(default="", null=False, blank=False)
-    timeout_msg = RichTextField(default="", null=False, blank=False)
-    btn_text_end_hit = models.CharField(max_length=20, default="Next Group", editable=True, null=False, blank=False)
+    timeout_msg = models.TextField(max_length=4096, default="", null=False, blank=False)
+    btn_text_end_hit = models.TextField(max_length=4096, default="", null=False, blank=False)
 
 class Instruction(models.Model):
     title = models.CharField(max_length=20, default="Instruction", editable=False)
@@ -18,16 +32,6 @@ class Instruction(models.Model):
 class ConsentForm(models.Model):
     title = models.CharField(max_length=20, default="Consent Form", editable=False)
     description = RichTextField()
-
-class Experiment(models.Model):
-    euid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=20, default="", editable=False, null=False, blank=False)
-    source_video = models.TextField(max_length=4096, default="", editable=False)
-    rating = models.IntegerField(default=0, editable=False)
-    pub_date = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
-    
-    def __str__(self):
-        return self.name    
 
 class VideoObj(models.Model):
     vuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

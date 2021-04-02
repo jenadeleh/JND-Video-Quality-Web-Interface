@@ -28,7 +28,7 @@ export function actNextHitBtn() {
     $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "visible");
     $(".decision-btn").attr("disabled", true);
     // request new videos
-    reqLoadVideos(getLocalData("pname"), getLocalData("puid"));
+    reqLoadVideos(getLocalData("pname"), getLocalData("puid"), getLocalData("euid"));
 }
 
 export function addResultToCurVideo(decision) {

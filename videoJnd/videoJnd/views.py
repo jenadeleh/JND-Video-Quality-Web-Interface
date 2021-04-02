@@ -6,16 +6,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.template import RequestContext
 from django.utils import timezone
 
-from videoJnd.src.InitDB import init_db
+
 from videoJnd.src.ProcessRequest import process_request
 
 # home page
 def home(request):
     return render(request,'index.html')
 
-# ----- init -----
-init_db()
-print("\n-- Initialization Done --\n")
 
 @csrf_exempt
 def scheduler(request):

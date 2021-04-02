@@ -63,7 +63,7 @@ input#cf-submit-btn{
     align-items: center; 
 }
 
-#exp-end-panel,
+#hit-end-panel,
 #timeout-msg {
     display: none;
 }
