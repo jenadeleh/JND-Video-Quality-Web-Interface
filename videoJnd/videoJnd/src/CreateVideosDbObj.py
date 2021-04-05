@@ -1,4 +1,4 @@
-from videoJnd.models import VideoObj, Experiment
+from videoJnd.models import VideoObj
 import uuid
 
 def createVideosDbObj(exp_db_obj:object) -> bool:

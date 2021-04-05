@@ -2,20 +2,11 @@ from django.utils import timezone
 
 from videoJnd.src.QuestPlusJnd import QuestPlusJnd
 from videoJnd.models import VideoObj, Experiment, Participant
-from videoJnd.src.GetConfig import get_config
 from videoJnd.src.GenUrl import gen_video_url, random_side
 
 
 import random
-import uuid
-import copy
 import ast
-
-config = get_config()
-VIDEO_NUM_PER_HIT = config["VIDEO_NUM_PER_HIT"]
-RATING_PER_SRC = config["RATING_PER_SRC"]
-URL_PREFIX = config["URL_PREFIX"]
-SRC_NAME = config["SRC_NAME"]
 
 qp_obj = QuestPlusJnd()
 
@@ -26,6 +17,8 @@ def req_videos(recv_data:dict) -> dict:
     cur_exp_obj = Experiment.objects.filter(euid=recv_data["euid"])
     if cur_exp_obj:
         cur_exp_obj = cur_exp_obj[0]
+        exp_config = cur_exp_obj.configuration
+
         if cur_exp_obj.active == True:
             avl_videos  = _select_videos(cur_exp_obj)
 
@@ -45,7 +38,8 @@ def req_videos(recv_data:dict) -> dict:
                     elif cur_p.ongoing == False:# not ongoing, return new videos
                         _response = {}
                         _p_start_date = str(timezone.now())
-                        videos_info = _extract_info_avl_videos(recv_data["pname"], 
+                        videos_info = _extract_info_avl_videos(exp_config, 
+                                                                recv_data["pname"], 
                                                                 recv_data["puid"], 
                                                                 _p_start_date, 
                                                                 avl_videos)
@@ -68,6 +62,8 @@ def req_videos(recv_data:dict) -> dict:
         return {"status":"failed", "restype": "req_videos", "data":"experiment is not exist"}
     
 def _select_videos(cur_exp_obj:object) -> list:
+    exp_config = cur_exp_obj.configuration
+
     # filter videos that are not finished and not ongoing
     avl_videos_pool = VideoObj.objects.filter(
                                         exp=cur_exp_obj
@@ -79,7 +75,7 @@ def _select_videos(cur_exp_obj:object) -> list:
 
     
     # filter videos that have different content
-    avl_src = copy.deepcopy(SRC_NAME)
+    avl_src = exp_config["SRC_NAME"]
     avl_videos = []
 
     # select the videos randomly
@@ -93,23 +89,23 @@ def _select_videos(cur_exp_obj:object) -> list:
             avl_videos.append(video)
             avl_src.remove(src_name)
 
-        if len(avl_videos) == VIDEO_NUM_PER_HIT:
+        if len(avl_videos) == exp_config["VIDEO_NUM_PER_HIT"]:
             return avl_videos
 
     # if number of available videos is less than VIDEO_NUM_PER_HIT, then return []
     return []
 
-def _extract_info_avl_videos(pname:str, puid:str, pstart_date:str, avl_videos:list) -> list:
+def _extract_info_avl_videos(exp_config:dict, pname:str, puid:str, pstart_date:str, avl_videos:list) -> list:
     output = []
     for video_obj in avl_videos:
         # update video
         _add_p_to_video(video_obj, pname, puid, pstart_date)
-        video_uuid, side, qp, url = _gen_video_url(video_obj)
+        video_uuid, side, qp, url = _gen_video_url(exp_config, video_obj)
         output.append({"vuid":str(video_uuid), "side":side, "qp":str(qp), "url":url})
     
     return output
 
-def _gen_video_url(video_obj:object) -> tuple:
+def _gen_video_url(exp_config:object, video_obj:object) -> tuple:
     if video_obj.result_code:
         result_code = video_obj.result_code.split(",")
     else:
@@ -120,7 +116,9 @@ def _gen_video_url(video_obj:object) -> tuple:
 
     # generate url
     side  = random_side()
-    url = gen_video_url(video_obj.codec, 
+    url = gen_video_url(exp_config["URL_PREFIX"], 
+                        exp_config["URL_POSTFIX"],
+                        video_obj.codec, 
                         video_obj.source_video, 
                         video_obj.frame_rate, 
                         video_obj.crf, 
