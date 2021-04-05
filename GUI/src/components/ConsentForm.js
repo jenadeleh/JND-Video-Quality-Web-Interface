@@ -1,7 +1,7 @@
 import * as $ from 'jquery';
 import { sendMsg } from "./Connection"
 import { storeLocalData, getLocalData } from "../utils/ManageLocalData"
-import { calibration } from "./Calibration"
+import { checkCaliStatus, calibration, passCali } from "./Calibration"
 import { globalStatus } from "./GlobalStatus"
 
 export function req_inst_cf() {
@@ -31,7 +31,15 @@ export function submitCf(pname, pemail) {
 }
 
 function _passCF_action() {
-    calibration();// remove
+    $("#cf-panel").css("display", "none");
+
+    checkCaliStatus();
+    if (getLocalData("hasCalibrated") == "true") {
+        passCali();
+    } else { // need to do calibration
+        $("#cali-panel").css("display", "inline");
+        calibration();
+    }
 }
 
 function _process_response(response) {

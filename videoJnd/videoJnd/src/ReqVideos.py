@@ -11,9 +11,6 @@ import ast
 qp_obj = QuestPlusJnd()
 
 def req_videos(recv_data:dict) -> dict:
-    """
-    select <VIDEO_NUM_PER_HIT> videos which are not ongoing(ongoing=False).
-    """
     cur_exp_obj = Experiment.objects.filter(euid=recv_data["euid"])
     if cur_exp_obj:
         cur_exp_obj = cur_exp_obj[0]

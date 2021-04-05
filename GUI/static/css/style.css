@@ -1,14 +1,22 @@
 .main {
     margin: auto;
-    width: 640px;
+    width: 80%;
+    display: flex;
+    justify-content: center; 
 } 
+
+#video-pool {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+}
 
 .video-cover {
     width: 100%;
     height: 100%;
     position:absolute;
     background-color: #FFFFFF;
-  }
+}
 
 #guide-panel
 , #instruction-btn {
@@ -26,9 +34,13 @@
     font-size: 24px;
 }
 
+#cali-panel,
+#dist-panel,
 #hit-panel,
 #cf-panel,
-#instruction-modal {
+#instruction-modal,
+#hit-end-panel,
+#timeout-msg {
     display: none;
 }
 
@@ -42,10 +54,6 @@ input#cf-submit-btn{
     color: white;
 }
 
-#instruction-modal {
-    display: none;
-}
-
 #video-spinner {
     display: flex;
     justify-content: center; 
@@ -57,13 +65,18 @@ input#cf-submit-btn{
     visibility: visible;
 }
 
-#video-pool {
-    display: flex;
-    justify-content: center; 
-    align-items: center; 
+#cali-fit-btn {
+    visibility: hidden;
 }
 
-#hit-end-panel,
-#timeout-msg {
-    display: none;
+#cali-frame {
+    position: relative;
+    margin-left: 25%;
+    border-radius: 15px;
+    width:562px;
+    height:354px;
+    max-width: 1124px;
+    max-height: 708px;
+    border-style: solid;
+    border-color: red;
 }

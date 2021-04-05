@@ -49,8 +49,8 @@ export function processHit() {
     updateProgressBar(globalStatus.video_num - globalStatus.videos.length
                     , globalStatus.video_num);
 
-    clearTimeout(globalStatus.first_duration_timer);
-    clearTimeout(globalStatus.second_duration_timer);       
+    clearTimeout(globalStatus.FIRST_DURATION_timer);
+    clearTimeout(globalStatus.SECOND_DURATION_timer);       
 
     if (globalStatus.videos.length > 0) {
         displayVideos();
@@ -59,6 +59,13 @@ export function processHit() {
     } else {
         _endHit();
     }
+}
+
+export function adjustDist() {
+    console.log("++++")
+    $("#dist-panel").css("display", "none");
+    $("#hit-panel").css("display", "inline");
+    actNextHitBtn();
 }
 
 function _playCurVideo() {
@@ -89,3 +96,4 @@ function sendResult() {
     globalStatus.result = [];
     sendMsg(send_data);
 }
+

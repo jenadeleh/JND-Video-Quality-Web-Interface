@@ -4,17 +4,17 @@ import { globalStatus } from "./GlobalStatus"
 import { addResultToCurVideo, processHit } from "./BtnActions"
 
 export function setTimer() {
-    globalStatus.first_duration_timer = setTimeout(()=> { 
+    globalStatus.FIRST_DURATION_timer = setTimeout(()=> { 
         _display_warning_info();
-        _second_duration_timer();
-    }, config.first_duration);
+        _SECOND_DURATION_timer();
+    }, config.FIRST_DURATION);
 }
 
-function _second_duration_timer() {
-    globalStatus.second_duration_timer = setTimeout(()=> { 
+function _SECOND_DURATION_timer() {
+    globalStatus.SECOND_DURATION_timer = setTimeout(()=> { 
         addResultToCurVideo("no decision"); 
         processHit();
-    }, config.second_duration);  
+    }, config.SECOND_DURATION);  
 }
 
 function _display_warning_info() {

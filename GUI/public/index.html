@@ -52,6 +52,42 @@
         </div>
     </div>
 
+    <div id="cali-panel">
+        <h3>Calibration</h3>
+        <h4>To increase the accuracy of your work, please do the calibration before the experiment. <br><br>Please prepare a bank-card, or something with a similar size. Use keyboard &#x2191; and &#x2193;, or click button &#x2191; and &#x2193; to adjust the frame until the frame fits the card size.<br>
+          <br>For Mac touchpad users, please use a hard-press (called Force click) to click the buttons. </h4>
+        <div style="vertical-align: middle;">
+
+          <img alt="calibration example" src="https://media.mmsp-kn.de/image-JND/jnd_video/instruction/calibration_exp.png">
+        </div>
+        <hr>
+        <div>
+          <button type="button" id="cali-inst-btn" class="btn btn-info ctl" data-toggle="modal" href="#cali-inst-modal">How?</button>&nbsp;
+          <button type="button" id="cali-zoom-in-btn" class="btn btn-warning ctl">&#x2191; Increasing</button>&nbsp;
+          <button type="button" id="cali-zoom-out-btn" class="btn btn-primary ctl">&#x2193; Decreasing</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <button type="button" id="cali-fit-btn" class="btn btn-success ctl">&radic;&nbsp;  fitted</button>
+        </div>
+        <br>
+        <div id="cali-frame" style="text-align:left;">
+          <h5>&#x2190;place your card on the left</h5>
+        </div>
+        <br>
+    </div>
+
+    <div id="dist-panel">
+        <div>
+          <img style="width: 400px; height: 400px;" src="https://media.mmsp-kn.de/image-JND/jnd_video/instruction/distance.png">
+        </div>
+        <br>
+        <h4 id="dist-value"></h4>
+        <p>Reference length</p>
+        <p>A4 Paper: 21cm x 29.7cm (8.3inch x 11.7inch)</p>
+        <p id="dist-browser-width"></p>
+        <div>
+          <button type="button" id="cali-adjust-dist" class="btn btn-info ctl">I adjusted my distance.</button>
+        </div>
+      </div>
+
     <div id="hit-panel" >
         <div id="instruction-btn">
             <span><a data-toggle="modal" href="#instruction-modal">Instruction</a></span>
@@ -136,6 +172,45 @@
 
             <div class="modal-footer">  
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>  
+            </div>  
+        </div>
+    </div> 
+  </div>
+
+  <div class="modal fade" id="cali-inst-modal" tabindex="-1" role="dialog">  
+    <div class="modal-dialog modal-lg">  
+        <div class="modal-content">  
+            <div class="modal-header">  
+                <h4 class="modal-title">Instruction</h4>  
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>  
+
+            <div class="modal-body">
+              <p><iframe frameborder="0" width="100%" height="480px" src="https://www.youtube.com/embed/__JsM0KKF2U" allowfullscreen></iframe></p>
+
+            </div>
+
+            <div class="modal-footer">  
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>  
+            </div>  
+        </div>
+    </div> 
+  </div>
+
+  <div class="modal fade" id="reminder" tabindex="-1" role="dialog">  
+    <div class="modal-dialog modal-lg">  
+        <div class="modal-content">  
+            <div class="modal-header">  
+                <h4 class="modal-title">Reminder</h4>  
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>  
+
+            <div class="modal-body">
+              <h3 id="reminder-modal-text"></h3>
+            </div>
+
+            <div class="modal-footer">  
+                <button id="reminder-modal-btn" type="button" class="btn btn-default btn-success" data-dismiss="modal"></button>  
             </div>  
         </div>
     </div> 

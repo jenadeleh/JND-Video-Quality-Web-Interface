@@ -49,7 +49,7 @@ function _addAllVideosToDom(videos_info) {
                                     data-qp=${qp}
                                     style="z-index:-1; height: ${globalStatus.video_h}px; width: ${globalStatus.video_w}px;"
                                     >
-                                    <video class="vd" loop="loop" muted id=${vuid}>
+                                    <video class="vd" loop="loop" muted id=${vuid} height="${globalStatus.video_h}" width="${globalStatus.video_w}">
                                         <source src=${url} 
                                             type='video/mp4'
                                         >

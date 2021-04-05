@@ -1,10 +1,10 @@
 import * as $ from 'jquery';
-import { actStartExpBtn, actDecisionBtn, actNextHitBtn} from "./BtnActions"
+import { actStartExpBtn, actDecisionBtn, actNextHitBtn, adjustDist} from "./BtnActions"
 import { submitCf } from "./ConsentForm"
 import { storeLocalData } from "../utils/ManageLocalData"
 
 export function initDoms() {
-    $('#start-exp-btn').on('click', ()=> {
+    $('#start-exp-btn').on('click', (e)=> {
         actStartExpBtn();
     });
     
@@ -12,9 +12,15 @@ export function initDoms() {
         actDecisionBtn(e);
     });
 
-    $('#next-hit-btn').on('click', ()=> {
+    $('#next-hit-btn').on('click', (e)=> {
         actNextHitBtn();
     });
+
+    $("#cali-adjust-dist").on('click', (e)=> {
+        adjustDist();
+    });
+
+
 
     let $cf_form = $("#cf-form");
     $cf_form.on("submit", () =>{ 

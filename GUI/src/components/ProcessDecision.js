@@ -8,8 +8,8 @@ import { displayVideo } from "./LoadVideos"
 export function processDecision(decision) {
 
     // clear timer
-    clearTimeout(globalStatus.first_duration_timer);
-    clearTimeout(globalStatus.second_duration_timer);
+    clearTimeout(globalStatus.FIRST_DURATION_timer);
+    clearTimeout(globalStatus.SECOND_DURATION_timer);
 
     // update control panel
     $("#warning-cover").css("display", "none");
