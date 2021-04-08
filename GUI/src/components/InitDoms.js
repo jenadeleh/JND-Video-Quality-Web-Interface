@@ -21,7 +21,6 @@ export function initDoms() {
     });
 
 
-
     let $cf_form = $("#cf-form");
     $cf_form.on("submit", () =>{ 
         let params = {};

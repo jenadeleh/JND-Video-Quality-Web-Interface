@@ -1,5 +1,5 @@
 import * as $ from 'jquery';
-import { config } from "./Config"
+import { config } from "./Configuration"
 import { globalStatus } from "./GlobalStatus"
 import { addResultToCurVideo, processHit } from "./BtnActions"
 

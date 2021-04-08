@@ -62,7 +62,6 @@ export function processHit() {
 }
 
 export function adjustDist() {
-    console.log("++++")
     $("#dist-panel").css("display", "none");
     $("#hit-panel").css("display", "inline");
     actNextHitBtn();

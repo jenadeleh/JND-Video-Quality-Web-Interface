@@ -1,6 +1,6 @@
 import * as $ from 'jquery';
 import { storeLocalData, getLocalData } from "../utils/ManageLocalData";
-import { config } from "./Config"; 
+import { config } from "./Configuration"; 
 import { globalStatus } from "./GlobalStatus";
 
 export function calibration() {
