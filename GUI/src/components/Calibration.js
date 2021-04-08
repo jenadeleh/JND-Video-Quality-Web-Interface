@@ -4,6 +4,10 @@ import { config } from "./Configuration";
 import { globalStatus } from "./GlobalStatus";
 
 export function calibration() {
+        if (getLocalData("hasCalibrated") === null) {
+            storeLocalData("hasCalibrated", "false");
+        }
+
         incCaliFrame();
         decCaliFrame();
 
@@ -12,6 +16,7 @@ export function calibration() {
             storeLocalData("cali_time", cali_time);
             globalStatus.os_info["cali_time"] = cali_time
             _scaleMediaSize();
+            globalStatus.display_panel = "dist-panel";
         });
 }
 
@@ -65,8 +70,8 @@ function incCaliFrame() {
     $("#cali-zoom-in-btn").on('mousedown', (e)=>  {
         if (e.which == 1) { // left key 1, 2, scroll, 3, right key
             $("#cali-fit-btn").css("visibility", "visible");
-            _recordStartTime();
-            frameInterval = setInterval(()=>_increase(),30);
+            recordCaliStartTime();
+            frameInterval = setInterval(()=>increase(),30);
         }
     })
     
@@ -88,8 +93,8 @@ function decCaliFrame() {
     $("#cali-zoom-out-btn").on('mousedown', (e)=>  {
         if (e.which == 1) { // lefy key 1, 2, scroll, 3, right key
             $("#cali-fit-btn").css("visibility", "visible");
-            _recordStartTime();
-            frameInterval = setInterval(()=>_decrease(),30);
+            recordCaliStartTime();
+            frameInterval = setInterval(()=>decrease(),30);
         }
     })
 
@@ -107,18 +112,18 @@ function decCaliFrame() {
 }
 
 
-function _increase() {
+export function increase() {
     $("#cali-frame").width($("#cali-frame").width() * 1.005)
                     .height($("#cali-frame").height() * 1.005);
 }
 
-function _decrease() {
+export function decrease() {
     $("#cali-frame").width($("#cali-frame").width() / 1.005)
                     .height($("#cali-frame").height() / 1.005);
 }
 
 
-function _recordStartTime() {
+export function recordCaliStartTime() {
     globalStatus.cali_start_time = (new Date()).getTime();
 }
 

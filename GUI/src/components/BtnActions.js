@@ -6,7 +6,7 @@ import { getLocalData } from "../utils/ManageLocalData"
 import { sendMsg } from "./Connection"
 import { setTimer } from "./Timer"
 
-export function actStartExpBtn() {
+export function actStartExpBtn(e) {
     $("#start-exp-btn").attr("disabled", true)
                     .css("display", "none");
 
@@ -27,6 +27,7 @@ export function actNextHitBtn() {
     $("#start-exp-btn").css("display", "inline");
     $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "visible");
     $(".decision-btn").attr("disabled", true);
+    globalStatus.display_panel = "hit-panel";
     // request new videos
     reqLoadVideos(getLocalData("pname"), getLocalData("puid"), getLocalData("euid"));
 }
@@ -84,6 +85,7 @@ function _displayUIComponents() {
     $(".decision-btn").attr("disabled")
     $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "hidden");
     $("#hit-end-panel").css("display", "inline");
+    globalStatus.display_panel = "next-hit-panel";
     updateProgressBar(0, globalStatus.video_num);
 }
 

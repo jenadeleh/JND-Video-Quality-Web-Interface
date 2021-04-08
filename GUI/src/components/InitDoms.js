@@ -2,6 +2,7 @@ import * as $ from 'jquery';
 import { actStartExpBtn, actDecisionBtn, actNextHitBtn, adjustDist} from "./BtnActions"
 import { submitCf } from "./ConsentForm"
 import { storeLocalData } from "../utils/ManageLocalData"
+import { globalStatus } from "./GlobalStatus";
 
 export function initDoms() {
     $('#start-exp-btn').on('click', (e)=> {
@@ -13,6 +14,7 @@ export function initDoms() {
     });
 
     $('#next-hit-btn').on('click', (e)=> {
+        globalStatus.display_panel = "hit-panel";
         actNextHitBtn();
     });
 

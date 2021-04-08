@@ -19,4 +19,5 @@ export const globalStatus = {
     isTheSameBrowser: true,
     isNotZoomedBrowser: true,
     reso_warnings: "",
+    display_panel: "dist-panel",
 }
