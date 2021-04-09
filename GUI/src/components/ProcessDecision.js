@@ -24,9 +24,7 @@ export function processDecision(decision) {
     // TODO: store result
 
     // check experiment is finished or not
-    if (globalStatus.task_finished_num < globalStatus.task_num) {
-        
-    } else if (globalStatus.task_finished_num == globalStatus.task_num) {
+    if (globalStatus.task_finished_num == globalStatus.task_num) {
         _end_exp();
     }
 }
