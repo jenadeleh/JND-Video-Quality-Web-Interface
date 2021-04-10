@@ -91,6 +91,7 @@ function _displayUIComponents() {
 
 function sendResult() {
     let send_data = {"action":"record_result",
+                    "euid":getLocalData("euid"),
                     "pname": getLocalData("pname"),
                     "puid": getLocalData("puid"),
                     "result": globalStatus.result};

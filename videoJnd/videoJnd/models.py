@@ -46,7 +46,6 @@ class VideoObj(models.Model):
     qp = models.TextField(max_length=4096, editable=False, null=True, blank=True)
     result_orig = models.TextField(max_length=4096, editable=False, null=True, blank=True)
     result_code = models.TextField(max_length=4096, editable=False, null=True, blank=True)
-    participant_result = models.TextField(max_length=4096, editable=False, null=False, blank=False)
     is_finished = models.BooleanField(default=False, editable=False)
     cur_participant = models.CharField(max_length=20, editable=False, null=True, blank=True)
     cur_participant_uid = models.CharField(max_length=50, editable=False, null=True, blank=True)
@@ -66,15 +65,13 @@ class Participant(models.Model):
     videos = models.TextField(max_length=4096, default="", editable=False)
     ongoing = models.BooleanField(default=False, editable=False)
 
-class RatingHistory(models.Model):
-    puid = models.UUIDField(editable=False, null=True, blank=True)
-    pname = models.CharField(max_length=20, editable=False, null=False, blank=False)
+class Assignment(models.Model):
+    auid = models.UUIDField(editable=False, null=True, blank=True)
     exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
-    vuid = models.UUIDField(editable=False, null=True, blank=True)
-    side = models.CharField(max_length=10, editable=False, null=False, blank=False)
-    qp = models.CharField(max_length=10, editable=False, null=False, blank=False)
-    decision = models.CharField(max_length=10, editable=False, null=False, blank=False)
-    result_orig = models.CharField(max_length=10, editable=False, null=False, blank=False)
-    update_time = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
+    pname = models.CharField(max_length=20, editable=False, null=False, blank=False)
+    puid = models.CharField(max_length=64, editable=False, null=False, blank=False)
+    # pemail = models.EmailField(max_length=30, editable=False, default="", null=True, blank=True)
+    result = models.TextField(max_length=40960, default="", editable=False)
+    submit_time = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
 
 

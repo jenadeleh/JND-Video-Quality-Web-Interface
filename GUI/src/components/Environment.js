@@ -20,8 +20,8 @@ export function _envCheck() {
         getLocalData("hasCalibrated") == "true"
     ) {
         if (
-            screen.availWidth != getLocalData("screen_width") || 
-            screen.availHeight != getLocalData("screen_height")
+            screen.availWidth != getLocalData("availWidth") || 
+            screen.availHeight != getLocalData("availHeight")
         ) {
             showWarningCover("same_monitor");
             globalStatus.isTheSameBrowser = false;

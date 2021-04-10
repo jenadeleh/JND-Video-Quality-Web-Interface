@@ -1,7 +1,7 @@
 from videoJnd.models import VideoObj
 import uuid
 
-def createVideosDbObj(exp_db_obj:object) -> bool:
+def createVideoObj(exp_db_obj:object) -> bool:
     if _doesExpVideosExist(exp_db_obj) == False:
         _create_videos_db(exp_db_obj)
         exp_db_obj.has_created_videos = True

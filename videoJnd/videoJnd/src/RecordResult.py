@@ -1,7 +1,7 @@
 from django.utils import timezone
 
 from videoJnd.src.QuestPlusJnd import QuestPlusJnd
-from videoJnd.models import VideoObj, Experiment, Participant, RatingHistory
+from videoJnd.models import VideoObj, Experiment, Participant, Assignment
 from videoJnd.src.GetConfig import get_config
 
 
@@ -14,10 +14,18 @@ config = get_config()
 QP_TRIAL_NUM = config["QP_TRIAL_NUM"]
 
 def record_result(recv_data:dict) -> dict:
+
     p_obj = Participant.objects.filter(puid=recv_data["puid"])
     if p_obj:
         p_obj = p_obj[0]
         result = recv_data["result"]
+        
+        exp_obj = Experiment.objects.filter(euid=recv_data["euid"])[0]
+        Assignment(auid = uuid.uuid4()
+                    , exp = exp_obj
+                    , pname = recv_data["pname"]
+                    , puid = recv_data["puid"]
+                    , result = recv_data["result"]).save()
 
         for video_result in result:
             video_obj = VideoObj.objects.filter(vuid=video_result["vuid"])
@@ -26,9 +34,6 @@ def record_result(recv_data:dict) -> dict:
                 video_obj = video_obj[0]
                 if video_obj.ongoing:
                     _update_video_db(video_result, video_obj)
-                    # TODO: add history, for each request or each video?
-                    # TODO: participant DB, change to task DB, 
-                    # TODO: record gt-side, reported side
 
                 else:
                     return {"status":"failed", 

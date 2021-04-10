@@ -1,7 +1,7 @@
 from django.utils import timezone
 
 from videoJnd.src.QuestPlusJnd import QuestPlusJnd
-from videoJnd.models import VideoObj, Experiment, Participant
+from videoJnd.models import VideoObj, Experiment, Participant, Assignment
 from videoJnd.src.GenUrl import gen_video_url, random_side
 
 
@@ -97,8 +97,17 @@ def _extract_info_avl_videos(exp_config:dict, pname:str, puid:str, pstart_date:s
     for video_obj in avl_videos:
         # update video
         _add_p_to_video(video_obj, pname, puid, pstart_date)
-        video_uuid, side, qp, url = _gen_video_url(exp_config, video_obj)
-        output.append({"vuid":str(video_uuid), "side":side, "qp":str(qp), "url":url})
+        video_uuid, source_video, codec, frame_rate, crf, side, qp_count, qp, url = _gen_video_url(exp_config, video_obj)
+
+        output.append({"vuid":str(video_uuid), 
+                        "source_video":source_video, 
+                        "codec": codec,
+                        "frame_rate": frame_rate, 
+                        "crf": crf,
+                        "side":side, 
+                        "qp":str(qp), 
+                        "qp_count": qp_count,
+                        "url":url})
     
     return output
 
@@ -122,7 +131,15 @@ def _gen_video_url(exp_config:object, video_obj:object) -> tuple:
                         qp, 
                         side)
 
-    return (str(video_obj.vuid), side, qp, url)
+    return (str(video_obj.vuid), 
+            video_obj.source_video, 
+            video_obj.codec, 
+            video_obj.frame_rate, 
+            video_obj.crf, 
+            side,
+            video_obj.qp_count, 
+            qp, 
+            url)
 
 def _add_p_to_video(video_obj:object, pname:str, puid:str, pstart_date:str) -> None:
     video_obj.ongoing = True
