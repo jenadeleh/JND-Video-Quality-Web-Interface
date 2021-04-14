@@ -16,14 +16,22 @@
         <br/>
         <div id="warning-msg"></div>
     </div>
-
     <br/>
+    <div id="msg-panel"></div>
+    <div id="inst-panel">
+        <h3>Instruction</h3>
+        <div class="instruction-content"></div>
+        <div id="read-inst-div">
+            <button id="read-inst-btn" type="button" class="btn btn-primary"></button>
+        </div>
+        <br/>
+    </div>
     <div id="cf-panel">
         <div id="cf-content"></div>
         <div>
             <form id="cf-form" action="">
                 <p>
-                    <label for="pname">Please enter your name or ID:</label>
+                    <label for="pname">Please enter your name:</label>
                     <input type="text" 
                             id="cf-pname" 
                             name="pname" 
@@ -40,7 +48,7 @@
                             id="cf-pemail" 
                             name="pemail"
                             pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" 
-                            size="30">
+                            size="30" required>
                 <p>
         
                 <p>
@@ -158,8 +166,6 @@
                     aria-valuenow="0">
                 </div>
             </div>
-
-          <!-- <button class="submit btn btn-success ctl">Submit Result</button>  -->
         </div>
     </div>
 
@@ -202,7 +208,7 @@
     </div> 
   </div>
 
-  <div class="modal fade" id="reminder" tabindex="-1" role="dialog">  
+  <div class="modal fade" id="reminder-modal" tabindex="-1" role="dialog">  
     <div class="modal-dialog modal-lg">  
         <div class="modal-content">  
             <div class="modal-header">  

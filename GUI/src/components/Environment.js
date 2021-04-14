@@ -57,16 +57,12 @@ export function checkEnvBackground() {
 }
 
 export function getBrowserInfo() {
-
+    let targeted_key = ["platform", "devicePixelRatio", "cookieEnabled", "language", "userAgent", "vendor"];
     for (let key in window.navigator) {
         if (!$.isFunction(window.navigator[key]) && typeof window.navigator[key] != 'object') {
-            globalStatus.os_info[key] = window.navigator[key];
-        }
-    }  
-    
-    for (let key in window.screen) {
-        if (!$.isFunction(window.navigator[key]) && typeof window.navigator[key] != 'object') {
-            globalStatus.os_info[key] = window.navigator[key];
+            if (targeted_key.includes(key)) {
+                globalStatus.os_info[key] = window.navigator[key];
+            }
         }
     }  
 
@@ -74,11 +70,6 @@ export function getBrowserInfo() {
     globalStatus.os_info["screen_resolution_h"] = screen.height;
     globalStatus.os_info["devicePixelRatio"] = window.devicePixelRatio;
     globalStatus.os_info["TimeZone"] = (-new Date().getTimezoneOffset()/60);
-
-    $.getJSON('https://ipapi.co/json/', function(data) {
-        let ip_info = JSON.stringify(data, null, 2);
-        globalStatus.os_info["ip_info"] += ip_info;
-    });  
 }
 
 export function isPC() {

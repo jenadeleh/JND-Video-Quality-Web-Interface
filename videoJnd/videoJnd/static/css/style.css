@@ -5,7 +5,8 @@
     justify-content: center; 
 } 
 
-#video-pool {
+#video-pool,
+#msg-panel{
     display: flex;
     justify-content: center; 
     align-items: center; 
@@ -30,17 +31,19 @@
     display: none;
 }
 
-
-
 #question {
     font-size: 24px;
 }
 
+#msg-panel,
+#inst-panel,
 #cali-panel,
 #dist-panel,
 #hit-panel,
 #cf-panel,
 #instruction-modal,
+#cali-inst-modal,
+#reminder-modal,
 #hit-end-panel,
 #timeout-msg
 #warning-cover {
@@ -93,4 +96,9 @@ input#cf-submit-btn{
     height: 100%;
     background: rgba(213, 213, 213, 0.9);
     z-index: 9999;
+}
+
+#read-inst-div {
+    display: flex;
+    justify-content: flex-end;  
 }

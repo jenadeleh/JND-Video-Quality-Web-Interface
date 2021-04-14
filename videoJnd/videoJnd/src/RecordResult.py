@@ -18,16 +18,21 @@ def record_result(recv_data:dict) -> dict:
     p_obj = Participant.objects.filter(puid=recv_data["puid"])
     if p_obj:
         p_obj = p_obj[0]
-        result = recv_data["result"]
+        _result = recv_data["data"]["result"]
+        cali_info = recv_data["data"]["cali_info"]
+        os_info = recv_data["data"]["os_info"]
         
         exp_obj = Experiment.objects.filter(euid=recv_data["euid"])[0]
         Assignment(auid = uuid.uuid4()
                     , exp = exp_obj
-                    , pname = recv_data["pname"]
+                    , pname = p_obj.name
+                    , email = p_obj.email
                     , puid = recv_data["puid"]
-                    , result = recv_data["result"]).save()
+                    , result = _result
+                    , calibration = cali_info
+                    , operation_system = os_info).save()
 
-        for video_result in result:
+        for video_result in _result:
             video_obj = VideoObj.objects.filter(vuid=video_result["vuid"])
 
             if video_obj:

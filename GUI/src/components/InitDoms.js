@@ -3,6 +3,7 @@ import { actStartExpBtn, actDecisionBtn, actNextHitBtn, adjustDist} from "./BtnA
 import { submitCf } from "./ConsentForm"
 import { storeLocalData } from "../utils/ManageLocalData"
 import { globalStatus } from "./GlobalStatus";
+import { passCF_action } from "./ConsentForm"
 
 export function initDoms() {
     $('#start-exp-btn').on('click', (e)=> {
@@ -14,7 +15,7 @@ export function initDoms() {
     });
 
     $('#next-hit-btn').on('click', (e)=> {
-        globalStatus.display_panel = "hit-panel";
+        globalStatus.exp_status = "hit_panel";
         actNextHitBtn();
     });
 
@@ -22,6 +23,14 @@ export function initDoms() {
         adjustDist();
     });
 
+    $("#read-inst-btn").on('click', (e)=> {
+        $("#inst-panel").css("display", "none");
+        if (globalStatus.ispexist) {
+            passCF_action();
+        } else {
+            $("#cf-panel").css("display", "inline");
+        }
+    });
 
     let $cf_form = $("#cf-form");
     $cf_form.on("submit", () =>{ 

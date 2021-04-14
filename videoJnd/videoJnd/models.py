@@ -24,14 +24,16 @@ class InterfaceText(models.Model):
     text_end_hit = RichTextField(default="", null=False, blank=False)
     timeout_msg = models.TextField(max_length=4096, default="", null=False, blank=False)
     btn_text_end_hit = models.TextField(max_length=4096, default="", null=False, blank=False)
+    instruction_btn_text = models.CharField(max_length=20, default="", null=False, blank=False)
+    no_available_exp = RichTextField(default="", null=False, blank=False)
 
 class Instruction(models.Model):
     title = models.CharField(max_length=20, default="Instruction", editable=False)
-    description = RichTextField()
+    description = RichTextField(default="", null=False, blank=False)
 
 class ConsentForm(models.Model):
     title = models.CharField(max_length=20, default="Consent Form", editable=False)
-    description = RichTextField()
+    description = RichTextField(default="", null=False, blank=False)
 
 class VideoObj(models.Model):
     vuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -69,9 +71,12 @@ class Assignment(models.Model):
     auid = models.UUIDField(editable=False, null=True, blank=True)
     exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
     pname = models.CharField(max_length=20, editable=False, null=False, blank=False)
+    email = models.EmailField(max_length=30, editable=False, default="", null=False, blank=False)
     puid = models.CharField(max_length=64, editable=False, null=False, blank=False)
     # pemail = models.EmailField(max_length=30, editable=False, default="", null=True, blank=True)
     result = models.TextField(max_length=40960, default="", editable=False)
+    calibration = models.TextField(max_length=40960, default="", editable=False)
+    operation_system = models.TextField(max_length=40960, default="", editable=False)
     submit_time = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
 
 

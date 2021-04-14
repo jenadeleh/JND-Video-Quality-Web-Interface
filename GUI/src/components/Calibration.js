@@ -16,7 +16,7 @@ export function calibration() {
             storeLocalData("cali_time", cali_time);
             globalStatus.os_info["cali_time"] = cali_time
             _scaleMediaSize();
-            globalStatus.display_panel = "dist-panel";
+            globalStatus.exp_status = "dist_panel";
         });
 }
 
@@ -158,7 +158,7 @@ function _scaleMediaSize() {
     } else {
         $("#reminder-modal-text").html(config.WARNING_MESSAGE["incorrect_cali"]);
         $("#reminder-modal-btn").html("OK");
-        $("#reminder").modal("show");
+        $("#reminder-modal").modal("show");
     }
 }
 

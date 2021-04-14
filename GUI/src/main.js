@@ -5,6 +5,4 @@ import 'bootstrap-slider/dist/css/bootstrap-slider.min.css';
 
 import { initGUI } from "./components/InitGUI"
 
-
-
 initGUI();

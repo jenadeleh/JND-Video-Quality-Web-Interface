@@ -13,7 +13,7 @@ export function actStartExpBtn(e) {
     $("#left-btn, #right-btn").attr("disabled", false);
 
     _playCurVideo();
-    setTimer();
+    globalStatus.exp_status = "decision";
 }
 
 export function actDecisionBtn(e) {
@@ -27,8 +27,9 @@ export function actNextHitBtn() {
     $("#start-exp-btn").css("display", "inline");
     $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "visible");
     $(".decision-btn").attr("disabled", true);
-    globalStatus.display_panel = "hit-panel";
+    globalStatus.exp_status = "hit_panel";
     // request new videos
+
     reqLoadVideos(getLocalData("pname"), getLocalData("puid"), getLocalData("euid"));
 }
 
@@ -56,7 +57,6 @@ export function processHit() {
     if (globalStatus.videos.length > 0) {
         displayVideos();
         _playCurVideo();
-        setTimer();
     } else {
         _endHit();
     }
@@ -69,10 +69,17 @@ export function adjustDist() {
 }
 
 function _playCurVideo() {
-    let vuid = globalStatus.cur_video["vuid"];
-    $(`#${vuid}`).get(0).play();
+    const promise = new Promise(function(resolve, reject) {
+        let vuid = globalStatus.cur_video["vuid"];
+        $(`#${vuid}`).get(0).play();
+        resolve();
+      });
 
-    globalStatus.cur_video["start_time"] = new Date().getTime();
+    promise.then(function () {
+        globalStatus.cur_video["start_time"] = new Date().getTime();
+        setTimer();
+        globalStatus.exp_status = "decision";
+    })
 }
 
 function _endHit() {
@@ -85,17 +92,30 @@ function _displayUIComponents() {
     $(".decision-btn").attr("disabled")
     $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "hidden");
     $("#hit-end-panel").css("display", "inline");
-    globalStatus.display_panel = "next-hit-panel";
+    globalStatus.exp_status = "next-hit-panel";
     updateProgressBar(0, globalStatus.video_num);
 }
 
 function sendResult() {
-    let send_data = {"action":"record_result",
-                    "euid":getLocalData("euid"),
-                    "pname": getLocalData("pname"),
-                    "puid": getLocalData("puid"),
-                    "result": globalStatus.result};
+
+    let cali_info = {};
+
+    ["cali_time", "browser_width_cm", "browser_height_cm", "devicePixelRatio", "px_cm_rate"].forEach((el)=>{
+        cali_info[el] = getLocalData(el);
+    });
+
+    let send_data = {
+                        "action":"record_result",
+                        "euid":getLocalData("euid"),
+                        "pname": getLocalData("pname"),
+                        "puid": getLocalData("puid"),
+                        "data": {"result":globalStatus.result,
+                                "os_info": globalStatus.os_info,
+                                "cali_info": cali_info}
+                    };
     globalStatus.result = [];
     sendMsg(send_data);
 }
+
+
 

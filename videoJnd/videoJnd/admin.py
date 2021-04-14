@@ -59,7 +59,9 @@ class InterfaceTextAdmin(admin.ModelAdmin):
                     "text_end_exp",
                     "text_end_hit",
                     "timeout_msg",
-                    "btn_text_end_hit")
+                    "btn_text_end_hit",
+                    "instruction_btn_text",
+                    "no_available_exp")
 
     def has_add_permission(self, request):
         """ only one 'instruction' object can be created """
@@ -127,7 +129,14 @@ class VideoObjAdmin(admin.ModelAdmin):
                     , "qp_count"
                     , "codec"]
 
-    list_filter = ("exp",)
+    list_filter = ("source_video"
+                    , "exp"
+                    , "frame_rate"
+                    , "crf"
+                    , "rating"
+                    , "ongoing"
+                    , "qp_count"
+                    , "codec")
 
     list_per_page = 200
 
@@ -143,6 +152,7 @@ class ParticipantAdmin(admin.ModelAdmin):
                     , "start_date"
                     , "puid")
 
+    list_filter = ("email", "exp", "ongoing")
 
     list_per_page = 200
 
@@ -154,11 +164,17 @@ class AssignmentAdmin(admin.ModelAdmin):
     list_display = ("auid"
                     , "exp"
                     , "pname"
+                    , "email"
                     , "puid"
                     , "result"
+                    , "calibration"
+                    , "operation_system"
                     , "submit_time")
 
     list_per_page = 200
+
+    list_filter = ("exp", "pname", "email")
+
 
     actions = ["export_as_csv"]
 

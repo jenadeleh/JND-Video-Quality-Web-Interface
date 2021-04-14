@@ -14,33 +14,36 @@ export function keyboardControl(){
             case 13://space
             case 32://enter
 
-                if(globalStatus.display_panel == "dist-panel") {
+                if(globalStatus.exp_status == "dist_panel") {
                     adjustDist();
-                    globalStatus.display_panel = "hit-panel";
-                } else if(globalStatus.display_panel == "hit-panel") {
+                } else if(globalStatus.exp_status == "hit_panel") {
                     actStartExpBtn();
-                    globalStatus.display_panel = "";
-                } else if(globalStatus.display_panel == "next-hit-panel") {
+                } else if(globalStatus.exp_status == "next-hit-panel") {
                     actNextHitBtn();
                 }
                 break;
             
             case 37: // left arrow
-                addResultToCurVideo("L");
-                processHit();
+                if(globalStatus.exp_status == "decision") {
+                    addResultToCurVideo("L");
+                    processHit();
+                }
                 break
 
             case 39: // right arrow
-                addResultToCurVideo("R");
-                processHit();
+                if(globalStatus.exp_status == "decision") {
+                    addResultToCurVideo("R");
+                    processHit();
+                }
                 break
             
             case 40: // down arrow
-                if ($("#not-sure-btn").attr("disabled") != "disabled") {
-                    addResultToCurVideo("not sure");
-                    processHit();
+                if(globalStatus.exp_status == "decision") {
+                    if ($("#not-sure-btn").attr("disabled") != "disabled") {
+                        addResultToCurVideo("not sure");
+                        processHit();
+                    }
                 }
-
                 break
 
             default:
