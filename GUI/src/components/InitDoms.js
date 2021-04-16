@@ -1,9 +1,8 @@
 import * as $ from 'jquery';
-import { actStartExpBtn, actDecisionBtn, actNextHitBtn, adjustDist} from "./BtnActions"
+import { readInst, actStartExpBtn, actDecisionBtn, actNextHitBtn, adjustDist} from "./BtnActions"
 import { submitCf } from "./ConsentForm"
 import { storeLocalData } from "../utils/ManageLocalData"
 import { globalStatus } from "./GlobalStatus";
-import { passCF_action } from "./ConsentForm"
 
 export function initDoms() {
     $('#start-exp-btn').on('click', (e)=> {
@@ -24,12 +23,7 @@ export function initDoms() {
     });
 
     $("#read-inst-btn").on('click', (e)=> {
-        $("#inst-panel").css("display", "none");
-        if (globalStatus.ispexist) {
-            passCF_action();
-        } else {
-            $("#cf-panel").css("display", "inline");
-        }
+        readInst();
     });
 
     let $cf_form = $("#cf-form");

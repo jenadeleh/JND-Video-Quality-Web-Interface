@@ -47,9 +47,9 @@ def req_videos(recv_data:dict) -> dict:
 
                     return {"status":"successful", "restype": "req_videos", "data":_response}
             else:
-                return {"status":"failed", "restype": "req_videos", "data":"no available video"}
+                return {"status":"failed", "restype": "req_videos", "data":interface_text.text_end_exp}
         else:
-            return {"status":"failed", "restype": "req_videos", "data":"experiment is not active"}
+            return {"status":"failed", "restype": "req_videos", "data":interface_text.no_available_exp}
     else:
         return {"status":"failed", "restype": "req_videos", "data":"experiment is not exist"}
     

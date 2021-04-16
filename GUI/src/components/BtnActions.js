@@ -5,6 +5,7 @@ import { updateProgressBar } from "./ProgressBar"
 import { getLocalData } from "../utils/ManageLocalData"
 import { sendMsg } from "./Connection"
 import { setTimer } from "./Timer"
+import { passCF_action } from "./ConsentForm"
 
 export function actStartExpBtn(e) {
     $("#start-exp-btn").attr("disabled", true)
@@ -67,6 +68,16 @@ export function adjustDist() {
     $("#hit-panel").css("display", "inline");
     actNextHitBtn();
 }
+
+export function readInst() {
+    $("#inst-panel").css("display", "none");
+    if (globalStatus.ispexist) {
+        passCF_action();
+    } else {
+        $("#cf-panel").css("display", "inline");
+    }
+}
+
 
 function _playCurVideo() {
     const promise = new Promise(function(resolve, reject) {

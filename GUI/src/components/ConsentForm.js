@@ -69,6 +69,7 @@ function _process_response(response) {
 
     } else if (response["status"] == "failed") {
         $("#msg-panel").html(response["data"]).css("display", "inline");
+        clearTimeout(globalStatus.env_bg_interval);
         return response["data"];
     }
 }
@@ -93,6 +94,7 @@ function _render_interface_text(instruction,
 
 function _render_instruction(instruction) {
     $(".instruction-content").html(instruction);
+    globalStatus.exp_status = "inst_panel";
     if (globalStatus.mode == "production") {
         $("#instruction-modal").css("display", "inline");
         $("#instruction-modal").modal("show");
@@ -121,5 +123,5 @@ function _render_read_inst_btn_text(instruction_btn_text) {
 }
 
 function _render_end_exp_text(text_end_exp) {
-    // TODO:
+    globalStatus.text_end_exp = text_end_exp;
 }

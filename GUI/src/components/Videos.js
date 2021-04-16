@@ -24,11 +24,13 @@ export function reqLoadVideos(pname, puid, euid) {
                 displayVideos();
                 $("#start-exp-btn").attr("disabled",false);
             });
-
-
         } else if (response["status"] == "failed") {
-                alert(response["data"]);
-                return response["data"];
+            $(".exp-panel").css("display", "none");
+            $("#msg-panel").html(response["data"]).css("display", "inline");
+            clearTimeout(globalStatus.env_bg_interval);
+            clearTimeout(globalStatus.FIRST_DURATION_timer);
+            clearTimeout(globalStatus.SECOND_DURATION_timer);
+            return response["data"];
         }
     });
 }

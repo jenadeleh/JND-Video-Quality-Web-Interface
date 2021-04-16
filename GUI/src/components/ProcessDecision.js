@@ -2,7 +2,6 @@ import * as $ from 'jquery';
 import { SendMsg } from "./Connection"
 import { globalStatus} from "./GlobalStatus"
 import { updateProgressBar } from "./ProgressBar"
-import { displayVideo } from "./LoadVideos"
 
 
 export function processDecision(decision) {
@@ -32,6 +31,4 @@ export function processDecision(decision) {
 function _end_exp() {
     $(".decision-btn").attr("disabled", true);
     $("#video").css("display", "none");
-    $("#warning-cover").css("display", "inline-block")
-                    .html("Thank you for your participation!");
 }

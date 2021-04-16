@@ -1,10 +1,9 @@
 import * as $ from 'jquery';
 import { recordCaliStartTime, increase, decrease } from "./Calibration";
 import { getLocalData } from "../utils/ManageLocalData";
-import { actStartExpBtn } from "./BtnActions" 
-import { adjustDist } from "./BtnActions"
 import { globalStatus } from "./GlobalStatus";
-import { addResultToCurVideo, processHit, actNextHitBtn } from "./BtnActions"
+import { readInst, actStartExpBtn, adjustDist, addResultToCurVideo, processHit, actNextHitBtn } from "./BtnActions"
+
 
 export function keyboardControl(){
     document.onkeyup = function (event) {
@@ -13,8 +12,9 @@ export function keyboardControl(){
         switch (keyCode) {
             case 13://space
             case 32://enter
-
-                if(globalStatus.exp_status == "dist_panel") {
+                if(globalStatus.exp_status == "inst_panel") {
+                    readInst();
+                } else if(globalStatus.exp_status == "dist_panel") {
                     adjustDist();
                 } else if(globalStatus.exp_status == "hit_panel") {
                     actStartExpBtn();

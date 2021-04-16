@@ -22,4 +22,5 @@ export const globalStatus = {
     exp_status: "",
     ispexist: false,
     jnd_video_data:{},
+    text_end_exp:""
 }
