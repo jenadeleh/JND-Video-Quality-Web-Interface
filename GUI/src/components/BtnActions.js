@@ -1,10 +1,9 @@
 import * as $ from 'jquery';
 import { globalStatus } from "./GlobalStatus"
-import { displayVideos, reqLoadVideos } from "./Videos"
+import { displayVideos, reqLoadVideos, playCurVideo } from "./Videos"
 import { updateProgressBar } from "./ProgressBar"
 import { getLocalData } from "../utils/ManageLocalData"
 import { sendMsg } from "./Connection"
-import { setTimer } from "./Timer"
 import { passCF_action } from "./ConsentForm"
 
 export function actStartExpBtn(e) {
@@ -13,7 +12,7 @@ export function actStartExpBtn(e) {
 
     $("#left-btn, #right-btn").attr("disabled", false);
 
-    _playCurVideo();
+    playCurVideo();
     globalStatus.exp_status = "decision";
 }
 
@@ -28,6 +27,10 @@ export function actNextHitBtn() {
     $("#start-exp-btn").css("display", "inline");
     $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "visible");
     $(".decision-btn").attr("disabled", true);
+    $("#start-exp-btn").attr("disabled",true);
+    $("#video-spinner").css("display", "none").css("z-index", "1");
+    $("#video-cover").remove();
+
     globalStatus.exp_status = "hit_panel";
     // request new videos
 
@@ -56,8 +59,7 @@ export function processHit() {
     clearTimeout(globalStatus.SECOND_DURATION_timer);       
 
     if (globalStatus.videos.length > 0) {
-        displayVideos();
-        _playCurVideo();
+        displayVideos("next_video");
     } else {
         _endHit();
     }
@@ -71,6 +73,7 @@ export function adjustDist() {
 
 export function readInst() {
     $("#inst-panel").css("display", "none");
+    globalStatus.exp_status = "";
     if (globalStatus.ispexist) {
         passCF_action();
     } else {
@@ -79,19 +82,6 @@ export function readInst() {
 }
 
 
-function _playCurVideo() {
-    const promise = new Promise(function(resolve, reject) {
-        let vuid = globalStatus.cur_video["vuid"];
-        $(`#${vuid}`).get(0).play();
-        resolve();
-      });
-
-    promise.then(function () {
-        globalStatus.cur_video["start_time"] = new Date().getTime();
-        setTimer();
-        globalStatus.exp_status = "decision";
-    })
-}
 
 function _endHit() {
     _displayUIComponents();
