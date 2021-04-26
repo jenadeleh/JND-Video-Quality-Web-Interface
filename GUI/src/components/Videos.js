@@ -59,7 +59,7 @@ function _addAllVideosToDom(videos_info) {
                         </div>`
 
             $(v_html).appendTo($video_pool);
-        })
+        })     
 
         resolve();
     });

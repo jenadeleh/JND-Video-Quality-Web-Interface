@@ -184,7 +184,7 @@ class AssignmentAdmin(admin.ModelAdmin):
         try:
             csv_name = "jnd_video_result_" + time.strftime("%Y-%m-%d_%H-%M-%S")
             meta = self.model._meta
-            column_names = [field.name for field in meta.fields]
+            column_names = [field.name for field in meta.fields if field.name not in ["id"]]
             response = HttpResponse(content_type='text/csv')
             response['Content-Disposition'] = 'attachment; filename={}.csv'.format(csv_name)
             writer = csv.writer(response)
