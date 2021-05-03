@@ -11,6 +11,8 @@ d # Created by https://www.toptal.com/developers/gitignore/api/macos,python,jupy
 *.sqlite3
 migrations/
 
+/videos
+
 
 # IPython
 profile_default/

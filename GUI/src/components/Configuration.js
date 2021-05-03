@@ -8,7 +8,7 @@ export const config = {
         "same_monitor": "Please use the same monitor.",
         "scale_browser": "Please don't change the browser zoom level. You can set it back from browser menu, or using the CMD/CTRL and +/- key combination, or using CMD/CTRL and mouse scroll combination. Thank you.",
     },
-    FIRST_DURATION: 500000,
+    FIRST_DURATION: 5000,
     SECOND_DURATION: 3000,
     MONITOR_MIN_HEIGHT: 17,  // cm
     IMAGE_WIDTH_CM: 13.797, 

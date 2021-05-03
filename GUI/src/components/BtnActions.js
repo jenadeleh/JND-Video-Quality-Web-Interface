@@ -1,19 +1,20 @@
 import * as $ from 'jquery';
 import { globalStatus } from "./GlobalStatus"
-import { displayVideos, reqLoadVideos, playCurVideo } from "./Videos"
+import { displayNextVideo, reqLoadVideos, recordTime } from "./Videos"
 import { updateProgressBar } from "./ProgressBar"
 import { getLocalData } from "../utils/ManageLocalData"
 import { sendMsg } from "./Connection"
 import { passCF_action } from "./ConsentForm"
+
 
 export function actStartExpBtn(e) {
     $("#start-exp-btn").attr("disabled", true)
                     .css("display", "none");
 
     $("#left-btn, #right-btn").attr("disabled", false);
-
-    playCurVideo();
-    globalStatus.exp_status = "decision";
+    let cur_vuid = globalStatus.cur_video["vuid"];
+    $(`#${cur_vuid}`).get(0).play();
+    recordTime()
 }
 
 export function actDecisionBtn(e) {
@@ -26,14 +27,14 @@ export function actNextHitBtn() {
     $("#hit-end-panel").css("display", "none");
     $("#start-exp-btn").css("display", "inline");
     $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "visible");
+    $("#video-spinner").css("display", "inline");
     $(".decision-btn").attr("disabled", true);
     $("#start-exp-btn").attr("disabled",true);
-    $("#video-spinner").css("display", "none").css("z-index", "1");
     $("#video-cover").remove();
 
     globalStatus.exp_status = "hit_panel";
-    // request new videos
 
+    // request new videos
     reqLoadVideos(getLocalData("pname"), getLocalData("puid"), getLocalData("euid"));
 }
 
@@ -59,7 +60,7 @@ export function processHit() {
     clearTimeout(globalStatus.SECOND_DURATION_timer);       
 
     if (globalStatus.videos.length > 0) {
-        displayVideos("next_video");
+        displayNextVideo();
     } else {
         _endHit();
     }
@@ -81,8 +82,6 @@ export function readInst() {
     }
 }
 
-
-
 function _endHit() {
     _displayUIComponents();
     sendResult();
@@ -98,7 +97,6 @@ function _displayUIComponents() {
 }
 
 function sendResult() {
-
     let cali_info = {};
 
     ["cali_time", "browser_width_cm", "browser_height_cm", "devicePixelRatio", "px_cm_rate"].forEach((el)=>{

@@ -6,6 +6,7 @@ export const globalStatus = {
     video_h: 480,
     video_w:640,
     videos: [],
+    videos_load: [],
     video_num:0,
     cur_video: {},
     mode: "development", // development or production
