@@ -50,8 +50,10 @@ export function reqLoadVideos(pname, puid, euid) {
             let videos_info = response["data"]["videos"];
             globalStatus.videos = videos_info;
             globalStatus.videos = _shuffle(globalStatus.videos)
+            globalStatus.loaded_video_num = 0;
             globalStatus.video_num = globalStatus.videos.length;
             updateProgressBar(0, globalStatus.video_num);
+            $("#loading-progress").html(globalStatus.loaded_video_num+ "/" +globalStatus.video_num);
             _addAllVideosToDom();
         } else if (response["status"] == "failed") {
             $(".exp-panel").css("display", "none");
@@ -99,7 +101,11 @@ function _loadVideoAsync(video_info) {
                                 </video>
                         </div>`
                 $(v_html).appendTo($video_pool);
-                console.log(source_video)
+
+                globalStatus.loaded_video_num += 1;
+
+                
+                $("#loading-progress").html(globalStatus.loaded_video_num+ "/" +globalStatus.video_num);
                 resolve();
             }
         }

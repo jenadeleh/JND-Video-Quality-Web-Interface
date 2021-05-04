@@ -8,6 +8,7 @@ export const globalStatus = {
     videos: [],
     videos_load: [],
     video_num:0,
+    loaded_video_num:0,
     cur_video: {},
     mode: "development", // development or production
     cali_start_time: 0,
