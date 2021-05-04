@@ -27,7 +27,7 @@ export function actNextHitBtn() {
     $("#hit-end-panel").css("display", "none");
     $("#start-exp-btn").css("display", "inline");
     $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "visible");
-    $("#video-spinner").css("display", "inline");
+    $("#video-spinner").css("display", "inline").addClass("d-flex");
     $(".decision-btn").attr("disabled", true);
     $("#start-exp-btn").attr("disabled",true);
     $("#video-cover").remove();
@@ -92,6 +92,7 @@ function _displayUIComponents() {
     $(".decision-btn").attr("disabled")
     $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "hidden");
     $("#hit-end-panel").css("display", "inline");
+    $("#video-spinner").css("display", "none").removeClass("d-flex");
     globalStatus.exp_status = "next-hit-panel";
     updateProgressBar(0, globalStatus.video_num);
 }

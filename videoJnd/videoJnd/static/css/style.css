@@ -9,7 +9,11 @@
 #msg-panel{
     display: flex;
     justify-content: center; 
-    align-items: center; 
+    align-items: center;
+}
+
+#video-pool {
+    position: relative;
 }
 
 .video-cover {
@@ -18,6 +22,7 @@
     position:absolute;
     background-color: #FFFFFF;
 }
+
 
 #guide-panel
 , #instruction-btn {
@@ -45,7 +50,7 @@
 #cali-inst-modal,
 #reminder-modal,
 #hit-end-panel,
-#timeout-msg
+#timeout-msg,
 #warning-cover {
     display: none;
 }
@@ -58,12 +63,6 @@ input#cf-submit-btn{
     -webkit-border-radius: 5px;
     border-radius: 5px; 
     color: white;
-}
-
-#video-spinner {
-    display: flex;
-    justify-content: center; 
-    align-items: center;    
 }
 
 #task-progressbar {

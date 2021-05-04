@@ -5,11 +5,14 @@ import { updateProgressBar } from "./ProgressBar"
 import { setTimer } from "./Timer"
 
 export function displayFirstVideo() {
-    $("#video-spinner").css("display", "none");
+    $("#video-spinner").css("display", "none").removeClass("d-flex");
     globalStatus.cur_video = globalStatus.videos.shift();
+    // console.log("--- First video ---")
+    // console.log(globalStatus.cur_video["source_video"])
     let cur_vuid = globalStatus.cur_video["vuid"];
     delete globalStatus.cur_video["url"];
     globalStatus.exp_status = "decision";
+
     $(`#${cur_vuid}`).get(0).pause();
     $(`#vc-${cur_vuid}`).css("visibility", "visible");
     $("#start-exp-btn").attr("disabled",false);
@@ -24,12 +27,11 @@ export function displayNextVideo() {
     globalStatus.cur_video = globalStatus.videos.shift();
     let cur_vuid = globalStatus.cur_video["vuid"];
     delete globalStatus.cur_video["url"];
-    $(`#vc-${cur_vuid}`).css("visibility", "visible");
+    $(`#vc-${cur_vuid}`).css("visibility", "visible").css("z-index", 1);
 
-    console.log("--- next video ---")
-    console.log(globalStatus.cur_video["source_video"])
+    // console.log("--- next video ---")
+    // console.log(globalStatus.cur_video["source_video"])
     recordTime();
-
 }
 
 export function recordTime() {
@@ -38,6 +40,9 @@ export function recordTime() {
 }
 
 export function reqLoadVideos(pname, puid, euid) {
+    $("#video-pool, #video-spinner").css("height", globalStatus.video_h)
+                                    .css("width", globalStatus.video_w);
+
     let data = {"action":"req_videos", "pname": pname, "puid":puid, "euid":euid}
 
     sendMsg(data).then(response => {
@@ -61,9 +66,6 @@ export function reqLoadVideos(pname, puid, euid) {
 
     
 function _addAllVideosToDom() {
-    $("#video-pool, #video-spinner").css("height", globalStatus.video_h)
-                                    .css("width", globalStatus.video_w);
-
     const tasks = Array.from(globalStatus.videos, (video_info) => _loadVideoAsync(video_info));
     Promise.all(tasks).then(() => {
         displayFirstVideo();
@@ -74,6 +76,7 @@ function _loadVideoAsync(video_info) {
     return new Promise(function(resolve, reject) {
         let $video_pool = $("#video-pool");
         let {url, vuid, side, qp, source_video} = video_info
+        // console.log(url)
         let req = new XMLHttpRequest();
         req.open('GET', url, true);
         req.responseType = 'blob';
