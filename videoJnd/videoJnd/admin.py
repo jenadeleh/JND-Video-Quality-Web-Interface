@@ -16,6 +16,7 @@ class ExperimentAdmin(admin.ModelAdmin):
     list_display = ("name"
                     , "euid"
                     , "active"
+                    , "duration"
                     , "description"
                     , "has_created_videos"
                     , "pub_date")
@@ -31,7 +32,6 @@ class ExperimentAdmin(admin.ModelAdmin):
 
     def export_result(self, request, queryset):
         try:
-            # TODO: rating history
             csv_name = "jnd_video_result_" + time.strftime("%Y-%m-%d_%H-%M-%S")
             meta = VideoObj._meta
             column_names = [field.name for field in meta.fields if field.name not in ["id"]]
@@ -61,7 +61,8 @@ class InterfaceTextAdmin(admin.ModelAdmin):
                     "timeout_msg",
                     "btn_text_end_hit",
                     "instruction_btn_text",
-                    "no_available_exp")
+                    "no_available_exp",
+                    "expire_msg")
 
     def has_add_permission(self, request):
         """ only one 'instruction' object can be created """
@@ -129,12 +130,12 @@ class VideoObjAdmin(admin.ModelAdmin):
                     , "qp_count"
                     , "codec"]
 
-    list_filter = ("source_video"
+    list_filter = ("ongoing"
                     , "exp"
+                    , "source_video"
                     , "frame_rate"
                     , "crf"
                     , "rating"
-                    , "ongoing"
                     , "qp_count"
                     , "codec")
 
@@ -166,9 +167,9 @@ class AssignmentAdmin(admin.ModelAdmin):
                     , "pname"
                     , "email"
                     , "puid"
-                    , "result"
-                    , "calibration"
-                    , "operation_system"
+                    # , "result"
+                    # , "calibration"
+                    # , "operation_system"
                     , "submit_time")
 
     list_per_page = 200

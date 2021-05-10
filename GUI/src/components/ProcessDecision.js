@@ -7,8 +7,8 @@ import { updateProgressBar } from "./ProgressBar"
 export function processDecision(decision) {
 
     // clear timer
-    clearTimeout(globalStatus.FIRST_DURATION_timer);
-    clearTimeout(globalStatus.SECOND_DURATION_timer);
+    clearTimeout(globalStatus.FIRST_DURATION_TIMER);
+    clearTimeout(globalStatus.SECOND_DURATION_TIMER);
 
     // update control panel
     $("#warning-cover").css("display", "none");

@@ -2,7 +2,8 @@ import * as $ from 'jquery';
 import { sendMsg } from "./Connection"
 import { globalStatus } from "./GlobalStatus"
 import { updateProgressBar } from "./ProgressBar"
-import { setTimer } from "./Timer"
+import { setTimer, setExpireTimer } from "./Timer"
+import { getLocalData } from "../utils/ManageLocalData"
 
 export function displayFirstVideo() {
     $("#video-spinner").css("display", "none").removeClass("d-flex");
@@ -48,9 +49,9 @@ export function reqLoadVideos(pname, puid, euid) {
     sendMsg(data).then(response => {
         if (response["status"] == "successful") {
             let videos_info = response["data"]["videos"];
+            globalStatus.duration = response["data"]["duration"];
             globalStatus.videos = videos_info;
             globalStatus.videos = _shuffle(globalStatus.videos)
-            globalStatus.loaded_video_num = 0;
             globalStatus.video_num = globalStatus.videos.length;
             updateProgressBar(0, globalStatus.video_num);
             $("#loading-progress").html(globalStatus.loaded_video_num+ "/" +globalStatus.video_num);
@@ -59,8 +60,8 @@ export function reqLoadVideos(pname, puid, euid) {
             $(".exp-panel").css("display", "none");
             $("#msg-panel").html(response["data"]).css("display", "inline");
             clearTimeout(globalStatus.env_bg_interval);
-            clearTimeout(globalStatus.FIRST_DURATION_timer);
-            clearTimeout(globalStatus.SECOND_DURATION_timer);
+            clearTimeout(globalStatus.FIRST_DURATION_TIMER);
+            clearTimeout(globalStatus.SECOND_DURATION_TIMER);
             return response["data"];
         }
     });
@@ -70,7 +71,20 @@ export function reqLoadVideos(pname, puid, euid) {
 function _addAllVideosToDom() {
     const tasks = Array.from(globalStatus.videos, (video_info) => _loadVideoAsync(video_info));
     Promise.all(tasks).then(() => {
-        displayFirstVideo();
+        sendMsg({"action":"resource_monitor", 
+                "pname": getLocalData("pname"), 
+                "puid":getLocalData("puid"), 
+                "euid":getLocalData("euid")}
+        ).then(response => {
+            if (response["status"] == "successful") {
+                displayFirstVideo();
+                globalStatus.start_time = response["data"]["start_date"];
+                globalStatus.expire_msg = response["data"]["expire_msg"];
+                setExpireTimer();
+            } else if (response["status"] == "failed") {
+                console.log("Error: _addAllVideosToDom")
+            }
+        }); 
     });
 }
 

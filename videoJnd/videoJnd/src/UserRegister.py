@@ -1,6 +1,7 @@
 from django.utils import timezone
 
 from videoJnd.models import Participant, Experiment
+from videoJnd.src.Log import logger
 import uuid
 
 def user_register(recv_data:dict) -> dict:
@@ -19,5 +20,5 @@ def user_register(recv_data:dict) -> dict:
             return {"status":"failed", "data":"no active experiment"}
 
     except Exception as e:
-        print("user_register error: %s" % str(e))
+        logger.info("user_register error: %s" % str(e))
         return {"status":"failed", "data":"system error"}

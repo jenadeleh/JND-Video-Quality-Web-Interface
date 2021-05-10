@@ -25,25 +25,23 @@ def req_videos(recv_data:dict) -> dict:
                 if cur_p.ongoing == True:# ongoing, return current videos      
                     videos = ast.literal_eval(cur_p.videos)
                     random.shuffle(videos)
-                    _response = {"videos":videos}
+                    _response = {"videos":videos, "duration":cur_exp_obj.duration}
 
                     return {"status":"successful", "restype": "req_videos", "data":_response}
 
                 elif cur_p.ongoing == False:# not ongoing, return new videos
                     _response = {}
-                    _p_start_date = str(timezone.now())
                     videos_info = _extract_info_avl_videos(exp_config, 
                                                             recv_data["pname"], 
                                                             recv_data["puid"], 
-                                                            _p_start_date, 
                                                             avl_videos)
                     
-                    cur_p.start_date = _p_start_date
-                    cur_p.ongoing = True
+
                     cur_p.videos = str(videos_info)
                     cur_p.save()
 
                     _response["videos"] =  videos_info
+                    _response["duration"] = cur_exp_obj.duration
 
                     return {"status":"successful", "restype": "req_videos", "data":_response}
             else:
@@ -87,11 +85,11 @@ def select_videos(cur_exp_obj:object) -> list:
     # if number of available videos is less than MAX_VIDEO_NUM_PER_HIT, continue to return avl_videos
     return avl_videos
 
-def _extract_info_avl_videos(exp_config:dict, pname:str, puid:str, pstart_date:str, avl_videos:list) -> list:
+def _extract_info_avl_videos(exp_config:dict, pname:str, puid:str, avl_videos:list) -> list:
     output = []
     for video_obj in avl_videos:
         # update video
-        _add_p_to_video(video_obj, pname, puid, pstart_date)
+        _add_p_to_video(video_obj, pname, puid)
         video_uuid, source_video, codec, frame_rate, crf, side, qp_count, qp, url = _gen_video_url(exp_config, video_obj)
 
         output.append({"vuid":str(video_uuid), 
@@ -136,9 +134,8 @@ def _gen_video_url(exp_config:object, video_obj:object) -> tuple:
             qp, 
             url)
 
-def _add_p_to_video(video_obj:object, pname:str, puid:str, pstart_date:str) -> None:
+def _add_p_to_video(video_obj:object, pname:str, puid:str) -> None:
     video_obj.ongoing = True
     video_obj.cur_participant = pname
     video_obj.cur_participant_uid = puid
-    video_obj.participant_start_date = pstart_date
     video_obj.save()

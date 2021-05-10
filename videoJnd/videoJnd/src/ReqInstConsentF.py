@@ -1,5 +1,6 @@
 from videoJnd.models import Instruction, ConsentForm, InterfaceText, Participant, Experiment
 from videoJnd.src.ReqVideos import select_videos
+from videoJnd.src.Log import logger
 
 def req_inst_cf(_puid:str) -> dict:
     try:
@@ -40,5 +41,5 @@ def req_inst_cf(_puid:str) -> dict:
         else:
             return {"status":"failed", "data":interface_text.no_available_exp, "restype": "req_inst_cf"}
     except Exception as e:
-        print("req_inst_cf error: %s" % str(e))
+        logger.info("req_inst_cf error: %s" % str(e))
         return {"status":"failed", "data":"system error", "restype": "req_inst_cf"}

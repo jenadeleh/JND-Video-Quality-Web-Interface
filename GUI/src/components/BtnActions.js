@@ -56,8 +56,8 @@ export function processHit() {
     updateProgressBar(globalStatus.video_num - globalStatus.videos.length
                     , globalStatus.video_num);
 
-    clearTimeout(globalStatus.FIRST_DURATION_timer);
-    clearTimeout(globalStatus.SECOND_DURATION_timer);       
+    clearTimeout(globalStatus.FIRST_DURATION_TIMER);
+    clearTimeout(globalStatus.SECOND_DURATION_TIMER);       
 
     if (globalStatus.videos.length > 0) {
         displayNextVideo();
@@ -95,6 +95,7 @@ function _displayUIComponents() {
     $("#video-spinner").css("display", "none").removeClass("d-flex");
     globalStatus.exp_status = "next-hit-panel";
     updateProgressBar(0, globalStatus.video_num);
+    globalStatus.loaded_video_num = 0;
 }
 
 function sendResult() {

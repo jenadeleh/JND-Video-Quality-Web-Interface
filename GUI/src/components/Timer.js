@@ -4,14 +4,14 @@ import { globalStatus } from "./GlobalStatus"
 import { addResultToCurVideo, processHit } from "./BtnActions"
 
 export function setTimer() {
-    globalStatus.FIRST_DURATION_timer = setTimeout(()=> { 
+    globalStatus.FIRST_DURATION_TIMER = setTimeout(()=> { 
         _display_warning_info();
         _SECOND_DURATION_timer();
     }, config.FIRST_DURATION);
 }
 
 function _SECOND_DURATION_timer() {
-    globalStatus.SECOND_DURATION_timer = setTimeout(()=> { 
+    globalStatus.SECOND_DURATION_TIMER = setTimeout(()=> { 
         addResultToCurVideo("no decision"); 
         processHit();
     }, config.SECOND_DURATION);  
@@ -23,4 +23,29 @@ function _display_warning_info() {
     $("#not-sure-btn").attr("disabled", false)
                     .removeClass("btn-secondary")
                     .addClass("btn-primary");
+}
+
+export function setExpireTimer() {
+    
+    let time_now = new Date().getTime();
+    let time_diff = (time_now - globalStatus.start_time) / 1000; // sec
+
+    console.log(time_diff, globalStatus.duration)
+    if (time_diff >= globalStatus.duration) {
+        _showTimeoutMsg();
+    } else {
+
+        let wait_time = (globalStatus.duration - time_diff)*1000; // ms
+        setTimeout(()=> {
+            _showTimeoutMsg();
+        }, wait_time);
+    }
+}
+
+function _showTimeoutMsg() {
+    clearTimeout(globalStatus.env_bg_interval);
+    clearTimeout(globalStatus.FIRST_DURATION_TIMER);
+    clearTimeout(globalStatus.SECOND_DURATION_TIMER);
+    $("#warning-cover").css("display", "inline").css("visibility", "visible");
+    $("#warning-msg").html(globalStatus.expire_msg);
 }

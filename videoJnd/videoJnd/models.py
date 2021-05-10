@@ -2,16 +2,18 @@ from django.db import models
 from ckeditor.fields import RichTextField
 import uuid
 from django.utils.timezone import now
+from django.core.validators import MaxValueValidator, MinValueValidator 
 import jsonfield
 from videoJnd.src.GetConfig import get_config
 
 class Experiment(models.Model):
     euid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    active = models.BooleanField(default=False, editable=True)
     name = models.CharField(max_length=20, default="", editable=True)
+    active = models.BooleanField(default=False, editable=True)
     description = models.TextField(max_length=4096, default="", editable=True)
     has_created_videos = models.BooleanField(default=False, editable=False)
     configuration = jsonfield.JSONField(default=get_config())
+    duration = models.IntegerField("Duration(seconds)", default=600, editable=True, validators=[MinValueValidator(10)])
     pub_date = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
 
     def __str__(self):
@@ -19,13 +21,14 @@ class Experiment(models.Model):
 
 class InterfaceText(models.Model):
     title = models.CharField(max_length=20, default="InterfaceText", editable=False)
-    question = models.TextField(max_length=4096, default="", null=False, blank=False)
-    text_end_exp = RichTextField(default="", null=False, blank=False)
-    text_end_hit = RichTextField(default="", null=False, blank=False)
-    timeout_msg = models.TextField(max_length=4096, default="", null=False, blank=False)
-    btn_text_end_hit = models.TextField(max_length=4096, default="", null=False, blank=False)
-    instruction_btn_text = models.CharField(max_length=20, default="", null=False, blank=False)
-    no_available_exp = RichTextField(default="", null=False, blank=False)
+    question = models.TextField("Question of the task", max_length=4096, default="", null=False, blank=False)
+    text_end_exp = RichTextField("When the experiment is done, display", default="", null=False, blank=False)
+    text_end_hit = RichTextField("When the HIT is done, display", default="", null=False, blank=False)
+    timeout_msg = models.TextField("When user doesn't make a decision, display", max_length=4096, default="", null=False, blank=False) # for image
+    btn_text_end_hit = models.TextField("Text of the button when the HIT is done", max_length=4096, default="", null=False, blank=False)
+    instruction_btn_text = models.CharField("Text of the button in the instruction page", max_length=20, default="", null=False, blank=False)
+    no_available_exp = RichTextField("When there is no experiment available, display", default="", null=False, blank=False)
+    expire_msg = models.TextField("When the HIT is expired, display", max_length=4096, default="", null=False, blank=False) # for hit
 
 class Instruction(models.Model):
     title = models.CharField(max_length=20, default="Instruction", editable=False)
@@ -52,8 +55,6 @@ class VideoObj(models.Model):
     cur_participant = models.CharField(max_length=20, editable=False, null=True, blank=True)
     cur_participant_uid = models.CharField(max_length=50, editable=False, null=True, blank=True)
 
-    # only for displaying the time when the user start the experiment
-    participant_start_date = models.CharField(max_length=20, editable=False, null=True, blank=True) 
     
     def __str__(self):
         return self.source_video

@@ -1,6 +1,6 @@
 export const globalStatus = {
-    FIRST_DURATION_timer:Object(),
-    SECOND_DURATION_timer:Object(),
+    FIRST_DURATION_TIMER:Object(),
+    SECOND_DURATION_TIMER:Object(),
     env_bg_interval: Object(),
     result: [],
     video_h: 480,
@@ -10,7 +10,7 @@ export const globalStatus = {
     video_num:0,
     loaded_video_num:0,
     cur_video: {},
-    mode: "development", // development or production
+    mode: "development", // development or production, production mode displays the instruction model
     cali_start_time: 0,
     cali_end_time: 0,
     os_info:{},
@@ -24,5 +24,8 @@ export const globalStatus = {
     exp_status: "",
     ispexist: false,
     jnd_video_data:{},
-    text_end_exp:""
+    text_end_exp:"",
+    duration:0, // timeout
+    start_time:Object(), // the time that finish loading the videos 
+    expire_msg:""
 }
