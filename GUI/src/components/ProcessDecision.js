@@ -19,9 +19,6 @@ export function processDecision(decision) {
     globalStatus.task_finished_num += 1;
     updateProgressBar(globalStatus.task_finished_num, globalStatus.task_num);
 
-    // store result
-    // TODO: store result
-
     // check experiment is finished or not
     if (globalStatus.task_finished_num == globalStatus.task_num) {
         _end_exp();

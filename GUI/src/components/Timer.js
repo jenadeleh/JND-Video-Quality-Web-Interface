@@ -36,14 +36,14 @@ export function setExpireTimer() {
     } else {
 
         let wait_time = (globalStatus.duration - time_diff)*1000; // ms
-        setTimeout(()=> {
+        globalStatus.EXPIRE_TIMER = setTimeout(()=> {
             _showTimeoutMsg();
         }, wait_time);
     }
 }
 
 function _showTimeoutMsg() {
-    clearTimeout(globalStatus.env_bg_interval);
+    clearInterval(globalStatus.env_bg_interval);
     clearTimeout(globalStatus.FIRST_DURATION_TIMER);
     clearTimeout(globalStatus.SECOND_DURATION_TIMER);
     $("#warning-cover").css("display", "inline").css("visibility", "visible");

@@ -1,6 +1,7 @@
 export const globalStatus = {
     FIRST_DURATION_TIMER:Object(),
     SECOND_DURATION_TIMER:Object(),
+    EXPIRE_TIMER:Object(),
     env_bg_interval: Object(),
     result: [],
     video_h: 480,

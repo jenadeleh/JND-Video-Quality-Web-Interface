@@ -69,7 +69,6 @@ function _process_response(response) {
 
     } else if (response["status"] == "failed") {
         $("#msg-panel").html(response["data"]).css("display", "inline");
-        clearTimeout(globalStatus.env_bg_interval);
         return response["data"];
     }
 }

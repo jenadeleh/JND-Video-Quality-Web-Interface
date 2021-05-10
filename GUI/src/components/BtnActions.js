@@ -83,6 +83,7 @@ export function readInst() {
 }
 
 function _endHit() {
+    clearTimeout(globalStatus.EXPIRE_TIMER);
     _displayUIComponents();
     sendResult();
 }

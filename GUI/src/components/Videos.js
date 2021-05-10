@@ -59,7 +59,6 @@ export function reqLoadVideos(pname, puid, euid) {
         } else if (response["status"] == "failed") {
             $(".exp-panel").css("display", "none");
             $("#msg-panel").html(response["data"]).css("display", "inline");
-            clearTimeout(globalStatus.env_bg_interval);
             clearTimeout(globalStatus.FIRST_DURATION_TIMER);
             clearTimeout(globalStatus.SECOND_DURATION_TIMER);
             return response["data"];
