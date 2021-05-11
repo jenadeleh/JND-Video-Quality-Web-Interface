@@ -78,6 +78,7 @@ def _update_video_db(video_result:dict, video_obj:object) -> None:
 def _set_p_onging_false(p_obj: object) -> None:
     p_obj.ongoing = False
     p_obj.videos = ""
+    p_obj.start_date = None
     p_obj.save()
 
 def _encode_decision(side:str, decision:str) -> str:

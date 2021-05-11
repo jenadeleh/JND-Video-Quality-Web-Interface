@@ -1,6 +1,6 @@
 import * as $ from 'jquery';
 import { globalStatus } from "./GlobalStatus"
-import { displayNextVideo, reqLoadVideos, recordTime } from "./Videos"
+import { displayNextVideo, reqLoadVideos, recordTime, stopExpireTimer } from "./Videos"
 import { updateProgressBar } from "./ProgressBar"
 import { getLocalData } from "../utils/ManageLocalData"
 import { sendMsg } from "./Connection"
@@ -14,7 +14,8 @@ export function actStartExpBtn(e) {
     $("#left-btn, #right-btn").attr("disabled", false);
     let cur_vuid = globalStatus.cur_video["vuid"];
     $(`#${cur_vuid}`).get(0).play();
-    recordTime()
+    stopExpireTimer();
+    recordTime();
 }
 
 export function actDecisionBtn(e) {
@@ -62,6 +63,7 @@ export function processHit() {
     if (globalStatus.videos.length > 0) {
         displayNextVideo();
     } else {
+        clearTimeout(globalStatus.EXPIRE_TIMER);
         _endHit();
     }
 }
@@ -83,12 +85,11 @@ export function readInst() {
 }
 
 function _endHit() {
-    clearTimeout(globalStatus.EXPIRE_TIMER);
-    _displayUIComponents();
-    sendResult();
+    displayEndHitPanel();
+    _sendResult();
 }
 
-function _displayUIComponents() {
+export function displayEndHitPanel() {
     $(".video-cover").remove();
     $(".decision-btn").attr("disabled")
     $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "hidden");
@@ -99,7 +100,7 @@ function _displayUIComponents() {
     globalStatus.loaded_video_num = 0;
 }
 
-function sendResult() {
+function _sendResult() {
     let cali_info = {};
 
     ["cali_time", "browser_width_cm", "browser_height_cm", "devicePixelRatio", "px_cm_rate"].forEach((el)=>{

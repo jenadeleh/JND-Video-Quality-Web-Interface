@@ -2,8 +2,9 @@ import * as $ from 'jquery';
 import { sendMsg } from "./Connection"
 import { globalStatus } from "./GlobalStatus"
 import { updateProgressBar } from "./ProgressBar"
-import { setTimer, setExpireTimer } from "./Timer"
+import { setTimer } from "./Timer"
 import { getLocalData } from "../utils/ManageLocalData"
+import { displayEndHitPanel } from "./BtnActions"
 
 export function displayFirstVideo() {
     $("#video-spinner").css("display", "none").removeClass("d-flex");
@@ -66,7 +67,11 @@ export function reqLoadVideos(pname, puid, euid) {
     });
 }
 
-    
+export function stopExpireTimer() {
+    clearTimeout(globalStatus.EXPIRE_TIMER);
+    sendMsg({"action":"stop_expire_timer", "puid":getLocalData("puid")})
+}
+
 function _addAllVideosToDom() {
     const tasks = Array.from(globalStatus.videos, (video_info) => _loadVideoAsync(video_info));
     Promise.all(tasks).then(() => {
@@ -133,4 +138,38 @@ function _shuffle(arr) {
         [arr[i], arr[random]] = [arr[random], arr[i]];
     }
     return arr
+}
+
+export function setExpireTimer() {
+    
+    let time_now = new Date().getTime();
+    let time_diff = (time_now - globalStatus.start_time) / 1000; // sec
+
+    if (time_diff >= globalStatus.duration) {
+        _showTimeoutMsg();
+    } else {
+
+        let wait_time = (globalStatus.duration - time_diff)*1000; // ms
+        globalStatus.EXPIRE_TIMER = setTimeout(()=> {
+            _showTimeoutMsg();
+        }, wait_time);
+    }
+}
+
+function _showTimeoutMsg() {
+    clearTimeout(globalStatus.EXPIRE_TIMER);
+    clearInterval(globalStatus.env_bg_interval);
+    clearTimeout(globalStatus.FIRST_DURATION_TIMER);
+    clearTimeout(globalStatus.SECOND_DURATION_TIMER);
+    $("#warning-msg").html(globalStatus.expire_msg);
+    $("#warning-cover").css("display", "inline")
+                        .css("visibility", "visible")
+                        .append(`<button id="expire-continue-btn" type="button" class="btn btn-info">Continue</button>`);
+
+    let $btn_dom = $("#expire-continue-btn");
+    $btn_dom.on("click", ()=>{
+        $btn_dom.remove();
+        $("#warning-cover").css("display", "none")
+        displayEndHitPanel();
+    })
 }

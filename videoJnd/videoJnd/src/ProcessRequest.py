@@ -15,8 +15,7 @@ from videoJnd.src.ReqVideos import req_videos
 from videoJnd.src.RecordResult import record_result
 from videoJnd.src.ReqInstConsentF import req_inst_cf
 from videoJnd.src.UserRegister import user_register
-from videoJnd.src.ResourceMonitor import resource_monitor
-
+from videoJnd.src.ResourceMonitor import resource_monitor, add_idle_thread
 from videoJnd.src.Log import logger
 
 def process_request(request):
@@ -37,6 +36,9 @@ def process_request(request):
 
                 elif recv_data["action"] == "resource_monitor":
                     response = resource_monitor(recv_data)
+
+                elif recv_data["action"] == "stop_expire_timer":
+                    response = add_idle_thread(recv_data["puid"])
 
                 elif recv_data["action"] == "record_result":
                     response = record_result(recv_data)
