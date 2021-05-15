@@ -3,7 +3,7 @@ import { globalStatus } from "./GlobalStatus"
 import { displayNextVideo, reqLoadVideos, recordTime, stopExpireTimer } from "./Videos"
 import { updateProgressBar } from "./ProgressBar"
 import { getLocalData } from "../utils/ManageLocalData"
-import { sendMsg } from "./Connection"
+import { sendMsg } from "./SendMsg"
 import { passCF_action } from "./ConsentForm"
 
 
@@ -119,6 +119,5 @@ function _sendResult() {
     globalStatus.result = [];
     sendMsg(send_data);
 }
-
 
 

@@ -1,5 +1,5 @@
 import * as $ from 'jquery';
-import { sendMsg } from "./Connection"
+import { sendMsg } from "./SendMsg"
 import { storeLocalData, getLocalData } from "../utils/ManageLocalData"
 import { checkCaliStatus, calibration, passCali } from "./Calibration"
 import { globalStatus } from "./GlobalStatus"

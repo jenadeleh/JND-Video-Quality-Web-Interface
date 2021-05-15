@@ -23,27 +23,41 @@ def resource_monitor(recv_data:dict) -> dict:
     p_obj.ongoing  = True
     p_obj.save()
 
-    if recv_data["puid"] not in monitor_threads:
+    if recv_data["puid"] not in monitor_threads and recv_data["puid"] not in idle_threads:
         _start_thread(p_obj)
 
     return {"status":"successful", "data":{"start_date":int(1000 * p_obj.start_date.timestamp()), "expire_msg":expire_msg}}
 
-def _release_videos(p_obj:object) -> None:
+def _start_thread(p_obj):
+    puid = str(p_obj.puid)
+    thread = threading.Thread(target=_release_videos, name=puid, args=(monitor_threads, idle_threads, p_obj,))
+    thread.start()
+    monitor_threads.append(puid)
+
+def _release_videos(monitor_threads:list, idle_threads:list, p_obj:object) -> None:
     videos = ast.literal_eval(p_obj.videos)
     videos_uid = [v["vuid"]for v in videos]
-    duration = p_obj.exp.duration + 3 # compensation for network delay 
+    duration = p_obj.exp.duration # compensation for network delay 
 
     if p_obj.ongoing:
         start_date = p_obj.start_date
         time_diff = (timezone.now() - start_date).total_seconds()
 
         if time_diff >= duration:
-            _config_released_resource(p_obj, videos_uid)
+            _config_released_resource(monitor_threads, idle_threads, p_obj, videos_uid)
         else:
-            time.sleep(duration - time_diff)
-            _config_released_resource(p_obj, videos_uid)
+            counter = int((duration - time_diff)*1000)
+            for _ in range(counter):
+                if str(p_obj.puid) in idle_threads:
+                    break
+                else:
+                    time.sleep(0.001)
+            logger.info("++++ %s ++++" % str(idle_threads))
+            _config_released_resource(monitor_threads, idle_threads, p_obj, videos_uid)
 
-def _config_released_resource(p_obj:object, videos_uid:list) -> None:
+def _config_released_resource(monitor_threads:list, idle_threads:list, p_obj:object, videos_uid:list) -> None:
+    # logger.info("_____release %s _______" % p_obj.puid)
+    # logger.info(str(monitor_threads) + str(idle_threads))
     puid = str(p_obj.puid)
     if puid not in idle_threads:
         p_obj.ongoing = False
@@ -59,21 +73,21 @@ def _config_released_resource(p_obj:object, videos_uid:list) -> None:
                 v.cur_participant_uid = ""
                 v.save()
 
-        logger.info("--- Release videos from participant: %s ---" % (p_obj.name))
+        # logger.info("--- Release videos from participant: %s ---" % (p_obj.name))
     else:
-        idle_threads.remove(puid)
-    
-    monitor_threads.remove(puid)
+        if puid in idle_threads:
+            idle_threads.remove(puid)
+    if puid in monitor_threads:
+        monitor_threads.remove(puid)
 
-def _start_thread(p_obj):
-    puid = str(p_obj.puid)
-    thread = threading.Thread(target=_release_videos, name=puid, args=(p_obj,))
-    thread.start()
-    monitor_threads.append(puid)
+    # logger.info(str(monitor_threads) + str(idle_threads))
 
-def add_idle_thread(puid):
-    # TODO: terminate thread
-    idle_threads.append(puid)
+
+def add_idle_thread(puid:str) -> None:
+    if puid not in idle_threads:
+        idle_threads.append(puid)
+
+    # logger.info("===== new %s ====" % str(idle_threads))
 
 def wait_release_resources():
     logger.info("--- Release videos ---")
@@ -81,7 +95,33 @@ def wait_release_resources():
 
     for p_obj in ongoing_p_obj:
         _start_thread(p_obj)
-    
+
+
+def release_resource(recv_data:dict) -> None:
+
+    if recv_data["puid"] in monitor_threads:
+        add_idle_thread(recv_data["puid"])
+
+    logger.info("===== release_resource ====" )
+    p_obj = Participant.objects.filter(puid=recv_data["puid"]).first()
+
+    if p_obj.videos:
+        videos = ast.literal_eval(p_obj.videos)
+        videos_uid = [v["vuid"]for v in videos]
+
+        p_obj.ongoing = False
+        p_obj.videos = ""
+        p_obj.start_date = None
+        p_obj.save()
+
+        ongoing_videos_obj = VideoObj.objects.filter(ongoing=True)
+        for v in ongoing_videos_obj:
+            if str(v.vuid) in videos_uid:
+                v.ongoing = False
+                v.cur_participant = ""
+                v.cur_participant_uid = ""
+                v.save()
+
 
 
 

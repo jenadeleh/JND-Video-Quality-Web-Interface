@@ -4,6 +4,8 @@ from videoJnd.src.QuestPlusJnd import QuestPlusJnd
 from videoJnd.models import VideoObj, Experiment, Participant, Assignment
 from videoJnd.src.GetConfig import get_config
 
+from videoJnd.src.ResourceMonitor import add_idle_thread
+
 
 import random
 import uuid
@@ -50,6 +52,7 @@ def record_result(recv_data:dict) -> dict:
                         "data":"video %s is not exist" % video_result["vuid"]}
 
         _set_p_onging_false(p_obj)
+
 
         return {"status":"successful", "restype": "record_result",}
     else:

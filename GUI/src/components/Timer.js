@@ -2,7 +2,7 @@ import * as $ from 'jquery';
 import { config } from "./Configuration"
 import { globalStatus } from "./GlobalStatus"
 import { addResultToCurVideo, processHit } from "./BtnActions"
-import { sendMsg } from "./Connection"
+import { sendMsg } from "./SendMsg"
 import { getLocalData } from "../utils/ManageLocalData"
 
 export function setTimer() {

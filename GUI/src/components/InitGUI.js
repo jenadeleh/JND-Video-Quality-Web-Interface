@@ -13,9 +13,9 @@ export function initGUI() {
         $("#warning-cover").css("visibility", "visible");
         $("#warning-msg").html(reso_warnings());
     } else {
-        // initLocalData();
         checkEnvBackground();
         if (!globalStatus.isNotMaximizedBrowser) {
+            // initLocalData();
             getBrowserInfo();
             initDoms();
             keyboardControl();
@@ -23,3 +23,5 @@ export function initGUI() {
         }
     }
 }
+
+
