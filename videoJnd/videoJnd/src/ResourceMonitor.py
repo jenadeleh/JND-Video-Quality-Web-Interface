@@ -12,9 +12,6 @@ from videoJnd.src.Log import logger
 monitor_threads = []
 idle_threads = [] # when user start the exp. before expiration, threading does nothing
 
-expire_msg = InterfaceText.objects.all().first().expire_msg
-
-
 def resource_monitor(recv_data:dict) -> dict:
     p_obj = Participant.objects.filter(puid=recv_data["puid"]).first()
 
@@ -26,6 +23,7 @@ def resource_monitor(recv_data:dict) -> dict:
     if recv_data["puid"] not in monitor_threads and recv_data["puid"] not in idle_threads:
         _start_thread(p_obj)
 
+    expire_msg = InterfaceText.objects.all().first().expire_msg
     return {"status":"successful", "data":{"start_date":int(1000 * p_obj.start_date.timestamp()), "expire_msg":expire_msg}}
 
 def _start_thread(p_obj):
@@ -52,7 +50,7 @@ def _release_videos(monitor_threads:list, idle_threads:list, p_obj:object) -> No
                     break
                 else:
                     time.sleep(0.001)
-            logger.info("++++ %s ++++" % str(idle_threads))
+            # logger.info("++++ %s ++++" % str(idle_threads))
             _config_released_resource(monitor_threads, idle_threads, p_obj, videos_uid)
 
 def _config_released_resource(monitor_threads:list, idle_threads:list, p_obj:object, videos_uid:list) -> None:
@@ -102,7 +100,7 @@ def release_resource(recv_data:dict) -> None:
     if recv_data["puid"] in monitor_threads:
         add_idle_thread(recv_data["puid"])
 
-    logger.info("===== release_resource ====" )
+    # logger.info("===== release_resource ====" )
     p_obj = Participant.objects.filter(puid=recv_data["puid"]).first()
 
     if p_obj.videos:

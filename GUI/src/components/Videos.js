@@ -68,7 +68,7 @@ export function reqLoadVideos(pname, puid, euid) {
 }
 
 export function stopExpireTimer() {
-    console.log("----- stopExpireTimer -----")
+    // console.log("----- stopExpireTimer -----")
     clearTimeout(globalStatus.EXPIRE_TIMER);
     sendMsg({"action":"stop_expire_timer", "puid":getLocalData("puid")})
 }
@@ -142,7 +142,7 @@ function _shuffle(arr) {
 }
 
 export function setExpireTimer() {
-    console.log("----- setExpireTimer -----")
+    // console.log("----- setExpireTimer -----")
     let time_now = new Date().getTime();
     let time_diff = (time_now - globalStatus.start_time) / 1000; // sec
 
@@ -158,7 +158,7 @@ export function setExpireTimer() {
 }
 
 function _showTimeoutMsg() {
-    console.log("----- showTimeoutMsg -----")
+    // console.log("----- showTimeoutMsg -----")
     clearTimeout(globalStatus.EXPIRE_TIMER);
     clearInterval(globalStatus.env_bg_interval);
     clearTimeout(globalStatus.FIRST_DURATION_TIMER);

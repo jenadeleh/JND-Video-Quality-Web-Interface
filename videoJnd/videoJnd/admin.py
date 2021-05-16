@@ -54,15 +54,15 @@ class ExperimentAdmin(admin.ModelAdmin):
 
 @admin.register(InterfaceText)
 class InterfaceTextAdmin(admin.ModelAdmin):
-    list_display = ("title", 
-                    "question",
-                    "text_end_exp",
-                    "text_end_hit",
-                    "timeout_msg",
-                    "btn_text_end_hit",
-                    "instruction_btn_text",
-                    "no_available_exp",
-                    "expire_msg")
+    # list_display = ("title", 
+    #                 "question",
+    #                 "text_end_exp",
+    #                 "text_end_hit",
+    #                 "timeout_msg",
+    #                 "btn_text_end_hit",
+    #                 "instruction_btn_text",
+    #                 "no_available_exp",
+    #                 "expire_msg")
 
     def has_add_permission(self, request):
         """ only one 'instruction' object can be created """
