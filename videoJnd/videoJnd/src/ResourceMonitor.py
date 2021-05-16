@@ -97,28 +97,31 @@ def wait_release_resources():
 
 def release_resource(recv_data:dict) -> None:
 
-    if recv_data["puid"] in monitor_threads:
-        add_idle_thread(recv_data["puid"])
+    try:
+        if recv_data["puid"] in monitor_threads:
+            add_idle_thread(recv_data["puid"])
 
-    # logger.info("===== release_resource ====" )
-    p_obj = Participant.objects.filter(puid=recv_data["puid"]).first()
+        # logger.info("===== release_resource ====" )
+        p_obj = Participant.objects.filter(puid=recv_data["puid"]).first()
 
-    if p_obj.videos:
-        videos = ast.literal_eval(p_obj.videos)
-        videos_uid = [v["vuid"]for v in videos]
+        if p_obj and p_obj.videos:
+            videos = ast.literal_eval(p_obj.videos)
+            videos_uid = [v["vuid"]for v in videos]
 
-        p_obj.ongoing = False
-        p_obj.videos = ""
-        p_obj.start_date = None
-        p_obj.save()
+            p_obj.ongoing = False
+            p_obj.videos = ""
+            p_obj.start_date = None
+            p_obj.save()
 
-        ongoing_videos_obj = VideoObj.objects.filter(ongoing=True)
-        for v in ongoing_videos_obj:
-            if str(v.vuid) in videos_uid:
-                v.ongoing = False
-                v.cur_participant = ""
-                v.cur_participant_uid = ""
-                v.save()
+            ongoing_videos_obj = VideoObj.objects.filter(ongoing=True)
+            for v in ongoing_videos_obj:
+                if str(v.vuid) in videos_uid:
+                    v.ongoing = False
+                    v.cur_participant = ""
+                    v.cur_participant_uid = ""
+                    v.save()
+    except Exception as e:
+        logger.error(str(e))
 
 
 
