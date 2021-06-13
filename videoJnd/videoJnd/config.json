@@ -1,5 +1,5 @@
 {
-    "QP_TRIAL_NUM" : 10, 
+    "QP_TRIAL_NUM" : 5, 
     "SRC_VIDEO_NUM" : 10, 
     "RATING_PER_SRC": 2,
     "MAX_VIDEO_NUM_PER_HIT": 5,

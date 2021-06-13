@@ -13,7 +13,6 @@ import copy
 import ast
 
 config = get_config()
-QP_TRIAL_NUM = config["QP_TRIAL_NUM"]
 
 def record_result(recv_data:dict) -> dict:
 
@@ -25,6 +24,9 @@ def record_result(recv_data:dict) -> dict:
         os_info = recv_data["data"]["os_info"]
         
         exp_obj = Experiment.objects.filter(euid=recv_data["euid"])[0]
+        qp_trail_num = exp_obj.configuration["QP_TRIAL_NUM"]
+
+        print(qp_trail_num)
         Assignment(auid = uuid.uuid4()
                     , exp = exp_obj
                     , pname = p_obj.name
@@ -40,7 +42,7 @@ def record_result(recv_data:dict) -> dict:
             if video_obj:
                 video_obj = video_obj[0]
                 if video_obj.ongoing:
-                    _update_video_db(video_result, video_obj)
+                    _update_video_db(video_result, video_obj, qp_trail_num)
 
                 else:
                     return {"status":"failed", 
@@ -58,7 +60,7 @@ def record_result(recv_data:dict) -> dict:
     else:
         return {"status":"failed", "restype": "record_result", "data":"participant is not exist"}
 
-def _update_video_db(video_result:dict, video_obj:object) -> None:
+def _update_video_db(video_result:dict, video_obj:object, qp_trail_num:int) -> None:
     decision_code = _encode_decision(video_result["side"], video_result["decision"])
     video_obj.result_orig = _add_new_item(video_obj.result_orig, 
                                             decision_code + "-" + video_result["side"] + "-" + video_result["decision"])
@@ -69,7 +71,7 @@ def _update_video_db(video_result:dict, video_obj:object) -> None:
     
     if decision_code != "4": # exclude decision code 4
         video_obj.qp_count = video_obj.qp_count + 1
-    if video_obj.qp_count == QP_TRIAL_NUM:
+    if video_obj.qp_count == qp_trail_num:
         video_obj.is_finished = True
     
     video_obj.cur_participant = None

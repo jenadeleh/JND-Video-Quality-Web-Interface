@@ -15,10 +15,10 @@ idle_threads = [] # when user start the exp. before expiration, threading does n
 def resource_monitor(recv_data:dict) -> dict:
     p_obj = Participant.objects.filter(puid=recv_data["puid"]).first()
 
-    if not p_obj.start_date:
-        p_obj.start_date  = timezone.now()
-    p_obj.ongoing  = True
-    p_obj.save()
+    # if not p_obj.start_date:
+    #     p_obj.start_date  = timezone.now()
+    # p_obj.ongoing  = True
+    # p_obj.save()
 
     if recv_data["puid"] not in monitor_threads and recv_data["puid"] not in idle_threads:
         _start_thread(p_obj)

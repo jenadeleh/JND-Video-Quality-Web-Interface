@@ -36,7 +36,9 @@ def req_videos(recv_data:dict) -> dict:
                                                             recv_data["puid"], 
                                                             avl_videos)
                     
-
+                    if not cur_p.start_date:
+                        cur_p.start_date  = timezone.now()
+                    cur_p.ongoing  = True
                     cur_p.videos = str(videos_info)
                     cur_p.save()
 
