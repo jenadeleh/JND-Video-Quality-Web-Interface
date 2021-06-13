@@ -1,10 +1,11 @@
 import * as $ from 'jquery';
+import { config } from "./Configuration";
 
 export const sendMsg = (data) => {
     return new Promise((resolve,reject)=>{
         $.ajax({
             type: 'POST',
-            url: "http://127.0.0.1:8000/scheduler",
+            url: config.SERVER_URL,
             data: JSON.stringify(data),
             contentType: 'application/json; charset=UTF-8',
             dataType: 'json', 

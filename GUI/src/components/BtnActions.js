@@ -96,8 +96,9 @@ export function displayEndHitPanel() {
     $("#hit-end-panel").css("display", "inline");
     $("#video-spinner").css("display", "none").removeClass("d-flex");
     globalStatus.exp_status = "next-hit-panel";
-    updateProgressBar(0, globalStatus.video_num);
     globalStatus.loaded_video_num = 0;
+    $("#loading-progress").html(globalStatus.loaded_video_num+ "/" +globalStatus.video_num);
+    updateProgressBar(0, globalStatus.video_num);
 }
 
 function _sendResult() {

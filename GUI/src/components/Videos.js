@@ -54,6 +54,7 @@ export function reqLoadVideos(pname, puid, euid) {
             globalStatus.videos = videos_info;
             globalStatus.videos = _shuffle(globalStatus.videos)
             globalStatus.video_num = globalStatus.videos.length;
+            globalStatus.loaded_video_num = 0;
             updateProgressBar(0, globalStatus.video_num);
             $("#loading-progress").html(globalStatus.loaded_video_num+ "/" +globalStatus.video_num);
             _addAllVideosToDom();

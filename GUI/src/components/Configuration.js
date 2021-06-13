@@ -16,4 +16,5 @@ export const config = {
     DISTANCE: 30,
     ENV_MIN_W: 1360,
     ENV_MIN_H: 760,
+    SERVER_URL: "" // http://127.0.0.1:8000/scheduler
 };
