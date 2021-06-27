@@ -1,16 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpResponse
-from django.http import JsonResponse
-from django.utils import timezone
-
-import random
 import json
-import sys
-import logging
-import uuid
-import copy
-import ast
-
-
 from videoJnd.src.ReqVideos import req_videos
 from videoJnd.src.RecordResult import record_result
 from videoJnd.src.ReqInstConsentF import req_inst_cf

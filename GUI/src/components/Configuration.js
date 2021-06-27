@@ -1,5 +1,3 @@
-import { globalStatus } from "./GlobalStatus";
-
 export const config = {
     WARNING_MESSAGE: {
         "incorrect_cali": `<span style="color:#BA4A00;font-size:20pt">Your monitor's size is detected as small. Please use a bank card , and do the calibration again, or switch to a larger monitor. Thank you for your cooperation.</span>`,
@@ -16,5 +14,5 @@ export const config = {
     DISTANCE: 30,
     ENV_MIN_W: 1360,
     ENV_MIN_H: 760,
-    SERVER_URL: "http://127.0.0.1:8000/scheduler" // 
+    SERVER_URL: "/scheduler" // http://127.0.0.1:8000/scheduler  /scheduler
 };
