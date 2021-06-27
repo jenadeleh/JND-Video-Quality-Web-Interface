@@ -16,7 +16,8 @@ class ExperimentAdmin(admin.ModelAdmin):
     list_display = ("name"
                     , "euid"
                     , "active"
-                    , "duration"
+                    , "download_time"
+                    , "wait_time"
                     , "description"
                     , "has_created_videos"
                     , "pub_date")
@@ -54,15 +55,6 @@ class ExperimentAdmin(admin.ModelAdmin):
 
 @admin.register(InterfaceText)
 class InterfaceTextAdmin(admin.ModelAdmin):
-    # list_display = ("title", 
-    #                 "question",
-    #                 "text_end_exp",
-    #                 "text_end_hit",
-    #                 "timeout_msg",
-    #                 "btn_text_end_hit",
-    #                 "instruction_btn_text",
-    #                 "no_available_exp",
-    #                 "expire_msg")
 
     def has_add_permission(self, request):
         """ only one 'instruction' object can be created """
@@ -73,7 +65,6 @@ class InterfaceTextAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
-
 
 @admin.register(Instruction)
 class InstructionAdmin(admin.ModelAdmin):

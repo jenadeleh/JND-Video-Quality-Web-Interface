@@ -13,7 +13,9 @@ class Experiment(models.Model):
     description = models.TextField(max_length=4096, default="", editable=True)
     has_created_videos = models.BooleanField(default=False, editable=False)
     configuration = jsonfield.JSONField(default=get_config())
-    duration = models.IntegerField("Duration(seconds)", default=600, editable=True, validators=[MinValueValidator(10)])
+    download_time = models.IntegerField("Download Time Limitation(seconds)", default=30, editable=True, validators=[MinValueValidator(10)])
+    wait_time = models.IntegerField("Waiting Time Limitation(seconds)", default=30, editable=True, validators=[MinValueValidator(10)])
+
     pub_date = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
 
     def __str__(self):
@@ -24,11 +26,15 @@ class InterfaceText(models.Model):
     question = models.TextField("Question of the task", max_length=4096, default="", null=False, blank=False)
     text_end_exp = RichTextField("When the experiment is done, display", default="", null=False, blank=False)
     text_end_hit = RichTextField("When the HIT is done, display", default="", null=False, blank=False)
-    timeout_msg = models.TextField("When user doesn't make a decision, display", max_length=4096, default="", null=False, blank=False) # for image
+    decision_timeout_msg = models.TextField("When user doesn't make a decision, display", max_length=4096, default="", null=False, blank=False) # for image
     btn_text_end_hit = models.TextField("Text of the button when the HIT is done", max_length=4096, default="", null=False, blank=False)
     instruction_btn_text = models.CharField("Text of the button in the instruction page", max_length=20, default="", null=False, blank=False)
     no_available_exp = RichTextField("When there is no experiment available, display", default="", null=False, blank=False)
-    expire_msg = models.TextField("When the HIT is expired, display", max_length=4096, default="", null=False, blank=False) # for hit
+    waiting_timeout_msg = models.TextField("When the HIT is expired, display", max_length=4096, default="", null=False, blank=False) # for hit
+    download_timeout_msg = models.TextField("When download timeout, display", max_length=4096, default="", null=False, blank=False) # for hit
+
+    def __str__(self):
+        return self.title
 
 class Instruction(models.Model):
     title = models.CharField(max_length=20, default="Instruction", editable=False)

@@ -51,7 +51,7 @@ function _process_response(response) {
             text_end_hit, 
             text_end_exp, 
             btn_text_end_hit, 
-            timeout_msg,
+            decision_timeout_msg,
             instruction_btn_text} = response["data"] 
 
         _render_interface_text(instruction, 
@@ -60,7 +60,7 @@ function _process_response(response) {
                                 text_end_hit, 
                                 text_end_exp, 
                                 btn_text_end_hit, 
-                                timeout_msg,
+                                decision_timeout_msg,
                                 instruction_btn_text);
 
         $("#inst-panel").css("display", "inline");
@@ -79,14 +79,14 @@ function _render_interface_text(instruction,
                                 text_end_hit, 
                                 text_end_exp, 
                                 btn_text_end_hit, 
-                                timeout_msg,
+                                decision_timeout_msg,
                                 instruction_btn_text) {
 
     _render_instruction(instruction);
     _render_consent_form(consent_form);
     _render_question_text(question);
     _render_end_hit_text(text_end_hit, btn_text_end_hit);
-    _render_timeout_text(timeout_msg);
+    _render_timeout_text(decision_timeout_msg);
     _render_end_exp_text(text_end_exp);
     _render_read_inst_btn_text(instruction_btn_text);
 }
@@ -113,8 +113,8 @@ function _render_question_text(question) {
     $("#question").html(question);
 }
 
-function _render_timeout_text(timeout_msg) {
-    $("#timeout-msg").html(timeout_msg);
+function _render_timeout_text(decision_timeout_msg) {
+    $("#decision-timeout-msg").html(decision_timeout_msg);
 }
 
 function _render_read_inst_btn_text(instruction_btn_text) {

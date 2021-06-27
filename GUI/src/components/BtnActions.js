@@ -52,7 +52,7 @@ export function processHit() {
                     .removeClass("btn-primary")
                     .addClass("btn-secondary");
     $(".video-cover").css("visibility", "visible");
-    $("#timeout-msg").css("display", "none");
+    $("#decision-timeout-msg").css("display", "none");
 
     updateProgressBar(globalStatus.video_num - globalStatus.videos.length
                     , globalStatus.video_num);

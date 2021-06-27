@@ -20,14 +20,23 @@ def req_videos(recv_data:dict) -> dict:
         if cur_exp_obj.active == True:
             avl_videos  = select_videos(cur_exp_obj)
 
+        
             if avl_videos:
                 cur_p = Participant.objects.filter(puid=recv_data["puid"])[0]
+
                 if cur_p.ongoing == True:# ongoing, return current videos      
                     videos = ast.literal_eval(cur_p.videos)
                     random.shuffle(videos)
                     cur_p.start_date  = timezone.now()
                     cur_p.save() # update start date 
-                    _response = {"videos":videos, "duration":cur_exp_obj.duration}
+                    _response = {
+                        "videos":videos, 
+                        "wait_time":cur_exp_obj.wait_time,
+                        "download_time":cur_exp_obj.download_time
+                    }
+
+                    print("+++++++")
+                    print(cur_p.ongoing)
 
                     return {"status":"successful", "restype": "req_videos", "data":_response}
 
@@ -45,7 +54,8 @@ def req_videos(recv_data:dict) -> dict:
                     cur_p.save()
 
                     _response["videos"] =  videos_info
-                    _response["duration"] = cur_exp_obj.duration
+                    _response["wait_time"] =  cur_exp_obj.wait_time
+                    _response["download_time"] =  cur_exp_obj.download_time
 
                     return {"status":"successful", "restype": "req_videos", "data":_response}
             else:

@@ -20,7 +20,7 @@ function _SECOND_DURATION_timer() {
 }
 
 function _display_warning_info() {
-    $("#timeout-msg").css("display", "inline-block");
+    $("#decision-timeout-msg").css("display", "inline-block");
     $(".video-cover").css("visibility", "hidden");
     $("#not-sure-btn").attr("disabled", false)
                     .removeClass("btn-secondary")

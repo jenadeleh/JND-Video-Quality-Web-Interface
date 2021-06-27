@@ -23,8 +23,19 @@ def resource_monitor(recv_data:dict) -> dict:
     if recv_data["puid"] not in monitor_threads and recv_data["puid"] not in idle_threads:
         _start_thread(p_obj)
 
-    expire_msg = InterfaceText.objects.all().first().expire_msg
-    return {"status":"successful", "data":{"start_date":int(1000 * p_obj.start_date.timestamp()), "expire_msg":expire_msg}}
+    waiting_timeout_msg = InterfaceText.objects.all().first().waiting_timeout_msg
+    download_timeout_msg = InterfaceText.objects.all().first().download_timeout_msg
+
+    _response = {
+        "status":"successful", 
+        "data":{
+            "start_date":int(1000 * p_obj.start_date.timestamp()), 
+            "waiting_timeout_msg":waiting_timeout_msg,
+            "download_timeout_msg":download_timeout_msg
+            }
+    }
+    
+    return _response
 
 def _start_thread(p_obj):
     puid = str(p_obj.puid)
@@ -35,7 +46,9 @@ def _start_thread(p_obj):
 def _release_videos(monitor_threads:list, idle_threads:list, p_obj:object) -> None:
     videos = ast.literal_eval(p_obj.videos)
     videos_uid = [v["vuid"]for v in videos]
-    duration = p_obj.exp.duration # compensation for network delay 
+    duration = p_obj.exp.download_time +  p_obj.exp.wait_time# compensation for network delay 
+
+
 
     if p_obj.ongoing:
         start_date = p_obj.start_date
