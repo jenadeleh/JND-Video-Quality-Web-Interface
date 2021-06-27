@@ -25,6 +25,8 @@ def req_videos(recv_data:dict) -> dict:
                 if cur_p.ongoing == True:# ongoing, return current videos      
                     videos = ast.literal_eval(cur_p.videos)
                     random.shuffle(videos)
+                    cur_p.start_date  = timezone.now()
+                    cur_p.save() # update start date 
                     _response = {"videos":videos, "duration":cur_exp_obj.duration}
 
                     return {"status":"successful", "restype": "req_videos", "data":_response}

@@ -57,7 +57,10 @@ export function reqLoadVideos(pname, puid, euid) {
             globalStatus.loaded_video_num = 0;
             updateProgressBar(0, globalStatus.video_num);
             $("#loading-progress").html(globalStatus.loaded_video_num+ "/" +globalStatus.video_num);
+            
+            _startCountExpireTime();
             _addAllVideosToDom();
+
         } else if (response["status"] == "failed") {
             $(".exp-panel").css("display", "none");
             $("#msg-panel").html(response["data"]).css("display", "inline");
@@ -77,20 +80,7 @@ export function stopExpireTimer() {
 function _addAllVideosToDom() {
     const tasks = Array.from(globalStatus.videos, (video_info) => _loadVideoAsync(video_info));
     Promise.all(tasks).then(() => {
-        sendMsg({"action":"resource_monitor", 
-                "pname": getLocalData("pname"), 
-                "puid":getLocalData("puid"), 
-                "euid":getLocalData("euid")}
-        ).then(response => {
-            if (response["status"] == "successful") {
-                displayFirstVideo();
-                globalStatus.start_time = response["data"]["start_date"];
-                globalStatus.expire_msg = response["data"]["expire_msg"];
-                setExpireTimer();
-            } else if (response["status"] == "failed") {
-                console.log("Error: _addAllVideosToDom")
-            }
-        }); 
+        displayFirstVideo();
     });
 }
 
@@ -142,24 +132,33 @@ function _shuffle(arr) {
     return arr
 }
 
-export function setExpireTimer() {
+function _startCountExpireTime(){
+    sendMsg({"action":"resource_monitor", 
+        "pname": getLocalData("pname"), 
+        "puid":getLocalData("puid"), 
+        "euid":getLocalData("euid")}
+    ).then(response => {
+        if (response["status"] == "successful") {
+            globalStatus.start_time = response["data"]["start_date"];
+            globalStatus.expire_msg = response["data"]["expire_msg"];
+            _setExpireTimer();
+        } else if (response["status"] == "failed") {
+            console.log("Error: _addAllVideosToDom")
+        }
+    }); 
+}
+
+function _setExpireTimer() {
     // console.log("----- setExpireTimer -----")
-    let time_now = new Date().getTime();
-    let time_diff = (time_now - globalStatus.start_time) / 1000; // sec
-
-    if (time_diff >= globalStatus.duration) {
+    let wait_time = globalStatus.duration * 1000; // ms
+    globalStatus.EXPIRE_TIMER = setTimeout(()=> {
         _showTimeoutMsg();
-    } else {
-
-        let wait_time = (globalStatus.duration - time_diff)*1000; // ms
-        globalStatus.EXPIRE_TIMER = setTimeout(()=> {
-            _showTimeoutMsg();
-        }, wait_time);
-    }
+    }, wait_time);
 }
 
 function _showTimeoutMsg() {
     // console.log("----- showTimeoutMsg -----")
+    displayEndHitPanel();
     clearTimeout(globalStatus.EXPIRE_TIMER);
     clearInterval(globalStatus.env_bg_interval);
     clearTimeout(globalStatus.FIRST_DURATION_TIMER);
@@ -173,6 +172,5 @@ function _showTimeoutMsg() {
     $btn_dom.on("click", ()=>{
         $btn_dom.remove();
         $("#warning-cover").css("display", "none")
-        displayEndHitPanel();
     })
 }

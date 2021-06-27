@@ -22,7 +22,12 @@ export const globalStatus = {
     isTheSameBrowser: true,
     isNotZoomedBrowser: true,
     reso_warnings: "",
-    exp_status: "",
+    exp_status: "", // inst_panel:instruction is being shown, 
+                    // dist_panel:adjust distance panel is being shown, 
+                    // hit_panel:after adjusting distance, hit is being shown, before videos are finished downloading
+                    // decision: after videos are finished downloading before clicking "start experiment" button
+                    // next-hit-panel: hit ends, before clicking "next assignment" button,
+                    
     ispexist: false,
     jnd_video_data:{},
     text_end_exp:"",

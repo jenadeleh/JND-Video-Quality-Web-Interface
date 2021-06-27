@@ -26,7 +26,6 @@ def record_result(recv_data:dict) -> dict:
         exp_obj = Experiment.objects.filter(euid=recv_data["euid"])[0]
         qp_trail_num = exp_obj.configuration["QP_TRIAL_NUM"]
 
-        print(qp_trail_num)
         Assignment(auid = uuid.uuid4()
                     , exp = exp_obj
                     , pname = p_obj.name

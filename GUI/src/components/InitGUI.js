@@ -5,6 +5,8 @@ import { checkEnvBackground, isPC, showWarningCover, isCorrectResolution, getBro
 import { globalStatus } from "./GlobalStatus";
 import { keyboardControl } from "./KeyboardControl";
 import { initLocalData } from "./InitLocalData";
+import { actionCloseTabBrowser } from "./ActionCloseTabBrowser"
+
 
 export function initGUI() {
     if (!isPC()) {
@@ -16,6 +18,7 @@ export function initGUI() {
         checkEnvBackground();
         if (!globalStatus.isNotMaximizedBrowser) {
             // initLocalData();
+            actionCloseTabBrowser();
             getBrowserInfo();
             initDoms();
             keyboardControl();

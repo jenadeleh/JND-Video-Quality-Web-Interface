@@ -8,7 +8,7 @@ d # Created by https://www.toptal.com/developers/gitignore/api/macos,python,jupy
 
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
-*.sqlite3
+jndvideo.sqlite3
 migrations/
 
 /videos

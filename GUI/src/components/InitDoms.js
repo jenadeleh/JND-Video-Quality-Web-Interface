@@ -14,7 +14,6 @@ export function initDoms() {
     });
 
     $('#next-hit-btn').on('click', (e)=> {
-        globalStatus.exp_status = "hit_panel";
         actNextHitBtn();
     });
 

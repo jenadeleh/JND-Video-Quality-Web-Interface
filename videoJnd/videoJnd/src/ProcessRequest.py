@@ -23,7 +23,7 @@ def process_request(request):
     if request.method == "POST":
         if request.body:
                 recv_data = json.loads(request.body)
-                
+                # print(recv_data)
 
                 if recv_data["action"] == "req_inst_cf":
                     response = req_inst_cf(recv_data["puid"])
