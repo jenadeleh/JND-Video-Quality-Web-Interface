@@ -36,4 +36,5 @@ export const globalStatus = {
     start_time:Object(), // the time that finish loading the videos 
     download_timeout_msg:"", 
     waiting_timeout_msg:"",
+    warning_status:"env"
 }

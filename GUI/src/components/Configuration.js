@@ -3,8 +3,9 @@ export const config = {
         "incorrect_cali": `<span style="color:#BA4A00;font-size:20pt">Your monitor's size is detected as small. Please use a bank card , and do the calibration again, or switch to a larger monitor. Thank you for your cooperation.</span>`,
         "mobile_device": "Mobile Device is not suitable for this work, please use PC, otherwise your work will be rejected.",
         "maximize_browser": "Please maximize your browser.",
-        "same_monitor": "Please use the same monitor.",
+        "same_monitor": "Please use the same monitor. Or refresh the website to restart the experiment.",
         "scale_browser": "Please don't change the browser zoom level. You can set it back from browser menu, or using the CMD/CTRL and +/- key combination, or using CMD/CTRL and mouse scroll combination. Thank you.",
+        "correct_browser":"To enable all interface features, please use Chrome or Firefox.",
     },
     FIRST_DURATION: 5000, // ms
     SECOND_DURATION: 3000, // ms
@@ -14,5 +15,5 @@ export const config = {
     DISTANCE: 30,
     ENV_MIN_W: 1360,
     ENV_MIN_H: 760,
-    SERVER_URL: "/scheduler" // http://127.0.0.1:8000/scheduler  /scheduler
+    SERVER_URL: "http://127.0.0.1:8000/scheduler" // http://127.0.0.1:8000/scheduler  
 };

@@ -29,6 +29,7 @@ class InterfaceText(models.Model):
     decision_timeout_msg = models.TextField("When user doesn't make a decision, display", max_length=4096, default="", null=False, blank=False) # for image
     btn_text_end_hit = models.TextField("Text of the button when the HIT is done", max_length=4096, default="", null=False, blank=False)
     instruction_btn_text = models.CharField("Text of the button in the instruction page", max_length=20, default="", null=False, blank=False)
+    consent_btn_text = models.CharField("Text of the button in the consent form page", max_length=20, default="", null=False, blank=False)
     no_available_exp = RichTextField("When there is no experiment available, display", default="", null=False, blank=False)
     waiting_timeout_msg = models.TextField("When the HIT is expired, display", max_length=4096, default="", null=False, blank=False) # for hit
     download_timeout_msg = models.TextField("When download timeout, display", max_length=4096, default="", null=False, blank=False) # for hit

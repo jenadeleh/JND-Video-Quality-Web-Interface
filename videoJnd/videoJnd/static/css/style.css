@@ -97,6 +97,13 @@ input#cf-submit-btn{
     z-index: 9999;
 }
 
+#warning-msg {
+    text-align: center;
+    width:80%;
+    position: relative;
+    margin: auto;
+}
+
 #read-inst-div {
     display: flex;
     justify-content: flex-end;  

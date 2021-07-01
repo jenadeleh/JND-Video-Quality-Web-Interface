@@ -52,7 +52,8 @@ function _process_response(response) {
             text_end_exp, 
             btn_text_end_hit, 
             decision_timeout_msg,
-            instruction_btn_text} = response["data"] 
+            instruction_btn_text,
+            consent_btn_text} = response["data"] 
 
         _render_interface_text(instruction, 
                                 consent_form,
@@ -61,7 +62,8 @@ function _process_response(response) {
                                 text_end_exp, 
                                 btn_text_end_hit, 
                                 decision_timeout_msg,
-                                instruction_btn_text);
+                                instruction_btn_text,
+                                consent_btn_text);
 
         $("#inst-panel").css("display", "inline");
         
@@ -80,7 +82,8 @@ function _render_interface_text(instruction,
                                 text_end_exp, 
                                 btn_text_end_hit, 
                                 decision_timeout_msg,
-                                instruction_btn_text) {
+                                instruction_btn_text,
+                                consent_btn_text) {
 
     _render_instruction(instruction);
     _render_consent_form(consent_form);
@@ -89,6 +92,7 @@ function _render_interface_text(instruction,
     _render_timeout_text(decision_timeout_msg);
     _render_end_exp_text(text_end_exp);
     _render_read_inst_btn_text(instruction_btn_text);
+    _render_read_consent_btn_text(consent_btn_text);
 }
 
 function _render_instruction(instruction) {
@@ -119,6 +123,10 @@ function _render_timeout_text(decision_timeout_msg) {
 
 function _render_read_inst_btn_text(instruction_btn_text) {
     $("#read-inst-btn").html(instruction_btn_text);
+}
+
+function _render_read_consent_btn_text(consent_btn_text) {
+    $("#cf-submit-btn").attr("value", consent_btn_text);
 }
 
 function _render_end_exp_text(text_end_exp) {

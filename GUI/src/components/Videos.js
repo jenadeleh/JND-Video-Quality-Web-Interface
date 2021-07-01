@@ -161,7 +161,6 @@ function _setExpireTimer(timeout_type) {
         duration = globalStatus.wait_time * 1000; // ms
     }
 
-    console.log("----- setExpireTimer -----" + timeout_type)
     globalStatus.EXPIRE_TIMER = setTimeout(()=> {
         _showTimeoutMsg(timeout_type);
         sendMsg({"action":"release_resource", "puid":getLocalData("puid")});
@@ -173,10 +172,11 @@ function _showTimeoutMsg(timeout_type) {
     // console.log("----- showTimeoutMsg -----" + timeout_type)
     displayEndHitPanel();
     clearTimeout(globalStatus.EXPIRE_TIMER);
-    clearInterval(globalStatus.env_bg_interval);
+    // clearInterval(globalStatus.env_bg_interval);
     clearTimeout(globalStatus.FIRST_DURATION_TIMER);
     clearTimeout(globalStatus.SECOND_DURATION_TIMER);
 
+    globalStatus.warning_status = "timer";
     if (timeout_type=="download") {
         $("#warning-msg").html(globalStatus.download_timeout_msg);
     } else if (timeout_type=="wait") {
@@ -191,5 +191,6 @@ function _showTimeoutMsg(timeout_type) {
     $btn_dom.on("click", ()=>{
         $btn_dom.remove();
         $("#warning-cover").css("display", "none")
+        globalStatus.warning_status = "env";
     })
 }

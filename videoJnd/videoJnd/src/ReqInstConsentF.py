@@ -33,7 +33,8 @@ def req_inst_cf(_puid:str) -> dict:
                                     "text_end_exp": interface_text.text_end_exp,
                                     "btn_text_end_hit": interface_text.btn_text_end_hit,
                                     "decision_timeout_msg": interface_text.decision_timeout_msg,
-                                    "instruction_btn_text": interface_text.instruction_btn_text}}
+                                    "instruction_btn_text": interface_text.instruction_btn_text,
+                                    "consent_btn_text": interface_text.consent_btn_text}}
 
                 return _response
             else:

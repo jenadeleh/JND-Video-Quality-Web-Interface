@@ -85,6 +85,20 @@ export function isPC() {
     return true;
 }
 
+export function isCorrectBrowser() {
+    // must use Chrome 
+
+    let userAgentInfo = navigator.userAgent.toLowerCase();
+    if (
+        userAgentInfo.indexOf("firefox") != -1 || 
+        userAgentInfo.indexOf("chrome") != -1
+    ) {
+        return true;
+    } 
+
+    return false;
+}
+
 export function isCorrectResolution() {
     if (screen.width < config.ENV_MIN_W || screen.height < config.ENV_MIN_H) {
         return false
@@ -98,11 +112,15 @@ export function reso_warnings() {
 }
 
 export function showWarningCover(message) {
-    $("#warning-cover").css("visibility", "visible");
-    $("#warning-msg").html(config.WARNING_MESSAGE[message]);
+    if (globalStatus.warning_status == "env" && globalStatus.exp_status != "inst_panel") {
+        $("#warning-cover").css("display", "inline-block").css("visibility", "visible");
+        $("#warning-msg").html(config.WARNING_MESSAGE[message]);
+    }
 }
     
 function _hideWarningCover() {
-    $("#warning-cover").css("visibility", "hidden");
-    $("#warning-msg").html();
+    if (globalStatus.warning_status == "env") {
+        $("#warning-cover").css("visibility", "hidden");
+        $("#warning-msg").html();
+    }
 }
