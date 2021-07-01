@@ -40,10 +40,14 @@ class InterfaceText(models.Model):
 class Instruction(models.Model):
     title = models.CharField(max_length=20, default="Instruction", editable=False)
     description = RichTextField(default="", null=False, blank=False)
+    def __str__(self):
+        return self.title
 
 class ConsentForm(models.Model):
     title = models.CharField(max_length=20, default="Consent Form", editable=False)
     description = RichTextField(default="", null=False, blank=False)
+    def __str__(self):
+        return self.title
 
 class VideoObj(models.Model):
     vuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -62,7 +66,6 @@ class VideoObj(models.Model):
     cur_participant = models.CharField(max_length=20, editable=False, null=True, blank=True)
     cur_participant_uid = models.CharField(max_length=50, editable=False, null=True, blank=True)
 
-    
     def __str__(self):
         return self.source_video
 
@@ -74,6 +77,8 @@ class Participant(models.Model):
     start_date = models.DateTimeField(editable=False, blank=True, null=True)
     videos = models.TextField(max_length=4096, default="", editable=False)
     ongoing = models.BooleanField(default=False, editable=False)
+    def __str__(self):
+        return self.puid
 
 class Assignment(models.Model):
     auid = models.UUIDField(editable=False, null=True, blank=True)
@@ -85,5 +90,6 @@ class Assignment(models.Model):
     calibration = models.TextField(max_length=40960, default="", editable=False)
     operation_system = models.TextField(max_length=40960, default="", editable=False)
     submit_time = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
-
+    def __str__(self):
+        return self.auid
 
