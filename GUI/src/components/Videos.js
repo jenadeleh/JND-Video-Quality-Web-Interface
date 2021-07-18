@@ -183,6 +183,7 @@ function _showTimeoutMsg(timeout_type) {
         $("#warning-msg").html(globalStatus.waiting_timeout_msg);
     }
     
+    $("#next-hit-btn").attr("disabled", true);
     $("#warning-cover").css("display", "inline")
                         .css("visibility", "visible")
                         .append(`<button id="expire-continue-btn" type="button" class="btn btn-info">Continue</button>`);
@@ -191,6 +192,7 @@ function _showTimeoutMsg(timeout_type) {
     $btn_dom.on("click", ()=>{
         $btn_dom.remove();
         $("#warning-cover").css("display", "none")
+        $("#next-hit-btn").attr("disabled", false);
         globalStatus.warning_status = "env";
     })
 }

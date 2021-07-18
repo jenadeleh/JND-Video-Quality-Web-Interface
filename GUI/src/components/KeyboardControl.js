@@ -18,27 +18,42 @@ export function keyboardControl(){
                     adjustDist();
                 } else if(globalStatus.exp_status == "hit_panel") {
                     actStartExpBtn();
-                } else if(globalStatus.exp_status == "next-hit-panel") {
+                } else if(
+                    globalStatus.exp_status == "next-hit-panel" && 
+                    $("#next-hit-btn").prop("disabled") == false
+                ) {
                     actNextHitBtn();
                 }
                 break;
             
             case 37: // left arrow
-                if(globalStatus.exp_status == "decision") {
+                if(
+                    globalStatus.exp_status == "decision" && 
+                    globalStatus.canMakeDecision == true &&
+                    globalStatus.isWarning == false
+                ) {
                     addResultToCurVideo("L");
                     processHit();
                 }
                 break
 
             case 39: // right arrow
-                if(globalStatus.exp_status == "decision") {
+                if(
+                    globalStatus.exp_status == "decision" &&
+                    globalStatus.canMakeDecision == true &&
+                    globalStatus.isWarning == false
+                ) {
                     addResultToCurVideo("R");
                     processHit();
                 }
                 break
             
             case 40: // down arrow
-                if(globalStatus.exp_status == "decision") {
+                if(
+                    globalStatus.exp_status == "decision" &&
+                    globalStatus.canMakeDecision == true &&
+                    globalStatus.isWarning == false
+                ) {
                     if ($("#not-sure-btn").attr("disabled") != "disabled") {
                         addResultToCurVideo("not sure");
                         processHit();

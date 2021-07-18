@@ -10,6 +10,8 @@ import { passCF_action } from "./ConsentForm"
 export function actStartExpBtn(e) {
     $("#start-exp-btn").attr("disabled", true)
                     .css("display", "none");
+    globalStatus.canMakeDecision = true;
+
 
     $("#left-btn, #right-btn").attr("disabled", false);
     let cur_vuid = globalStatus.cur_video["vuid"];
@@ -34,6 +36,7 @@ export function actNextHitBtn() {
     $("#video-cover").remove();
 
     globalStatus.exp_status = "hit_panel";
+    globalStatus.canMakeDecision = false;
 
     // request new videos
     reqLoadVideos(getLocalData("pname"), getLocalData("puid"), getLocalData("euid"));
@@ -48,6 +51,7 @@ export function addResultToCurVideo(decision) {
 }
 
 export function processHit() {
+    globalStatus.isNotSureBtnAvl = false;
     $("#not-sure-btn").attr("disabled", true)
                     .removeClass("btn-primary")
                     .addClass("btn-secondary");
@@ -91,7 +95,7 @@ function _endHit() {
 
 export function displayEndHitPanel() {
     $(".video-cover").remove();
-    $(".decision-btn").attr("disabled")
+    $(".decision-btn").attr("disabled", true);
     $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "hidden");
     $("#hit-end-panel").css("display", "inline");
     $("#video-spinner").css("display", "none").removeClass("d-flex");

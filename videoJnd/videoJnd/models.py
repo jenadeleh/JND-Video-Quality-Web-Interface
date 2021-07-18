@@ -22,7 +22,7 @@ class Experiment(models.Model):
         return self.name
 
 class InterfaceText(models.Model):
-    title = models.CharField(max_length=20, default="InterfaceText", editable=False)
+    title = models.CharField(primary_key=True, max_length=20, default="InterfaceText", editable=False)
     question = models.TextField("Question of the task", max_length=4096, default="", null=False, blank=False)
     text_end_exp = RichTextField("When the experiment is done, display", default="", null=False, blank=False)
     text_end_hit = RichTextField("When the HIT is done, display", default="", null=False, blank=False)
@@ -38,13 +38,13 @@ class InterfaceText(models.Model):
         return self.title
 
 class Instruction(models.Model):
-    title = models.CharField(max_length=20, default="Instruction", editable=False)
+    title = models.CharField(primary_key=True, max_length=20, default="Instruction", editable=False)
     description = RichTextField(default="", null=False, blank=False)
     def __str__(self):
         return self.title
 
 class ConsentForm(models.Model):
-    title = models.CharField(max_length=20, default="Consent Form", editable=False)
+    title = models.CharField(primary_key=True, max_length=20, default="Consent Form", editable=False)
     description = RichTextField(default="", null=False, blank=False)
     def __str__(self):
         return self.title
@@ -77,11 +77,9 @@ class Participant(models.Model):
     start_date = models.DateTimeField(editable=False, blank=True, null=True)
     videos = models.TextField(max_length=4096, default="", editable=False)
     ongoing = models.BooleanField(default=False, editable=False)
-    def __str__(self):
-        return self.puid
 
 class Assignment(models.Model):
-    auid = models.UUIDField(editable=False, null=True, blank=True)
+    auid = models.UUIDField(primary_key=True, editable=False, blank=True)
     exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
     pname = models.CharField(max_length=20, editable=False, null=False, blank=False)
     email = models.EmailField(max_length=30, editable=False, default="", null=False, blank=False)

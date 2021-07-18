@@ -115,6 +115,11 @@ export function showWarningCover(message) {
     if (globalStatus.warning_status == "env" && globalStatus.exp_status != "inst_panel") {
         $("#warning-cover").css("display", "inline-block").css("visibility", "visible");
         $("#warning-msg").html(config.WARNING_MESSAGE[message]);
+        globalStatus.isWarning = true;
+
+        if (globalStatus.canMakeDecision == true) {
+            $(".decision-btn").attr("disabled", true);
+        }
     }
 }
     
@@ -122,5 +127,13 @@ function _hideWarningCover() {
     if (globalStatus.warning_status == "env") {
         $("#warning-cover").css("visibility", "hidden");
         $("#warning-msg").html();
+        globalStatus.isWarning = false;
+        if (globalStatus.canMakeDecision == true) {
+            $("#left-btn").attr("disabled", false);
+            $("#right-btn").attr("disabled", false);
+            if (globalStatus.isNotSureBtnAvl == true) {
+                $("#not-sure-btn").attr("disabled", false);
+            }
+        }
     }
 }

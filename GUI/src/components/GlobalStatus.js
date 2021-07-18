@@ -36,5 +36,8 @@ export const globalStatus = {
     start_time:Object(), // the time that finish loading the videos 
     download_timeout_msg:"", 
     waiting_timeout_msg:"",
-    warning_status:"env"
+    warning_status:"env",
+    canMakeDecision: false, // exp_status=decision, but use doesn't press "start experiment", or next video is loading
+    isWarning: false, // true, can not make a decision
+    isNotSureBtnAvl: false, // not_sure_button is available or not
 }
