@@ -90,7 +90,7 @@ export function isCorrectBrowser() {
 
     let userAgentInfo = navigator.userAgent.toLowerCase();
     if (
-        userAgentInfo.indexOf("firefox") != -1 || 
+        // userAgentInfo.indexOf("firefox") != -1 || 
         userAgentInfo.indexOf("chrome") != -1
     ) {
         return true;
