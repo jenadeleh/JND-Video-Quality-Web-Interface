@@ -1,7 +1,7 @@
 from django.utils import timezone
 
 from videoJnd.src.QuestPlusJnd import QuestPlusJnd
-from videoJnd.models import VideoObj, Experiment, Participant, InterfaceText
+from videoJnd.models import VideoObj, Experiment, Participant, InterfaceText, Assignment
 from videoJnd.src.GenUrl import gen_video_url, random_side
 
 
@@ -23,6 +23,8 @@ def req_videos(recv_data:dict) -> dict:
         
             if avl_videos:
                 cur_p = Participant.objects.filter(puid=recv_data["puid"])[0]
+                finished_assignment_num = len(Assignment.objects.filter(puid=recv_data["puid"], exp=cur_exp_obj))
+
 
                 if cur_p.ongoing == True:# ongoing, return current videos      
                     videos = ast.literal_eval(cur_p.videos)
@@ -35,8 +37,6 @@ def req_videos(recv_data:dict) -> dict:
                         "download_time":cur_exp_obj.download_time
                     }
 
-                    print("+++++++")
-                    print(cur_p.ongoing)
 
                     return {"status":"successful", "restype": "req_videos", "data":_response}
 
@@ -56,6 +56,7 @@ def req_videos(recv_data:dict) -> dict:
                     _response["videos"] =  videos_info
                     _response["wait_time"] =  cur_exp_obj.wait_time
                     _response["download_time"] =  cur_exp_obj.download_time
+                    _response["finished_assignment_num"] = finished_assignment_num
 
                     return {"status":"successful", "restype": "req_videos", "data":_response}
             else:

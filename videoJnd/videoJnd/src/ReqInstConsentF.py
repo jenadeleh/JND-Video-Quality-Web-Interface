@@ -15,6 +15,7 @@ def req_inst_cf(_puid:str) -> dict:
                     cur_p = Participant.objects.filter(puid=_puid, exp=exp_obj)
                     if cur_p:
                         isPExist = True
+
                     else:
                         isPExist = False
                 else:
@@ -34,7 +35,8 @@ def req_inst_cf(_puid:str) -> dict:
                                     "btn_text_end_hit": interface_text.btn_text_end_hit,
                                     "decision_timeout_msg": interface_text.decision_timeout_msg,
                                     "instruction_btn_text": interface_text.instruction_btn_text,
-                                    "consent_btn_text": interface_text.consent_btn_text}}
+                                    "consent_btn_text": interface_text.consent_btn_text,
+                                    "no_exp_avl_text": interface_text.no_available_exp}}
 
                 return _response
             else:

@@ -99,6 +99,7 @@ export function displayEndHitPanel() {
     $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "hidden");
     $("#hit-end-panel").css("display", "inline");
     $("#video-spinner").css("display", "none").removeClass("d-flex");
+    $("#finish-asgm-num").html(globalStatus.finished_assignment_num+1);
     globalStatus.exp_status = "next-hit-panel";
     globalStatus.loaded_video_num = 0;
     $("#loading-progress").html(globalStatus.loaded_video_num+ "/" +globalStatus.video_num);

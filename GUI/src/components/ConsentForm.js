@@ -25,7 +25,7 @@ export function submitCf(pname, pemail) {
             $("#msg-panel").html(response["data"]).css("display", "inline");
             return response["data"];
         }
-    }).catch(err => {
+    }).catch(err => {actNextHitBtn();actNextHitBtn();
         console.log("submitCf errors: " + err.message);  
     });
 }
@@ -53,7 +53,8 @@ function _process_response(response) {
             btn_text_end_hit, 
             decision_timeout_msg,
             instruction_btn_text,
-            consent_btn_text} = response["data"] 
+            consent_btn_text,
+            no_exp_avl_text} = response["data"] 
 
         _render_interface_text(instruction, 
                                 consent_form,
@@ -63,7 +64,8 @@ function _process_response(response) {
                                 btn_text_end_hit, 
                                 decision_timeout_msg,
                                 instruction_btn_text,
-                                consent_btn_text);
+                                consent_btn_text,
+                                no_exp_avl_text);
 
         $("#inst-panel").css("display", "inline");
         
@@ -83,16 +85,18 @@ function _render_interface_text(instruction,
                                 btn_text_end_hit, 
                                 decision_timeout_msg,
                                 instruction_btn_text,
-                                consent_btn_text) {
+                                consent_btn_text,
+                                no_exp_avl_text) {
 
     _render_instruction(instruction);
     _render_consent_form(consent_form);
     _render_question_text(question);
     _render_end_hit_text(text_end_hit, btn_text_end_hit);
     _render_timeout_text(decision_timeout_msg);
-    _render_end_exp_text(text_end_exp);
     _render_read_inst_btn_text(instruction_btn_text);
     _render_read_consent_btn_text(consent_btn_text);
+    _store_end_exp_text(text_end_exp);
+    _store_no_exp_avl_text(no_exp_avl_text);
 }
 
 function _render_instruction(instruction) {
@@ -129,6 +133,10 @@ function _render_read_consent_btn_text(consent_btn_text) {
     $("#cf-submit-btn").attr("value", consent_btn_text);
 }
 
-function _render_end_exp_text(text_end_exp) {
+function _store_end_exp_text(text_end_exp) {
     globalStatus.text_end_exp = text_end_exp;
+}
+
+function _store_no_exp_avl_text(no_exp_avl_text) {
+    globalStatus.no_exp_avl_text = no_exp_avl_text;
 }

@@ -17,6 +17,11 @@ export function initDoms() {
         actNextHitBtn();
     });
 
+    $('#quit-exp-btn').on('click', (e)=> {
+        $("#msg-panel").html(globalStatus.no_exp_avl_text).css("display", "inline");
+        $("#hit-end-panel, #hit-panel").css("display", "none");
+    });
+
     $("#cali-adjust-dist").on('click', (e)=> {
         adjustDist();
     });

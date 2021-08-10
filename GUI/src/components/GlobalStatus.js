@@ -31,6 +31,8 @@ export const globalStatus = {
     ispexist: false,
     jnd_video_data:{},
     text_end_exp:"",
+    no_exp_avl_text:"",
+    finished_assignment_num:0,
     download_time:0,// time limitation for downloading videos
     wait_time:0, // time limitation between finishing downloading videos and clicking "start experiment" button
     start_time:Object(), // the time that finish loading the videos 

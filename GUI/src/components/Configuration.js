@@ -5,7 +5,7 @@ export const config = {
         "maximize_browser": "Please maximize your browser.",
         "same_monitor": "Please use the same monitor. Or refresh the website to restart the experiment.",
         "scale_browser": "Please don't change the browser zoom level. You can set it back from browser menu, or using the CMD/CTRL and +/- key combination, or using CMD/CTRL and mouse scroll combination. Thank you.",
-        "correct_browser":"To enable all interface features, please use Chrome or Firefox.",
+        "correct_browser":"To enable all interface features, please use Chrome.",
     },
     FIRST_DURATION: 5000, // ms
     SECOND_DURATION: 3000, // ms
