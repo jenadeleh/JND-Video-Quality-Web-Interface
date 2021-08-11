@@ -16,7 +16,7 @@ export function keyboardControl(){
                     readInst();
                 } else if(globalStatus.exp_status == "dist_panel") {
                     adjustDist();
-                } else if(globalStatus.exp_status == "hit_panel") {
+                } else if(globalStatus.exp_status == "decision" && $("#start-exp-btn").attr("disabled")!="disabled") {
                     actStartExpBtn();
                 } else if(
                     globalStatus.exp_status == "next-hit-panel" && 
