@@ -36,7 +36,7 @@ def req_inst_cf(_puid:str) -> dict:
                                     "decision_timeout_msg": interface_text.decision_timeout_msg,
                                     "instruction_btn_text": interface_text.instruction_btn_text,
                                     "consent_btn_text": interface_text.consent_btn_text,
-                                    "no_exp_avl_text": interface_text.no_available_exp}}
+                                    "assignment_num_text": interface_text.assignment_num_text}}
 
                 return _response
             else:

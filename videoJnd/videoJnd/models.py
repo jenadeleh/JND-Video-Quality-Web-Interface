@@ -33,6 +33,7 @@ class InterfaceText(models.Model):
     no_available_exp = RichTextField("When there is no experiment available, display", default="", null=False, blank=False)
     waiting_timeout_msg = models.TextField("When the HIT is expired, display", max_length=4096, default="", null=False, blank=False) # for hit
     download_timeout_msg = models.TextField("When download timeout, display", max_length=4096, default="", null=False, blank=False) # for hit
+    assignment_num_text = models.TextField("Tell user how many assignments they have finished", max_length=4096, default="The number of the completed assignments: placeholder. (you can edit this text on 'interface text' page. Please use 'placeholder' to represent the number.)") # for hit
 
     def __str__(self):
         return self.title
@@ -79,7 +80,7 @@ class Participant(models.Model):
     ongoing = models.BooleanField(default=False, editable=False)
 
 class Assignment(models.Model):
-    auid = models.UUIDField(primary_key=True, editable=False, blank=True)
+    auid = models.UUIDField(primary_key=True,  default=uuid.uuid4, editable=False, blank=True)
     exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
     pname = models.CharField(max_length=20, editable=False, null=False, blank=False)
     email = models.EmailField(max_length=30, editable=False, default="", null=False, blank=False)

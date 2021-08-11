@@ -18,7 +18,7 @@ export function initDoms() {
     });
 
     $('#quit-exp-btn').on('click', (e)=> {
-        $("#msg-panel").html(globalStatus.no_exp_avl_text).css("display", "inline");
+        $("#msg-panel").html(globalStatus.text_end_exp).css("display", "inline");
         $("#hit-end-panel, #hit-panel").css("display", "none");
     });
 
