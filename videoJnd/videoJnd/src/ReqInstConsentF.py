@@ -8,7 +8,11 @@ def req_inst_cf(_puid:str) -> dict:
         interface_text = InterfaceText.objects.all()[0]
         if active_exps:
             exp_obj = active_exps[0]
-            avl_videos  = select_videos(exp_obj)
+            
+            if _puid:
+                avl_videos  = select_videos(exp_obj, _puid)
+            else: 
+                avl_videos  = select_videos(exp_obj, "")
 
             if avl_videos:
                 if _puid:

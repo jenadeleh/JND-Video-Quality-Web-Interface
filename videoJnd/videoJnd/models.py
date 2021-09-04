@@ -13,10 +13,11 @@ class Experiment(models.Model):
     description = models.TextField(max_length=4096, default="", editable=True)
     has_created_videos = models.BooleanField(default=False, editable=False)
     configuration = jsonfield.JSONField(default=get_config())
-    download_time = models.IntegerField("Download Time Limitation(seconds)", default=30, editable=True, validators=[MinValueValidator(10)])
-    wait_time = models.IntegerField("Waiting Time Limitation(seconds)", default=30, editable=True, validators=[MinValueValidator(10)])
-
+    download_time = models.IntegerField("Download Time Limitation(seconds)", default=300, editable=True, validators=[MinValueValidator(10)])
+    wait_time = models.IntegerField("Waiting Time Limitation(seconds)", default=300, editable=True, validators=[MinValueValidator(10)])
+    up_num_per_video_worker = models.IntegerField("Times for a worker to annotate a source video", default=2, editable=True)
     pub_date = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
+    
 
     def __str__(self):
         return self.name
@@ -78,6 +79,7 @@ class Participant(models.Model):
     start_date = models.DateTimeField(editable=False, blank=True, null=True)
     videos = models.TextField(max_length=4096, default="", editable=False)
     ongoing = models.BooleanField(default=False, editable=False)
+    videos_count = jsonfield.JSONField(default={})
 
 class Assignment(models.Model):
     auid = models.UUIDField(primary_key=True,  default=uuid.uuid4, editable=False, blank=True)

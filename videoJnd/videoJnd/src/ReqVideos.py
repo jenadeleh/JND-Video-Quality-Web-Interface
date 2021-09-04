@@ -18,13 +18,11 @@ def req_videos(recv_data:dict) -> dict:
         exp_config = cur_exp_obj.configuration
 
         if cur_exp_obj.active == True:
-            avl_videos  = select_videos(cur_exp_obj)
+            avl_videos  = select_videos(cur_exp_obj, recv_data["puid"])
 
-        
             if avl_videos:
                 cur_p = Participant.objects.filter(puid=recv_data["puid"])[0]
                 finished_assignment_num = len(Assignment.objects.filter(puid=recv_data["puid"], exp=cur_exp_obj))
-
 
                 if cur_p.ongoing == True:# ongoing, return current videos      
                     videos = ast.literal_eval(cur_p.videos)
@@ -66,7 +64,17 @@ def req_videos(recv_data:dict) -> dict:
     else:
         return {"status":"failed", "restype": "req_videos", "data":"experiment is not exist"}
     
-def select_videos(cur_exp_obj:object) -> list:
+def select_videos(cur_exp_obj:object, _puid:str) -> list:
+    removed_videos = []
+    
+    if _puid !="":
+        cur_p = Participant.objects.filter(puid=_puid, exp=cur_exp_obj)
+        if cur_p:
+            cur_p = cur_p[0]
+            for video_nam,v in cur_p.videos_count.items():
+                if v >= cur_exp_obj.up_num_per_video_worker:
+                    removed_videos.append(video_nam)
+
     exp_config = cur_exp_obj.configuration
 
     # filter videos that are not finished and not ongoing
@@ -81,6 +89,8 @@ def select_videos(cur_exp_obj:object) -> list:
     
     # filter videos that have different content
     avl_src = exp_config["SRC_NAME"]
+
+    avl_src = [src for src in avl_src if src not in removed_videos]
     avl_videos = []
 
     # select the videos randomly

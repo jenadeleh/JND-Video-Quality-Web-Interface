@@ -35,11 +35,21 @@ def record_result(recv_data:dict) -> dict:
                     , calibration = cali_info
                     , operation_system = os_info).save()
 
+        videos_count = p_obj.videos_count
+
         for video_result in _result:
             video_obj = VideoObj.objects.filter(vuid=video_result["vuid"])
 
             if video_obj:
                 video_obj = video_obj[0]
+
+                # update videos count
+                if video_obj.source_video in videos_count:
+                    videos_count[video_obj.source_video] += 1
+                else:
+                    videos_count[video_obj.source_video] = 1
+
+
                 if video_obj.ongoing:
                     _update_video_db(video_result, video_obj, qp_trail_num)
 
@@ -53,6 +63,9 @@ def record_result(recv_data:dict) -> dict:
                         "data":"video %s is not exist" % video_result["vuid"]}
 
         _set_p_onging_false(p_obj)
+
+        p_obj.videos_count = videos_count
+        p_obj.save()
 
 
         return {"status":"successful", "restype": "record_result",}

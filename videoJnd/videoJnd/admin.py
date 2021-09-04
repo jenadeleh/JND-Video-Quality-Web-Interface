@@ -142,7 +142,8 @@ class ParticipantAdmin(admin.ModelAdmin):
                     , "exp"
                     , "ongoing"
                     , "start_date"
-                    , "puid")
+                    , "puid"
+                    , "videos_count")
 
     list_filter = ("email", "exp", "ongoing")
 
