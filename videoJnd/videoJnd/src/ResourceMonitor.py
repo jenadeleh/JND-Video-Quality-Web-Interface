@@ -104,8 +104,9 @@ def wait_release_resources():
     logger.info("--- Release videos ---")
     ongoing_p_obj = Participant.objects.filter(ongoing=True)
 
-    for p_obj in ongoing_p_obj:
-        _start_thread(p_obj)
+    if ongoing_p_obj:
+        for p_obj in ongoing_p_obj:
+            _start_thread(p_obj)
 
 
 def release_resource(recv_data:dict) -> None:

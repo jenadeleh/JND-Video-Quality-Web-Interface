@@ -93,7 +93,6 @@ function _loadVideoAsync(video_info) {
     return new Promise(function(resolve, reject) {
         let $video_pool = $("#video-pool");
         let {url, vuid, side, qp, source_video} = video_info
-        // console.log(url)
         let req = new XMLHttpRequest();
         req.open('GET', url, true);
         req.responseType = 'blob';
@@ -101,7 +100,6 @@ function _loadVideoAsync(video_info) {
             if (this.status === 200) {
                 let videoBlob = this.response;
                 let v_l_url = URL.createObjectURL(videoBlob);
-
                 let v_html = `<div class="video-cover"
                                 id=vc-${vuid}
                                 data-side=${side}
@@ -115,16 +113,16 @@ function _loadVideoAsync(video_info) {
                                     >
                                 </video>
                         </div>`
-                $(v_html).appendTo($video_pool);
 
+                $(v_html).appendTo($video_pool);
                 globalStatus.loaded_video_num += 1;
 
-                
                 $("#loading-progress").html(globalStatus.loaded_video_num+ "/" +globalStatus.video_num);
                 resolve();
             }
         }
-        req.onerror = function() {}
+
+        req.onerror = function() {};
         req.send();
     });
 }
