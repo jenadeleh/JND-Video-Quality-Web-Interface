@@ -18,9 +18,55 @@ class Experiment(models.Model):
     up_num_per_video_worker = models.IntegerField("Times for a worker to annotate a source video", default=2, editable=True)
     pub_date = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
     
+    def __str__(self):
+        return self.name
+
+class VideoObj(models.Model):
+    vuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
+    source_video = models.CharField(max_length=20, default="", editable=False, null=False, blank=False)
+    codec = models.CharField(max_length=10, default="", editable=False)
+    frame_rate = models.IntegerField(default=0, editable=False)
+    crf = models.CharField(max_length=10, default="", editable=False)
+    rating = models.IntegerField(default=0, editable=False)
+    ongoing = models.BooleanField(default=False, editable=False)
+    qp_count = models.IntegerField(default=0, editable=False)
+    qp = models.TextField(max_length=4096, editable=False, null=True, blank=True)
+    result_orig = models.TextField(max_length=4096, editable=False, null=True, blank=True)
+    result_code = models.TextField(max_length=4096, editable=False, null=True, blank=True)
+    is_finished = models.BooleanField(default=False, editable=False)
+    cur_participant = models.CharField(max_length=20, editable=False, null=True, blank=True)
+    cur_participant_uid = models.CharField(max_length=50, editable=False, null=True, blank=True)
+
+    def __str__(self):
+        return self.source_video
+
+class Participant(models.Model):
+    puid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=20, default="", editable=False, null=False, blank=False)
+    email = models.EmailField(max_length=30, editable=False, default="", null=True, blank=True)
+    exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
+    start_date = models.DateTimeField(editable=False, blank=True, null=True)
+    videos = models.TextField(max_length=4096, default="", editable=False)
+    ongoing = models.BooleanField(default=False, editable=False)
+    videos_count = jsonfield.JSONField(default={})
 
     def __str__(self):
         return self.name
+
+class Assignment(models.Model):
+    auid = models.UUIDField(primary_key=True,  default=uuid.uuid4, editable=False)
+    exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
+    pname = models.CharField(max_length=20, editable=False, null=False, blank=False)
+    email = models.EmailField(max_length=30, editable=False, default="", null=False, blank=False)
+    puid = models.CharField(max_length=64, editable=False, null=False, blank=False)
+    result = models.TextField(max_length=40960, default="", editable=False)
+    calibration = models.TextField(max_length=40960, default="", editable=False)
+    operation_system = models.TextField(max_length=40960, default="", editable=False)
+    submit_time = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
+    
+    def __str__(self):
+        return str(self.auid)
 
 class InterfaceText(models.Model):
     title = models.CharField(primary_key=True, max_length=20, default="InterfaceText", editable=False)
@@ -50,47 +96,3 @@ class ConsentForm(models.Model):
     description = RichTextField(default="", null=False, blank=False)
     def __str__(self):
         return self.title
-
-class VideoObj(models.Model):
-    vuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
-    source_video = models.CharField(max_length=20, default="", editable=False, null=False, blank=False)
-    codec = models.CharField(max_length=10, default="", editable=False)
-    frame_rate = models.IntegerField(default=0, editable=False)
-    crf = models.CharField(max_length=10, default="", editable=False)
-    rating = models.IntegerField(default=0, editable=False)
-    ongoing = models.BooleanField(default=False, editable=False)
-    qp_count = models.IntegerField(default=0, editable=False)
-    qp = models.TextField(max_length=4096, editable=False, null=True, blank=True)
-    result_orig = models.TextField(max_length=4096, editable=False, null=True, blank=True)
-    result_code = models.TextField(max_length=4096, editable=False, null=True, blank=True)
-    is_finished = models.BooleanField(default=False, editable=False)
-    cur_participant = models.CharField(max_length=20, editable=False, null=True, blank=True)
-    cur_participant_uid = models.CharField(max_length=50, editable=False, null=True, blank=True)
-
-    def __str__(self):
-        return self.source_video
-
-class Participant(models.Model):
-    puid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=20, default="", editable=False, null=False, blank=False)
-    email = models.EmailField(max_length=30, editable=False, default="", null=True, blank=True)
-    exp = models.ForeignKey(Experiment, on_delete=models.CASCADE, editable=False)
-    start_date = models.DateTimeField(editable=False, blank=True, null=True)
-    videos = models.TextField(max_length=4096, default="", editable=False)
-    ongoing = models.BooleanField(default=False, editable=False)
-    videos_count = jsonfield.JSONField(default={})
-
-class Assignment(models.Model):
-    auid = models.UUIDField(primary_key=True,  default=uuid.uuid4, editable=False, blank=True)
-    exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
-    pname = models.CharField(max_length=20, editable=False, null=False, blank=False)
-    email = models.EmailField(max_length=30, editable=False, default="", null=False, blank=False)
-    puid = models.CharField(max_length=64, editable=False, null=False, blank=False)
-    result = models.TextField(max_length=40960, default="", editable=False)
-    calibration = models.TextField(max_length=40960, default="", editable=False)
-    operation_system = models.TextField(max_length=40960, default="", editable=False)
-    submit_time = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
-    def __str__(self):
-        return self.auid
-
