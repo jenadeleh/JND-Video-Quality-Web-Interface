@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.http import HttpResponse
-from .models import Instruction, ConsentForm, VideoObj, Experiment, Participant, Assignment, InterfaceText
+from .models import Instruction, ConsentForm, VideoGroupObj, Experiment, Participant, Assignment, InterfaceText, EncodedRefVideoObj
 
 admin.site.site_header = "JND Video Study"
 admin.site.site_title = "JND Video Study"
@@ -9,18 +9,19 @@ admin.site.index_title = "Admin"
 import csv
 import time
 
-from videoJnd.src.CreateVideosObj import createVideoObj
+from videoJnd.src.CreateVideosObj import createVideoGroupObj
 
 @admin.register(Experiment)
 class ExperimentAdmin(admin.ModelAdmin):
-    list_display = ("name"
-                    , "euid"
-                    , "active"
-                    , "download_time"
-                    , "wait_time"
-                    , "description"
-                    , "has_created_videos"
-                    , "pub_date")
+    list_display = (
+        "name"
+        , "euid"
+        , "active"
+        , "download_time"
+        , "wait_time"
+        , "description"
+        , "pub_date"
+    )
 
     list_per_page = 50
     list_editable =["active"]
@@ -29,7 +30,7 @@ class ExperimentAdmin(admin.ModelAdmin):
     
     def save_model(self, request, obj, form, change):
         super(ExperimentAdmin, self).save_model(request, obj, form, change)
-        createVideoObj(obj)
+        createVideoGroupObj(obj)
 
     def export_result(self, request, queryset):
         try:
@@ -51,6 +52,122 @@ class ExperimentAdmin(admin.ModelAdmin):
             print("admin page got error: " + str(e))
 
     export_result.short_description = "Export Selected"
+
+@admin.register(EncodedRefVideoObj)
+class EncodedRefVideoObjAdmin(admin.ModelAdmin):
+    list_display = (
+        "exp" 
+        # , "refuid"
+        , "ref_video"
+        , "vurl"
+        , "target_cnt"
+        , "remain_cnt" 
+        , "ongoing"
+        , "is_finished"
+        , "cur_workerid" 
+    )
+
+    search_fields = [
+        "exp"
+        , "ongoing"
+        , "is_finished"
+        , "cur_workerid"
+    ]
+
+    list_filter = ([
+        "exp"
+        , "ongoing"
+        , "is_finished"
+        , "cur_workerid"
+    ])
+
+    list_per_page = 200
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(VideoGroupObj)
+class VideoGroupObjAdmin(admin.ModelAdmin):
+
+    items = [
+        "exp" 
+        , "ref_video"
+        , "crf"
+        , "codec"
+        , "rating_cnt" 
+        , "ongoing"
+        , "is_finished"
+        , "cur_workerid" 
+    ]
+    list_display = (items)
+
+    search_fields = items
+
+    list_filter = (items)
+
+    list_per_page = 200
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+@admin.register(Participant)
+class ParticipantAdmin(admin.ModelAdmin):
+    list_display = (
+        "workerid"
+        , "exp"
+        , "ongoing"
+        , "start_date"
+        , "ref_videos_remain"
+    )
+
+    list_filter = ("exp", "ongoing")
+
+    list_per_page = 200
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+@admin.register(Assignment)
+class AssignmentAdmin(admin.ModelAdmin):
+    list_display = (
+        "auid"
+        , "exp"
+        , "workerid"
+        , "result"
+        , "submit_time"
+    )
+
+    list_per_page = 200
+
+    list_filter = (["exp"])
+
+
+    actions = ["export_as_csv"]
+
+    list_per_page = 200
+
+    def export_as_csv(self, request, queryset):
+        try:
+            csv_name = "jnd_video_result_" + time.strftime("%Y-%m-%d_%H-%M-%S")
+            meta = self.model._meta
+            column_names = [field.name for field in meta.fields if field.name not in ["id"]]
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename={}.csv'.format(csv_name)
+            writer = csv.writer(response)
+            writer.writerow(column_names)
+
+            for obj in queryset:
+                writer.writerow([str(getattr(obj, field)) for field in column_names])
+
+            return response
+        except Exception as e:
+            print("admin page got error: " + str(e))
+
+    export_as_csv.short_description = "Export Selected"
+
+    def has_add_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(InterfaceText)
@@ -91,109 +208,5 @@ class ConsentFormAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False 
-
-
-@admin.register(VideoObj)
-class VideoObjAdmin(admin.ModelAdmin):
-    list_display = ("source_video"
-                    , "exp"
-                    , "frame_rate"
-                    , "crf"
-                    , "rating"
-                    , "ongoing"
-                    , "cur_participant"
-                    # , "cur_participant_uid"
-                    # , "participant_start_date"
-                    , "vuid"
-                    , "qp"
-                    , "qp_count"
-                    , "result_orig"
-                    , "result_code"
-                    , "codec"
-                    , "is_finished")
-
-    search_fields = ["source_video"
-                    , "exp"
-                    , "frame_rate"
-                    , "crf"
-                    , "rating"
-                    , "ongoing"
-                    , "qp_count"
-                    , "codec"]
-
-    list_filter = ("ongoing"
-                    , "exp"
-                    , "source_video"
-                    , "frame_rate"
-                    , "crf"
-                    , "rating"
-                    , "qp_count"
-                    , "codec")
-
-    list_per_page = 200
-
-    def has_add_permission(self, request, obj=None):
-        return False
-
-@admin.register(Participant)
-class ParticipantAdmin(admin.ModelAdmin):
-    list_display = ("name"
-                    , "email"
-                    , "exp"
-                    , "ongoing"
-                    , "start_date"
-                    , "puid"
-                    , "videos_count")
-
-    list_filter = ("email", "exp", "ongoing")
-
-    list_per_page = 200
-
-    def has_add_permission(self, request, obj=None):
-        return False
-
-@admin.register(Assignment)
-class AssignmentAdmin(admin.ModelAdmin):
-    list_display = ("auid"
-                    , "exp"
-                    , "pname"
-                    , "email"
-                    , "puid"
-                    # , "result"
-                    # , "calibration"
-                    # , "operation_system"
-                    , "submit_time")
-
-    list_per_page = 200
-
-    list_filter = ("exp", "pname", "email")
-
-
-    actions = ["export_as_csv"]
-
-    list_per_page = 200
-
-    def export_as_csv(self, request, queryset):
-        try:
-            csv_name = "jnd_video_result_" + time.strftime("%Y-%m-%d_%H-%M-%S")
-            meta = self.model._meta
-            column_names = [field.name for field in meta.fields if field.name not in ["id"]]
-            response = HttpResponse(content_type='text/csv')
-            response['Content-Disposition'] = 'attachment; filename={}.csv'.format(csv_name)
-            writer = csv.writer(response)
-            writer.writerow(column_names)
-
-            for obj in queryset:
-                writer.writerow([str(getattr(obj, field)) for field in column_names])
-
-            return response
-        except Exception as e:
-            print("admin page got error: " + str(e))
-
-    export_as_csv.short_description = "Export Selected"
-
-    def has_add_permission(self, request, obj=None):
-        return False
-
 
 

@@ -93,6 +93,7 @@ function _loadVideoAsync(video_info) {
     return new Promise(function(resolve, reject) {
         let $video_pool = $("#video-pool");
         let {url, vuid, side, qp, source_video} = video_info
+        
         let req = new XMLHttpRequest();
         req.open('GET', url, true);
         req.responseType = 'blob';
@@ -100,13 +101,22 @@ function _loadVideoAsync(video_info) {
             if (this.status === 200) {
                 let videoBlob = this.response;
                 let v_l_url = URL.createObjectURL(videoBlob);
-                let v_html = `<div class="video-cover"
+
+                let v_html = `
+                        <div class="video-cover"
                                 id=vc-${vuid}
                                 data-side=${side}
                                 data-qp=${qp}
                                 data-src-video=${source_video}
-                                style="z-index:-1; height: ${globalStatus.video_h}px; width: ${globalStatus.video_w}px; visibility:hidden;"
+                                style="z-index:-1; height: ${globalStatus.video_h}px; width: ${globalStatus.video_w * 2 + 20}px; visibility:hidden;"
                                 >
+                                
+                                <video class="vd" loop="loop" autoplay muted id=new${vuid} height="${globalStatus.video_h}" width="${globalStatus.video_w}">
+                                    <source src=${v_l_url} 
+                                        type='video/mp4'
+                                    >
+                                </video>
+
                                 <video class="vd" loop="loop" autoplay muted id=${vuid} height="${globalStatus.video_h}" width="${globalStatus.video_w}">
                                     <source src=${v_l_url} 
                                         type='video/mp4'

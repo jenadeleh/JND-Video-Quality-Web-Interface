@@ -1,7 +1,7 @@
 from django.utils import timezone
 
 from videoJnd.src.QuestPlusJnd import QuestPlusJnd
-from videoJnd.models import VideoObj, Experiment, Participant, Assignment
+from videoJnd.models import VideoGroupObj, Experiment, Participant, Assignment
 from videoJnd.src.GetConfig import get_config
 
 from videoJnd.src.ResourceMonitor import add_idle_thread

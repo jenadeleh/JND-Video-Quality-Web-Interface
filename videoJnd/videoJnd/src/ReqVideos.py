@@ -1,7 +1,7 @@
 from django.utils import timezone
 
 from videoJnd.src.QuestPlusJnd import QuestPlusJnd
-from videoJnd.models import VideoObj, Experiment, Participant, InterfaceText, Assignment
+from videoJnd.models import VideoGroupObj, Experiment, Participant, InterfaceText, Assignment, EncodedRefVideoObj
 from videoJnd.src.GenUrl import gen_video_url, random_side
 
 
@@ -18,14 +18,17 @@ def req_videos(recv_data:dict) -> dict:
         exp_config = cur_exp_obj.configuration
 
         if cur_exp_obj.active == True:
-            avl_videos  = select_videos(cur_exp_obj, recv_data["puid"])
+            avl_encoded_ref_videos  = select_encoded_ref_videos(cur_exp_obj, recv_data["workerid"])
 
-            if avl_videos:
-                cur_p = Participant.objects.filter(puid=recv_data["puid"])[0]
-                finished_assignment_num = len(Assignment.objects.filter(puid=recv_data["puid"], exp=cur_exp_obj))
+            if avl_encoded_ref_videos:
+                cur_p = Participant.objects.filter(workerid=recv_data["workerid"])[0]
+                finished_assignment_num = len(Assignment.objects.filter(workerid=recv_data["workerid"], exp=cur_exp_obj))
 
                 if cur_p.ongoing == True:# ongoing, return current videos      
                     videos = ast.literal_eval(cur_p.videos)
+
+                    cur_p.ref_videos_remain.items()
+
                     random.shuffle(videos)
                     cur_p.start_date  = timezone.now()
                     cur_p.save() # update start date 
@@ -42,8 +45,8 @@ def req_videos(recv_data:dict) -> dict:
                     _response = {}
                     videos_info = _extract_info_avl_videos(exp_config, 
                                                             recv_data["pname"], 
-                                                            recv_data["puid"], 
-                                                            avl_videos)
+                                                            recv_data["workerid"], 
+                                                            avl_encoded_ref_videos)
                     
                     if not cur_p.start_date:
                         cur_p.start_date  = timezone.now()
@@ -64,57 +67,46 @@ def req_videos(recv_data:dict) -> dict:
     else:
         return {"status":"failed", "restype": "req_videos", "data":"experiment is not exist"}
     
-def select_videos(cur_exp_obj:object, _puid:str) -> list:
-    removed_videos = []
+def select_encoded_ref_videos(cur_exp_obj:object, _workerid:str) -> list:
+    exp_config = cur_exp_obj.configuration
+    removed_encoded_ref_videos = [] # for a worker, encoded_reference videos whose 
+                                    # number of annotated reaches maximum should be removed for this worker
     
-    if _puid !="":
-        cur_p = Participant.objects.filter(puid=_puid, exp=cur_exp_obj)
+    if _workerid !="": # chrome has worker record
+        cur_p = Participant.objects.filter(workerid=_workerid, exp=cur_exp_obj)
         if cur_p:
             cur_p = cur_p[0]
-            for video_nam,v in cur_p.videos_count.items():
-                if v >= cur_exp_obj.up_num_per_video_worker:
-                    removed_videos.append(video_nam)
+            for encoded_ref_video,remain_num in cur_p.ref_videos_remain.items():
+                if remain_num >= cur_exp_obj.max_ref_per_worker:
+                    removed_encoded_ref_videos.append(encoded_ref_video)
 
-    exp_config = cur_exp_obj.configuration
-
-    # filter videos that are not finished and not ongoing
-    avl_videos_pool = VideoObj.objects.filter(
-                                        exp=cur_exp_obj
-                                    ).filter(
-                                        is_finished=False
-                                    ).filter(
-                                        ongoing=False
-                                    )
-
+    # filter encoded reference videos that are not finished and not ongoing
+    avl_encoded_ref_videos = EncodedRefVideoObj.objects.filter(
+                                                exp=cur_exp_obj
+                                            ).filter(
+                                                is_finished=False
+                                            ).filter(
+                                                ongoing=False
+                                            )
     
-    # filter videos that have different content
-    avl_src = exp_config["SRC_NAME"]
+    # available encoded reference videos for this worker
+    avl_encoded_ref_videos = [
+        encoded_ref_videos for encoded_ref_videos in avl_encoded_ref_videos \
+            if encoded_ref_videos not in removed_encoded_ref_videos
+    ]
 
-    avl_src = [src for src in avl_src if src not in removed_videos]
-    avl_videos = []
+    if len(avl_encoded_ref_videos) >= exp_config["MAX_REF_VIDEO_PER_HIT"]:
+        selected_encoded_ref_videos = random.sample(avl_encoded_ref_videos, exp_config["MAX_REF_VIDEO_PER_HIT"])
+        return selected_encoded_ref_videos
+    else:
+        # if number of available videos is less than MAX_REF_VIDEO_PER_HIT, continue to return avl_encoded_ref_videos
+        return avl_encoded_ref_videos
 
-    # select the videos randomly
-    select_idx = list(range(avl_videos_pool.count()))
-    random.shuffle(select_idx)
-
-    for idx in select_idx:
-        video = avl_videos_pool[idx]
-        src_name = video.source_video
-        if src_name in avl_src:
-            avl_videos.append(video)
-            avl_src.remove(src_name)
-
-        if len(avl_videos) == exp_config["MAX_VIDEO_NUM_PER_HIT"]:
-            return avl_videos
-
-    # if number of available videos is less than MAX_VIDEO_NUM_PER_HIT, continue to return avl_videos
-    return avl_videos
-
-def _extract_info_avl_videos(exp_config:dict, pname:str, puid:str, avl_videos:list) -> list:
+def _extract_info_avl_videos(exp_config:dict, pname:str, workerid:str, avl_videos:list) -> list:
     output = []
     for video_obj in avl_videos:
         # update video
-        _add_p_to_video(video_obj, pname, puid)
+        _add_p_to_video(video_obj, pname, workerid)
         video_uuid, source_video, codec, frame_rate, crf, side, qp_count, qp, url = _gen_video_url(exp_config, video_obj)
 
         output.append({"vuid":str(video_uuid), 
@@ -159,8 +151,8 @@ def _gen_video_url(exp_config:object, video_obj:object) -> tuple:
             qp, 
             url)
 
-def _add_p_to_video(video_obj:object, pname:str, puid:str) -> None:
+def _add_p_to_video(video_obj:object, pname:str, workerid:str) -> None:
     video_obj.ongoing = True
     video_obj.cur_participant = pname
-    video_obj.cur_participant_uid = puid
+    video_obj.cur_participant_uid = workerid
     video_obj.save()

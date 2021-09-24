@@ -1,5 +1,5 @@
 
-from videoJnd.models import VideoObj, Experiment, Participant, InterfaceText
+from videoJnd.models import VideoGroupObj, Experiment, Participant, InterfaceText
 from django.utils import timezone
 import ast
 import threading

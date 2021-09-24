@@ -11,10 +11,10 @@ def process_request(request):
     if request.method == "POST":
         if request.body:
                 recv_data = json.loads(request.body)
-                # print(recv_data)
+                print(recv_data)
 
                 if recv_data["action"] == "req_inst_cf":
-                    response = req_inst_cf(recv_data["puid"])
+                    response = req_inst_cf(recv_data["workerid"])
                 
                 elif recv_data["action"] == "user_register":
                     response = user_register(recv_data)
@@ -23,11 +23,11 @@ def process_request(request):
                     response = req_videos(recv_data)
 
                 elif recv_data["action"] == "resource_monitor":
-                    response = resource_monitor(recv_data)
+                    # response = resource_monitor(recv_data)
                     logger.info("\n---------------------\n%s\n---------------------" % str(recv_data))
 
                 elif recv_data["action"] == "stop_expire_timer":
-                    response = add_idle_thread(recv_data["puid"])
+                    # response = add_idle_thread(recv_data["puid"])
                     logger.info("\n---------------------\n%s\n---------------------" % str(recv_data))
 
                 elif recv_data["action"] == "record_result":
@@ -35,7 +35,7 @@ def process_request(request):
 
                 elif recv_data["action"] == "release_resource":
                     logger.info("\n---------------------\n%s\n---------------------" % str(recv_data))
-                    response = release_resource(recv_data)
+                    # response = release_resource(recv_data)
                     
         else:
             response = {"status":"failed", "restype":"request-body", "data":"empty request body"}

@@ -5,7 +5,7 @@ import { checkCaliStatus, calibration, passCali } from "./Calibration"
 import { globalStatus } from "./GlobalStatus"
 
 export function req_inst_cf() {
-    let data = {"action":"req_inst_cf", "puid":getLocalData("puid")};
+    let data = {"action":"req_inst_cf", "workerid":getLocalData("workerid")};
     sendMsg(data).then(response => {
         _process_response(response)
     }).catch(err => {

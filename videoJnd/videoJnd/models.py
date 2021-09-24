@@ -8,59 +8,71 @@ from videoJnd.src.GetConfig import get_config
 
 class Experiment(models.Model):
     euid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=20, default="", editable=True)
+    name = models.CharField(max_length=20, default="demo", editable=True)
     active = models.BooleanField(default=False, editable=True)
-    description = models.TextField(max_length=4096, default="", editable=True)
-    has_created_videos = models.BooleanField(default=False, editable=False)
+    description = models.TextField(max_length=4096, default="This is a demo.", editable=True)
     configuration = jsonfield.JSONField(default=get_config())
     download_time = models.IntegerField("Download Time Limitation(seconds)", default=300, editable=True, validators=[MinValueValidator(10)])
     wait_time = models.IntegerField("Waiting Time Limitation(seconds)", default=300, editable=True, validators=[MinValueValidator(10)])
-    up_num_per_video_worker = models.IntegerField("Times for a worker to annotate a source video", default=2, editable=True)
+    max_ref_per_worker = models.IntegerField("Maximum number of reference videos for a worker to annotate", default=2, editable=True)
     pub_date = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
     
     def __str__(self):
         return self.name
 
-class VideoObj(models.Model):
-    vuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+class VideoGroupObj(models.Model):
+    guid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
-    source_video = models.CharField(max_length=20, default="", editable=False, null=False, blank=False)
-    codec = models.CharField(max_length=10, default="", editable=False)
-    frame_rate = models.IntegerField(default=0, editable=False)
-    crf = models.CharField(max_length=10, default="", editable=False)
-    rating = models.IntegerField(default=0, editable=False)
+    ref_video = models.CharField(max_length=20, default="", editable=False, null=False, blank=False)
+    crf = models.CharField(max_length=10, editable=False, null=True, blank=True)
+    codec = models.CharField(max_length=10, editable=False, null=True, blank=True)
+    reference_url = models.URLField(max_length=200, editable=False, null=False, blank=False, default="")
+    distortion_url = models.URLField(max_length=200, editable=False, null=False, blank=False, default="")
+    flickering_url = models.URLField(max_length=200, editable=False, null=False, blank=False, default="")
+    pro_distortion_qp = jsonfield.JSONField(default={"qp":[]}) # after aligning 
+    pro_flickering_qp = jsonfield.JSONField(default={"qp":[]}) # after aligning 
+    ori_distortion_qp = jsonfield.JSONField(default={"qp":[]}) # original result
+    ori_flickering_qp = jsonfield.JSONField(default={"qp":[]}) # original result
+    rating_cnt = models.IntegerField(default=0, editable=False)
     ongoing = models.BooleanField(default=False, editable=False)
-    qp_count = models.IntegerField(default=0, editable=False)
-    qp = models.TextField(max_length=4096, editable=False, null=True, blank=True)
-    result_orig = models.TextField(max_length=4096, editable=False, null=True, blank=True)
-    result_code = models.TextField(max_length=4096, editable=False, null=True, blank=True)
     is_finished = models.BooleanField(default=False, editable=False)
-    cur_participant = models.CharField(max_length=20, editable=False, null=True, blank=True)
-    cur_participant_uid = models.CharField(max_length=50, editable=False, null=True, blank=True)
+    cur_workerid = models.CharField(max_length=50, editable=False, null=True, blank=True)
 
     def __str__(self):
-        return self.source_video
+        return self.ref_video
+
+class EncodedRefVideoObj(models.Model):
+    refuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    ref_video = models.TextField(max_length=4096, editable=False, null=True, blank=True)
+    exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
+    vurl = models.URLField(max_length=200, editable=False, null=False, blank=False, default="")
+    target_cnt = models.IntegerField(default=0, editable=False)
+    remain_cnt = models.IntegerField(default=0, editable=False)
+    ongoing = models.BooleanField(default=False, editable=False)
+    is_finished = models.BooleanField(default=False, editable=False)
+    cur_workerid = models.CharField(max_length=50, editable=False, null=True, blank=True)
+
+    def __str__(self):
+        return self.ref_video   
 
 class Participant(models.Model):
     puid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=20, default="", editable=False, null=False, blank=False)
-    email = models.EmailField(max_length=30, editable=False, default="", null=True, blank=True)
+    workerid = models.CharField(max_length=20, default="", editable=False, null=False, blank=False)
     exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
     start_date = models.DateTimeField(editable=False, blank=True, null=True)
-    videos = models.TextField(max_length=4096, default="", editable=False)
+    end_date = models.DateTimeField(editable=False, blank=True, null=True)
     ongoing = models.BooleanField(default=False, editable=False)
-    videos_count = jsonfield.JSONField(default={})
+    ongoing_encoded_ref_videos = jsonfield.JSONField(default={}) # record current ref videos, once user refresh the page, render current ref videos
+    ref_videos_remain = jsonfield.JSONField(default={}) # limitation of the number for each reference video for each worker
 
     def __str__(self):
-        return self.name
+        return self.workerid
 
 class Assignment(models.Model):
     auid = models.UUIDField(primary_key=True,  default=uuid.uuid4, editable=False)
     exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
-    pname = models.CharField(max_length=20, editable=False, null=False, blank=False)
-    email = models.EmailField(max_length=30, editable=False, default="", null=False, blank=False)
-    puid = models.CharField(max_length=64, editable=False, null=False, blank=False)
-    result = models.TextField(max_length=40960, default="", editable=False)
+    workerid = models.CharField(max_length=64, editable=False, null=False, blank=False)
+    result = jsonfield.JSONField(default={})
     calibration = models.TextField(max_length=40960, default="", editable=False)
     operation_system = models.TextField(max_length=40960, default="", editable=False)
     submit_time = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)

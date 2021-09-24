@@ -5,7 +5,6 @@
     justify-content: center; 
 } 
 
-#video-pool,
 #msg-panel{
     display: flex;
     justify-content: center; 
@@ -14,6 +13,9 @@
 
 #video-pool {
     position: relative;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
 }
 
 .video-cover {
@@ -21,8 +23,15 @@
     height: 100%;
     position:absolute;
     background-color: #FFFFFF;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
 }
 
+.video-cover > video {
+    display: inline-block;
+    margin:5px;
+}
 
 #guide-panel
 , #instruction-btn {

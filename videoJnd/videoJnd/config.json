@@ -1,12 +1,16 @@
 {
     "QP_TRIAL_NUM" : 5, 
-    "SRC_VIDEO_NUM" : 10, 
-    "RATING_PER_SRC": 2,
-    "MAX_VIDEO_NUM_PER_HIT": 5,
+    "RATING_PER_REF_VIDEO": 2,
+    "MAX_REF_VIDEO_PER_HIT": 5,
     "SRC_NAME" : ["001", "006", "015", "089", "121", "135", "155", "105", "111", "173"],
     "URL_PREFIX": "http://localhost/download/Video_JND_implementation_crf_25_30/",
-    "URL_POSTFIX": "JND_{codec}_640x480/SRC{src_name}_640x480_{frame_rate}/crf_{crf}/videoSRC{src_name}_640x480_{frame_rate}_qp_00_{qp}_{side}_crf_{crf}.mp4",
+    "REF_URL_POSTFIX":"JND_{codec}_640x480/SRC{src_name}_640x480_{frame_rate}/crf_{crf}/videoSRC{src_name}_640x480_{frame_rate}_qp_00_crf_{crf}.mp4",
+    "FLK_URL_POSTFIX":"JND_{codec}_640x480/SRC{src_name}_640x480_{frame_rate}/crf_{crf}/videoSRC{src_name}_640x480_{frame_rate}_qp_00_{qp}_crf_{crf}.mp4",
+    "DIS_URL_POSTFIX":"JND_{codec}_640x480/SRC{src_name}_640x480_{frame_rate}/crf_{crf}/videoSRC{src_name}_640x480_{frame_rate}_qp_{qp}_crf_{crf}.mp4",
     "FRAME_RATE": {"30":["001", "006", "015", "089", "121", "135", "155"], "24":["105", "111", "173"]},
     "CRF": ["25", "30"], 
-    "CODEC": ["264", "266"]
+    "CODEC": {
+        "264":["001","006","015","089","121","135","155","105","111","173"]
+        ,"266":["001","006","015","089","121","135","155","105","111","173"]
+    }
 }
