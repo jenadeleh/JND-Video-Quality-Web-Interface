@@ -1,12 +1,10 @@
 from django.utils import timezone
 
 from videoJnd.src.QuestPlusJnd import QuestPlusJnd
-from videoJnd.models import VideoGroupObj, Experiment, Participant, InterfaceText, Assignment, EncodedRefVideoObj
+from videoJnd.models import Experiment, Participant, InterfaceText, Assignment, EncodedRefVideoObj
 from videoJnd.src.GenUrl import gen_video_url, random_side
-
-
 import random
-import ast
+
 
 qp_obj = QuestPlusJnd()
 
@@ -15,144 +13,216 @@ def req_videos(recv_data:dict) -> dict:
     interface_text = InterfaceText.objects.all()[0]
     if cur_exp_obj:
         cur_exp_obj = cur_exp_obj[0]
-        exp_config = cur_exp_obj.configuration
 
         if cur_exp_obj.active == True:
-            avl_encoded_ref_videos  = select_encoded_ref_videos(cur_exp_obj, recv_data["workerid"])
+            cur_p = Participant.objects.filter(puid=recv_data["puid"])[0]
 
-            if avl_encoded_ref_videos:
-                cur_p = Participant.objects.filter(workerid=recv_data["workerid"])[0]
-                finished_assignment_num = len(Assignment.objects.filter(workerid=recv_data["workerid"], exp=cur_exp_obj))
+            finished_assignment_num = len(
+                Assignment.objects.filter(
+                    workerid=recv_data["workerid"]
+                    , exp=cur_exp_obj
+                )
+            ) 
 
-                if cur_p.ongoing == True:# ongoing, return current videos      
-                    videos = ast.literal_eval(cur_p.videos)
+            if cur_p.ongoing == True:# ongoing, return current videos      
+                ongoing_videos_pairs = cur_p.ongoing_videos_pairs
+                distortion_videos_pairs = _shuffle_videos_pairs(ongoing_videos_pairs["distortion"])
+                flickering_videos_pairs = _shuffle_videos_pairs(ongoing_videos_pairs["flickering"])
 
-                    cur_p.ref_videos_remain.items()
+                ongoing_videos_pairs = {
+                    "distortion":distortion_videos_pairs
+                    , "flickering":flickering_videos_pairs
+                }
 
-                    random.shuffle(videos)
-                    cur_p.start_date  = timezone.now()
-                    cur_p.save() # update start date 
-                    _response = {
-                        "videos":videos, 
-                        "wait_time":cur_exp_obj.wait_time,
-                        "download_time":cur_exp_obj.download_time
+                cur_p.ongoing_videos_pairs = ongoing_videos_pairs
+                cur_p.start_date  = timezone.now()
+                cur_p.save() 
+
+                response_data = {
+                    "videos_pairs": ongoing_videos_pairs
+                    , "wait_time": cur_exp_obj.wait_time # TODO: remove in the future
+                    , "download_time": cur_exp_obj.download_time # TODO: remove in the future
+                    , "finished_assignment_num": finished_assignment_num
+                }
+
+                return {"status":"successful", "restype": "req_videos", "data":response_data}
+
+            elif cur_p.ongoing == False:# not ongoing, return new videos
+                avl_encoded_ref_videos_objs  = select_encoded_ref_videos(cur_exp_obj, recv_data["puid"])
+
+                if len(avl_encoded_ref_videos_objs) > 0:
+                    (
+                        distortion_videos_pairs
+                        , flickering_videos_pairs
+                    ) = _output_videos_pairs(
+                            recv_data["workerid"],
+                            recv_data["puid"], 
+                            avl_encoded_ref_videos_objs
+                    )
+
+                    ongoing_videos_pairs = {
+                        "distortion":distortion_videos_pairs
+                        , "flickering":flickering_videos_pairs
                     }
 
-
-                    return {"status":"successful", "restype": "req_videos", "data":_response}
-
-                elif cur_p.ongoing == False:# not ongoing, return new videos
-                    _response = {}
-                    videos_info = _extract_info_avl_videos(exp_config, 
-                                                            recv_data["pname"], 
-                                                            recv_data["workerid"], 
-                                                            avl_encoded_ref_videos)
-                    
                     if not cur_p.start_date:
                         cur_p.start_date  = timezone.now()
+
                     cur_p.ongoing  = True
-                    cur_p.videos = str(videos_info)
+                    cur_p.ongoing_encoded_ref_videos = {
+                        "ongoing_encoded_ref_videos":[
+                            obj.ref_video for obj in avl_encoded_ref_videos_objs
+                        ]
+                    }
+                    cur_p.ongoing_videos_pairs = ongoing_videos_pairs
                     cur_p.save()
 
-                    _response["videos"] =  videos_info
-                    _response["wait_time"] =  cur_exp_obj.wait_time
-                    _response["download_time"] =  cur_exp_obj.download_time
-                    _response["finished_assignment_num"] = finished_assignment_num
+                    response_data = {
+                        "videos_pairs": ongoing_videos_pairs
+                        , "wait_time": cur_exp_obj.wait_time # TODO: remove in the future
+                        , "download_time": cur_exp_obj.download_time # TODO: remove in the future
+                        , "finished_assignment_num": finished_assignment_num
+                    }
 
-                    return {"status":"successful", "restype": "req_videos", "data":_response}
-            else:
-                return {"status":"failed", "restype": "req_videos", "data":interface_text.text_end_exp}
+                    return {"status":"successful", "restype": "req_videos", "data":response_data}
+                else: # no encoded reference videos are available
+                    return {"status":"failed", "restype": "req_videos", "data":interface_text.text_end_exp}
         else:
             return {"status":"failed", "restype": "req_videos", "data":interface_text.no_available_exp}
     else:
         return {"status":"failed", "restype": "req_videos", "data":"experiment is not exist"}
     
-def select_encoded_ref_videos(cur_exp_obj:object, _workerid:str) -> list:
+def select_encoded_ref_videos(cur_exp_obj:object, puid:str) -> list:
+
     exp_config = cur_exp_obj.configuration
     removed_encoded_ref_videos = [] # for a worker, encoded_reference videos whose 
                                     # number of annotated reaches maximum should be removed for this worker
     
-    if _workerid !="": # chrome has worker record
-        cur_p = Participant.objects.filter(workerid=_workerid, exp=cur_exp_obj)
+    if puid !="": # chrome has worker record
+        cur_p = Participant.objects.filter(puid=puid, exp=cur_exp_obj)
         if cur_p:
             cur_p = cur_p[0]
-            for encoded_ref_video,remain_num in cur_p.ref_videos_remain.items():
+            for encoded_ref_video,remain_num in cur_p.finished_ref_videos.items():
                 if remain_num >= cur_exp_obj.max_ref_per_worker:
                     removed_encoded_ref_videos.append(encoded_ref_video)
 
     # filter encoded reference videos that are not finished and not ongoing
-    avl_encoded_ref_videos = EncodedRefVideoObj.objects.filter(
+    avl_encoded_ref_videos_objs = EncodedRefVideoObj.objects.filter(
                                                 exp=cur_exp_obj
                                             ).filter(
                                                 is_finished=False
                                             ).filter(
                                                 ongoing=False
                                             )
-    
+
     # available encoded reference videos for this worker
-    avl_encoded_ref_videos = [
-        encoded_ref_videos for encoded_ref_videos in avl_encoded_ref_videos \
-            if encoded_ref_videos not in removed_encoded_ref_videos
+    avl_encoded_ref_videos_objs = [
+        obj for obj in avl_encoded_ref_videos_objs \
+            if obj.ref_video not in removed_encoded_ref_videos
     ]
 
-    if len(avl_encoded_ref_videos) >= exp_config["MAX_REF_VIDEO_PER_HIT"]:
-        selected_encoded_ref_videos = random.sample(avl_encoded_ref_videos, exp_config["MAX_REF_VIDEO_PER_HIT"])
+    if len(avl_encoded_ref_videos_objs) >= exp_config["MAX_ENCODED_REF_VIDEO_PER_HIT"]:
+        selected_encoded_ref_videos = random.sample(avl_encoded_ref_videos_objs, exp_config["MAX_ENCODED_REF_VIDEO_PER_HIT"])
         return selected_encoded_ref_videos
     else:
-        # if number of available videos is less than MAX_REF_VIDEO_PER_HIT, continue to return avl_encoded_ref_videos
-        return avl_encoded_ref_videos
+        # if number of available videos is less than MAX_ENCODED_REF_VIDEO_PER_HIT, continue to return avl_encoded_ref_videos_objs
+        return avl_encoded_ref_videos_objs
 
-def _extract_info_avl_videos(exp_config:dict, pname:str, workerid:str, avl_videos:list) -> list:
-    output = []
-    for video_obj in avl_videos:
-        # update video
-        _add_p_to_video(video_obj, pname, workerid)
-        video_uuid, source_video, codec, frame_rate, crf, side, qp_count, qp, url = _gen_video_url(exp_config, video_obj)
+def _shuffle_videos_pairs(videos_pairs_list:list) -> list:
+    videos_pairs_list = videos_pairs_list
+    for idx, pair in enumerate(videos_pairs_list):
+        videos_pair = pair["videos_pair"]
+        side_of_reference = pair["side_of_reference"]
+        reference_url = videos_pair[{"L":0, "R":1}[side_of_reference]]
+        random.shuffle(videos_pair)
+        side_of_reference = ["L", "R"][videos_pair.index(reference_url)]
+        videos_pairs_list[idx]["videos_pair"] = videos_pair
+        videos_pairs_list[idx]["side_of_reference"] = side_of_reference
 
-        output.append({"vuid":str(video_uuid), 
-                        "source_video":source_video, 
-                        "codec": codec,
-                        "frame_rate": frame_rate, 
-                        "crf": crf,
-                        "side":side, 
-                        "qp":str(qp), 
-                        "qp_count": qp_count,
-                        "url":url})
+    random.shuffle(videos_pairs_list)
+    return videos_pairs_list
+
+def _output_videos_pairs(workerid:str, puid:str , avl_encoded_ref_videos_objs:list) -> tuple:
+    output_distortion_videos_pairs = []
+    output_flickering_videos_pairs = []
+
+    for encoded_ref_video_obj in avl_encoded_ref_videos_objs:
+        _add_worker_to_obj(encoded_ref_video_obj, workerid, puid)
+        distortion_videos_pairs, flickering_videos_pairs = _gen_videos_pairs(encoded_ref_video_obj)
+        output_distortion_videos_pairs += distortion_videos_pairs
+        output_flickering_videos_pairs += flickering_videos_pairs
     
-    return output
+    random.shuffle(output_distortion_videos_pairs)
+    random.shuffle(output_flickering_videos_pairs)
 
-def _gen_video_url(exp_config:object, video_obj:object) -> tuple:
-    if video_obj.result_code:
-        result_code = video_obj.result_code.split(",")
-    else:
-        result_code = []
+    return (output_distortion_videos_pairs, output_flickering_videos_pairs)
 
-    # generate qp value
-    qp = qp_obj.update_params(qp_obj.gen_qp_param(video_obj.codec), result_code)
+def _add_worker_to_obj(encoded_ref_video_obj:object, workerid:str, puid:str) -> None:
+    encoded_ref_video_obj.ongoing = True
+    encoded_ref_video_obj.cur_workerid = workerid
+    encoded_ref_video_obj.cur_participant_uid = puid
+    encoded_ref_video_obj.save()
 
-    # generate url
-    side  = random_side()
-    url = gen_video_url(exp_config["URL_PREFIX"], 
-                        exp_config["URL_POSTFIX"],
-                        video_obj.codec, 
-                        video_obj.source_video, 
-                        video_obj.frame_rate, 
-                        video_obj.crf, 
-                        qp, 
-                        side)
+def _gen_videos_pairs(encoded_ref_video_obj:object) -> tuple:
 
-    return (str(video_obj.vuid), 
-            video_obj.source_video, 
-            video_obj.codec, 
-            video_obj.frame_rate, 
-            video_obj.crf, 
-            side,
-            video_obj.qp_count, 
-            qp, 
-            url)
+    refuid = str(encoded_ref_video_obj.refuid)
+    ref_video = encoded_ref_video_obj.ref_video
+    videoGroups = encoded_ref_video_obj.videoGroups
+    codec = encoded_ref_video_obj.codec
 
-def _add_p_to_video(video_obj:object, pname:str, workerid:str) -> None:
-    video_obj.ongoing = True
-    video_obj.cur_participant = pname
-    video_obj.cur_participant_uid = workerid
-    video_obj.save()
+    distortion_videos_pairs = []
+    flickering_videos_pairs = []
+    
+    for crf, crf_group in videoGroups.items():
+        prev_distortion_qp = crf_group["proc_distortion_d_code"]
+        prev_flickering_qp = crf_group["proc_flickering_d_code"]
+
+        if encoded_ref_video_obj.qp_cnt == 0: 
+            # initial qp value, codec264=30, codec266=37
+            prev_distortion_qp = [0]
+            prev_flickering_qp = [0]
+
+        next_distortion_qp = qp_obj.update_params(
+                                qp_obj.gen_qp_param(codec)
+                                , prev_distortion_qp
+                            )
+
+        next_flickering_qp = qp_obj.update_params(
+                                qp_obj.gen_qp_param(codec)
+                                , prev_flickering_qp
+                            )
+        
+        reference_url = crf_group["reference_url"].format()
+        distortion_url = crf_group["distortion_url"].format(qp=next_distortion_qp)
+        flickering_url = crf_group["flickering_url"].format(qp=next_flickering_qp)
+
+        distortion_pair = [reference_url, distortion_url]
+        random.shuffle(distortion_pair)
+        distortion_side_of_reference = ["L", "R"][distortion_pair.index(reference_url)]
+
+        flickering_pair = [reference_url, flickering_url]
+        random.shuffle(flickering_pair)
+        flickering_side_of_reference = ["L", "R"][flickering_pair.index(reference_url)]
+
+        distortion_videos_pairs.append({
+            "refuid":refuid
+            , "ref_video":ref_video
+            , "presentation": "distortion"
+            , "crf": crf
+            , "qp": next_distortion_qp
+            , "videos_pair":distortion_pair
+            , "side_of_reference":distortion_side_of_reference
+        })
+
+        flickering_videos_pairs.append({
+            "refuid": refuid
+            , "ref_video": ref_video
+            , "presentation": "flickering"
+            , "crf": crf
+            , "qp": next_flickering_qp
+            , "videos_pair": flickering_pair
+            , "side_of_reference":flickering_side_of_reference
+        })
+
+    return (distortion_videos_pairs, flickering_videos_pairs)
+

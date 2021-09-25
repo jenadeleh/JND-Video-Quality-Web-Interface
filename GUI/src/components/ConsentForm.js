@@ -5,16 +5,16 @@ import { checkCaliStatus, calibration, passCali } from "./Calibration"
 import { globalStatus } from "./GlobalStatus"
 
 export function req_inst_cf() {
-    let data = {"action":"req_inst_cf", "workerid":getLocalData("workerid")};
+    let data = {"action":"req_inst_cf", "puid":getLocalData("puid")};
     sendMsg(data).then(response => {
         _process_response(response)
     }).catch(err => {
-        console.log("req_inst_cf errors: " + err.message);  
+        console.log("req_inst_cf errors: " + err.message);
     })
 }
 
-export function submitCf(pname, pemail) {
-    let data = {"action":"user_register", "pname":pname, "pemail":pemail};
+export function submitCf(workerid) {
+    let data = {"action":"user_register", "workerid":workerid};
     sendMsg(data).then(response => {
         if (response["status"] == "successful") {
             let { euid, puid } = response["data"];

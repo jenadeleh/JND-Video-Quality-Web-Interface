@@ -7,11 +7,11 @@ import { getLocalData } from "../utils/ManageLocalData"
 import { displayEndHitPanel } from "./BtnActions"
 
 
-export function reqLoadVideos(pname, puid, euid) {
+export function reqLoadVideos(workerid, puid, euid) {
     $("#video-pool, #video-spinner").css("height", globalStatus.video_h)
                                     .css("width", globalStatus.video_w);
 
-    let data = {"action":"req_videos", "pname": pname, "puid":puid, "euid":euid}
+    let data = {"action":"req_videos", "workerid": workerid, "puid":puid, "euid":euid}
 
     sendMsg(data).then(response => {
         if (response["status"] == "successful") {
@@ -27,8 +27,8 @@ export function reqLoadVideos(pname, puid, euid) {
             updateProgressBar(0, globalStatus.video_num);
             $("#loading-progress").html(globalStatus.loaded_video_num+ "/" +globalStatus.video_num);
             
-            _startCountExpireTime("download");
-            _addAllVideosToDom();
+            // _startCountExpireTime("download");
+            // _addAllVideosToDom();
 
         } else if (response["status"] == "failed") {
             $(".exp-panel").css("display", "none");
@@ -147,7 +147,7 @@ function _shuffle(arr) {
 
 function _startCountExpireTime(timeout_type){
     sendMsg({"action":"resource_monitor", 
-        "pname": getLocalData("pname"), 
+        "workerid": getLocalData("workerid"), 
         "puid":getLocalData("puid"), 
         "euid":getLocalData("euid")}
     ).then(response => {

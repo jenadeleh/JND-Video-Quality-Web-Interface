@@ -9,13 +9,15 @@ def user_register(recv_data:dict) -> dict:
         active_exps = Experiment.objects.filter(active=True)
         if active_exps:
             active_exp = active_exps[0]
-            _puid = uuid.uuid4()
+            puid = uuid.uuid4()
 
-            Participant(puid = _puid
-                , name = recv_data["pname"]
-                , email = recv_data["pemail"]
-                , exp = active_exp).save()
-            return {"status":"successful", "data":{"euid":active_exp.euid, "puid":_puid}}
+            Participant(
+                puid = puid
+                , workerid = recv_data["workerid"]
+                , exp = active_exp
+            ).save()
+            
+            return {"status":"successful", "data":{"euid":active_exp.euid, "puid":puid}}
         else:
             return {"status":"failed", "data":"no active experiment"}
 

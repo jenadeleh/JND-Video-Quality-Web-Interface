@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.http import HttpResponse
-from .models import Instruction, ConsentForm, VideoGroupObj, Experiment, Participant, Assignment, InterfaceText, EncodedRefVideoObj
+from .models import Instruction, ConsentForm, Experiment, Participant, Assignment, InterfaceText, EncodedRefVideoObj
 
 admin.site.site_header = "JND Video Study"
 admin.site.site_title = "JND Video Study"
@@ -9,7 +9,7 @@ admin.site.index_title = "Admin"
 import csv
 import time
 
-from videoJnd.src.CreateVideosObj import createVideoGroupObj
+from videoJnd.src.CreateVideosObj import createEncodedRefVideosDB
 
 @admin.register(Experiment)
 class ExperimentAdmin(admin.ModelAdmin):
@@ -30,45 +30,45 @@ class ExperimentAdmin(admin.ModelAdmin):
     
     def save_model(self, request, obj, form, change):
         super(ExperimentAdmin, self).save_model(request, obj, form, change)
-        createVideoGroupObj(obj)
+        createEncodedRefVideosDB(obj)
 
-    def export_result(self, request, queryset):
-        try:
-            csv_name = "jnd_video_result_" + time.strftime("%Y-%m-%d_%H-%M-%S")
-            meta = VideoObj._meta
-            column_names = [field.name for field in meta.fields if field.name not in ["id"]]
-            response = HttpResponse(content_type='text/csv')
-            response['Content-Disposition'] = 'attachment; filename={}.csv'.format(csv_name)
-            writer = csv.writer(response)
-            writer.writerow(column_names)
+    # def export_result(self, request, queryset):
+    #     try:
+    #         csv_name = "jnd_video_result_" + time.strftime("%Y-%m-%d_%H-%M-%S")
+    #         meta = VideoObj._meta
+    #         column_names = [field.name for field in meta.fields if field.name not in ["id"]]
+    #         response = HttpResponse(content_type='text/csv')
+    #         response['Content-Disposition'] = 'attachment; filename={}.csv'.format(csv_name)
+    #         writer = csv.writer(response)
+    #         writer.writerow(column_names)
 
-            for obj in queryset:
-                videos = VideoObj.objects.filter(exp=obj)
-                for v in videos:
-                    writer.writerow([getattr(v, field) for field in column_names])
+    #         for obj in queryset:
+    #             videos = VideoObj.objects.filter(exp=obj)
+    #             for v in videos:
+    #                 writer.writerow([getattr(v, field) for field in column_names])
 
-            return response
-        except Exception as e:
-            print("admin page got error: " + str(e))
+    #         return response
+    #     except Exception as e:
+    #         print("admin page got error: " + str(e))
 
-    export_result.short_description = "Export Selected"
+    # export_result.short_description = "Export Selected"
 
 @admin.register(EncodedRefVideoObj)
 class EncodedRefVideoObjAdmin(admin.ModelAdmin):
     list_display = (
         "exp" 
-        # , "refuid"
         , "ref_video"
-        , "vurl"
-        , "target_cnt"
-        , "remain_cnt" 
+        , "ratingIdx"
+        , "codec"
         , "ongoing"
         , "is_finished"
         , "cur_workerid" 
+        , "videoGroups"
     )
 
     search_fields = [
         "exp"
+        , "ratingIdx"
         , "ongoing"
         , "is_finished"
         , "cur_workerid"
@@ -76,6 +76,7 @@ class EncodedRefVideoObjAdmin(admin.ModelAdmin):
 
     list_filter = ([
         "exp"
+        , "ratingIdx"
         , "ongoing"
         , "is_finished"
         , "cur_workerid"
@@ -87,30 +88,6 @@ class EncodedRefVideoObjAdmin(admin.ModelAdmin):
         return False
 
 
-@admin.register(VideoGroupObj)
-class VideoGroupObjAdmin(admin.ModelAdmin):
-
-    items = [
-        "exp" 
-        , "ref_video"
-        , "crf"
-        , "codec"
-        , "rating_cnt" 
-        , "ongoing"
-        , "is_finished"
-        , "cur_workerid" 
-    ]
-    list_display = (items)
-
-    search_fields = items
-
-    list_filter = (items)
-
-    list_per_page = 200
-
-    def has_add_permission(self, request, obj=None):
-        return False
-
 @admin.register(Participant)
 class ParticipantAdmin(admin.ModelAdmin):
     list_display = (
@@ -118,7 +95,9 @@ class ParticipantAdmin(admin.ModelAdmin):
         , "exp"
         , "ongoing"
         , "start_date"
-        , "ref_videos_remain"
+        , "finished_ref_videos"
+        , "ongoing_encoded_ref_videos"
+        , "ongoing_videos_pairs"
     )
 
     list_filter = ("exp", "ongoing")

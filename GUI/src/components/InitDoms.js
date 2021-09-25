@@ -36,13 +36,8 @@ export function initDoms() {
         $cf_form.serializeArray().forEach((element)=>{
             params[element.name] = element.value;
         });
-        storeLocalData("pname", params.pname);
-    
-        if (!params.pemail) {
-            params.pemail = "";
-        }
-    
-        submitCf(params.pname, params.pemail);
+        storeLocalData("workerid", params.workerid);
+        submitCf(params.workerid);
         return false;
     })
 }

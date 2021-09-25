@@ -39,23 +39,23 @@ class QuestPlusJnd():
         qp_param_dict = {"264":self.QpParam264, "266":self.QpParam266}
         return copy.deepcopy(qp_param_dict[codec])
 
-    def update_params(self, qp_param: object, decisions:list) -> str:
-        for d in decisions:
+    def update_params(self, qp_param: object, decision_codes:list) -> str:
+        for d_code in decision_codes:
             next_stim = qp_param.next_stim
 
-            if d == '1': # left side
+            if d_code == '1': # left side
                 qp_param.update(stim = next_stim, outcome = {"response":"No"})
                 qp_param.update(stim = next_stim, outcome = {"response":"No"})
 
-            elif d == '2': # right side
+            elif d_code == '2': # right side
                 qp_param.update(stim = next_stim, outcome = {"response":"Yes"})
                 qp_param.update(stim = next_stim, outcome = {"response":"Yes"})
 
-            elif d == '3': # not sure
+            elif d_code == '3': # not sure
                 qp_param.update(stim = next_stim, outcome = {"response":"Yes"})
                 qp_param.update(stim = next_stim, outcome = {"response":"No"})
 
-            elif d == '4': # no decision
+            elif d_code == '4': # no decision
                 pass
             
             # print(d, qp_param.next_stim)
@@ -73,11 +73,13 @@ if __name__ == "__main__":
 
     qp_obj = QuestPlusJnd()
 
-    codec = "264"
+    codec = "266"
 
-    t1 = time.process_time()
-    for _ in range(10):
-        next_stim = qp_obj.update_params(qp_obj.gen_qp_param(codec), decisions)
-    # print(next_stim)
-    t2 = time.process_time()
-    print((t2-t1)*1000)
+    # t1 = time.process_time()
+    # for _ in range(10):
+    #     next_stim = qp_obj.update_params(qp_obj.gen_qp_param(codec), decisions)
+    next_stim = qp_obj.update_params(qp_obj.gen_qp_param(codec), [0])
+    print(next_stim)
+
+    # t2 = time.process_time()
+    # print((t2-t1)*1000)

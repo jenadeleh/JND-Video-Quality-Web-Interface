@@ -14,7 +14,7 @@ def process_request(request):
                 print(recv_data)
 
                 if recv_data["action"] == "req_inst_cf":
-                    response = req_inst_cf(recv_data["workerid"])
+                    response = req_inst_cf(recv_data["puid"])
                 
                 elif recv_data["action"] == "user_register":
                     response = user_register(recv_data)
@@ -24,6 +24,7 @@ def process_request(request):
 
                 elif recv_data["action"] == "resource_monitor":
                     # response = resource_monitor(recv_data)
+                    response = {"status":"failed", "restype":"request-body", "data":"empty request body"}
                     logger.info("\n---------------------\n%s\n---------------------" % str(recv_data))
 
                 elif recv_data["action"] == "stop_expire_timer":

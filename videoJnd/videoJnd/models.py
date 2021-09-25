@@ -20,50 +20,63 @@ class Experiment(models.Model):
     def __str__(self):
         return self.name
 
-class VideoGroupObj(models.Model):
-    guid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
-    ref_video = models.CharField(max_length=20, default="", editable=False, null=False, blank=False)
-    crf = models.CharField(max_length=10, editable=False, null=True, blank=True)
-    codec = models.CharField(max_length=10, editable=False, null=True, blank=True)
-    reference_url = models.URLField(max_length=200, editable=False, null=False, blank=False, default="")
-    distortion_url = models.URLField(max_length=200, editable=False, null=False, blank=False, default="")
-    flickering_url = models.URLField(max_length=200, editable=False, null=False, blank=False, default="")
-    pro_distortion_qp = jsonfield.JSONField(default={"qp":[]}) # after aligning 
-    pro_flickering_qp = jsonfield.JSONField(default={"qp":[]}) # after aligning 
-    ori_distortion_qp = jsonfield.JSONField(default={"qp":[]}) # original result
-    ori_flickering_qp = jsonfield.JSONField(default={"qp":[]}) # original result
-    rating_cnt = models.IntegerField(default=0, editable=False)
-    ongoing = models.BooleanField(default=False, editable=False)
-    is_finished = models.BooleanField(default=False, editable=False)
-    cur_workerid = models.CharField(max_length=50, editable=False, null=True, blank=True)
-
-    def __str__(self):
-        return self.ref_video
-
 class EncodedRefVideoObj(models.Model):
     refuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     ref_video = models.TextField(max_length=4096, editable=False, null=True, blank=True)
     exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
-    vurl = models.URLField(max_length=200, editable=False, null=False, blank=False, default="")
-    target_cnt = models.IntegerField(default=0, editable=False)
-    remain_cnt = models.IntegerField(default=0, editable=False)
+    ratingIdx = models.IntegerField(default=0, editable=False)
+    codec = models.CharField(max_length=10, editable=False, null=True, blank=True)
+    qp_cnt = models.IntegerField(default=0, editable=False)
+    # status
+    remain_qp_cnt = models.IntegerField(default=0, editable=False)
     ongoing = models.BooleanField(default=False, editable=False)
     is_finished = models.BooleanField(default=False, editable=False)
     cur_workerid = models.CharField(max_length=50, editable=False, null=True, blank=True)
+    cur_participant_uid = models.CharField(max_length=64, editable=False, null=True, blank=True, default="")
+    # result
+    videoGroups  = jsonfield.JSONField(default={})
+    """
+    {
+        "264":{
+            "reference_url": ""
+            , "distortion_url": ""
+            , "flickering_url": ""
+            , "proc_distortion_d_code": []
+            , "proc_flickering_d_code": []
+            , "ori_distortion_d_code": []
+            , "ori_flickering_d_code": []
+            , "ori_distortion_decision": []
+            , "ori_flickering_decision": []
+        },
+        "266":{
+            "reference_url": ""
+            , "distortion_url": ""
+            , "flickering_url": ""
+            , "proc_distortion_d_code": []
+            , "proc_flickering_d_code": []
+            , "ori_distortion_d_code": []
+            , "ori_flickering_d_code": []
+            , "ori_distortion_decision": []
+            , "ori_flickering_decision": []
+        },
+    }
+    """
+
 
     def __str__(self):
         return self.ref_video   
 
 class Participant(models.Model):
     puid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    workerid = models.CharField(max_length=20, default="", editable=False, null=False, blank=False)
+    workerid = models.CharField(max_length=20, default="", editable=False, null=False, blank=False) # pname
     exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
     start_date = models.DateTimeField(editable=False, blank=True, null=True)
     end_date = models.DateTimeField(editable=False, blank=True, null=True)
     ongoing = models.BooleanField(default=False, editable=False)
-    ongoing_encoded_ref_videos = jsonfield.JSONField(default={}) # record current ref videos, once user refresh the page, render current ref videos
-    ref_videos_remain = jsonfield.JSONField(default={}) # limitation of the number for each reference video for each worker
+    ongoing_encoded_ref_videos = jsonfield.JSONField(default={"ongoing_encoded_ref_videos":[]}) 
+    ongoing_videos_pairs = jsonfield.JSONField(default={"distortion":[], "flickering":[]}) 
+    finished_ref_videos = jsonfield.JSONField(default={}) # limitation of the number for each reference video for each worker
+    
 
     def __str__(self):
         return self.workerid
@@ -71,7 +84,7 @@ class Participant(models.Model):
 class Assignment(models.Model):
     auid = models.UUIDField(primary_key=True,  default=uuid.uuid4, editable=False)
     exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
-    workerid = models.CharField(max_length=64, editable=False, null=False, blank=False)
+    workerid = models.CharField(max_length=20, default="", editable=False, null=False, blank=False) # pname
     result = jsonfield.JSONField(default={})
     calibration = models.TextField(max_length=40960, default="", editable=False)
     operation_system = models.TextField(max_length=40960, default="", editable=False)
