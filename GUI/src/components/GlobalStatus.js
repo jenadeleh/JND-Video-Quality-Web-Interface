@@ -6,11 +6,11 @@ export const globalStatus = {
     result: [],
     video_h: 480,
     video_w:640,
-    videos: [],
+    videos_original_url: [],
     videos_load: [],
     video_num:0,
     loaded_video_num:0,
-    cur_video: {},
+    cur_video_pair: {},
     mode: "development", // development or production, production mode displays the instruction model
     cali_start_time: 0,
     cali_end_time: 0,
@@ -42,4 +42,8 @@ export const globalStatus = {
     canMakeDecision: false, // exp_status=decision, but use doesn't press "start experiment", or next video is loading
     isWarning: false, // true, can not make a decision
     isNotSureBtnAvl: false, // not_sure_button is available or not
+    videos_pairs:{},
+    task_num:0,
+    videos_url_mapping:{}, //original url to cache url
+    videos_pairs_sequence:[],
 }

@@ -12,10 +12,11 @@ export function actStartExpBtn(e) {
                     .css("display", "none");
     globalStatus.canMakeDecision = true;
 
-
     $("#left-btn, #right-btn").attr("disabled", false);
-    let cur_vuid = globalStatus.cur_video["vuid"];
-    $(`#${cur_vuid}`).get(0).play();
+
+    let cur_video_pair = globalStatus.cur_video_pair
+    $(`#left-${cur_video_pair}`).get(0).play();
+    $(`#right-${cur_video_pair}`).get(0).play();
     stopExpireTimer();
     recordTime();
 }

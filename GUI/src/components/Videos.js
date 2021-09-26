@@ -15,20 +15,19 @@ export function reqLoadVideos(workerid, puid, euid) {
 
     sendMsg(data).then(response => {
         if (response["status"] == "successful") {
-            let videos_info = response["data"]["videos"];
             globalStatus.download_time = response["data"]["download_time"];
             globalStatus.wait_time = response["data"]["wait_time"];
-            globalStatus.videos = videos_info;
-            globalStatus.videos = _shuffle(globalStatus.videos)
-            globalStatus.video_num = globalStatus.videos.length;
-            globalStatus.loaded_video_num = 0;
+            globalStatus.videos_pairs = response["data"]["videos_pairs"];
+            globalStatus.task_num = globalStatus.videos_pairs["distortion"].length 
+                                    + globalStatus.videos_pairs["flickering"].length;
             globalStatus.finished_assignment_num = response["data"]["finished_assignment_num"];
-            
-            updateProgressBar(0, globalStatus.video_num);
-            $("#loading-progress").html(globalStatus.loaded_video_num+ "/" +globalStatus.video_num);
+
+            _extract_videos_url(globalStatus.videos_pairs);
+            updateProgressBar(0, globalStatus.task_num);
+            $("#loading-progress").html("0/" + globalStatus.videos_original_url.length);
             
             // _startCountExpireTime("download");
-            // _addAllVideosToDom();
+            _addAllVideosToDom();
 
         } else if (response["status"] == "failed") {
             $(".exp-panel").css("display", "none");
@@ -42,13 +41,13 @@ export function reqLoadVideos(workerid, puid, euid) {
 
 export function displayFirstVideo() {
     $("#video-spinner").css("display", "none").removeClass("d-flex");
-    globalStatus.cur_video = globalStatus.videos.shift();
-    let cur_vuid = globalStatus.cur_video["vuid"];
-    delete globalStatus.cur_video["url"];
+    globalStatus.cur_video_pair = globalStatus.videos_pairs_sequence.shift(); // removes the first element
+    let cur_video_pair = globalStatus.cur_video_pair
     globalStatus.exp_status = "decision";
 
-    $(`#${cur_vuid}`).get(0).pause();
-    $(`#vc-${cur_vuid}`).css("visibility", "visible");
+    $(`#left-${cur_video_pair}`).get(0).pause();
+    $(`#right-${cur_video_pair}`).get(0).pause();
+    $(`#vc-${cur_video_pair}`).css("visibility", "visible");
     $("#start-exp-btn").attr("disabled",false);
 }
 
@@ -79,62 +78,109 @@ export function stopExpireTimer() {
     sendMsg({"action":"stop_expire_timer", "puid":getLocalData("puid")})
 }
 
+function _extract_videos_url(videos_pairs) {
+    let videos_original_url = [];
+
+    let videos_pairs_sequence = [];
+
+    ["flickering", "distortion"].forEach(function(presentation,key1,arr1) {
+        videos_pairs[presentation].forEach(function(value,key2,arr2){
+            if (!videos_original_url.includes(value["videos_pair"][0])) {
+                videos_original_url.push(value["videos_pair"][0]);
+            }
+    
+            if (!videos_original_url.includes(value["videos_pair"][1])) {
+                videos_original_url.push(value["videos_pair"][1]);
+            }
+
+            let ref_video = value["ref_video"];
+            let crf = value["crf"];
+            videos_pairs_sequence.push(`${ref_video}-crf${crf}-${presentation}`);
+        })
+    })
+
+    globalStatus.videos_original_url = videos_original_url;
+    globalStatus.videos_pairs_sequence = videos_pairs_sequence;
+}
+
 function _addAllVideosToDom() {
-    const tasks = Array.from(globalStatus.videos, (video_info) => _loadVideoAsync(video_info));
+    const tasks = Array.from(
+        globalStatus.videos_original_url, (video_ori_url) => _loadVideoAsync(video_ori_url)
+    );
+
     Promise.all(tasks).then(() => {
+        _addVideosPairHtml();
         displayFirstVideo();
-        clearTimeout(globalStatus.EXPIRE_TIMER);
-        // console.log("----- clearTimer -----" + "download")
-        _startCountExpireTime("wait");
+        // clearTimeout(globalStatus.EXPIRE_TIMER);
+        // console.log("----- clearTimer -----" + "download");
+        // _startCountExpireTime("wait");
     });
 }
 
-function _loadVideoAsync(video_info) {
+function _loadVideoAsync(video_ori_url) {
     return new Promise(function(resolve, reject) {
-        let $video_pool = $("#video-pool");
-        let {url, vuid, side, qp, source_video} = video_info
-        
         let req = new XMLHttpRequest();
-        req.open('GET', url, true);
+        req.open('GET', video_ori_url, true);
         req.responseType = 'blob';
         req.onload = function() {
             if (this.status === 200) {
                 let videoBlob = this.response;
-                let v_l_url = URL.createObjectURL(videoBlob);
-
-                let v_html = `
-                        <div class="video-cover"
-                                id=vc-${vuid}
-                                data-side=${side}
-                                data-qp=${qp}
-                                data-src-video=${source_video}
-                                style="z-index:-1; height: ${globalStatus.video_h}px; width: ${globalStatus.video_w * 2 + 20}px; visibility:hidden;"
-                                >
-                                
-                                <video class="vd" loop="loop" autoplay muted id=new${vuid} height="${globalStatus.video_h}" width="${globalStatus.video_w}">
-                                    <source src=${v_l_url} 
-                                        type='video/mp4'
-                                    >
-                                </video>
-
-                                <video class="vd" loop="loop" autoplay muted id=${vuid} height="${globalStatus.video_h}" width="${globalStatus.video_w}">
-                                    <source src=${v_l_url} 
-                                        type='video/mp4'
-                                    >
-                                </video>
-                        </div>`
-
-                $(v_html).appendTo($video_pool);
+                let video_local_url = URL.createObjectURL(videoBlob);
+                globalStatus.videos_url_mapping[video_ori_url] = video_local_url;
                 globalStatus.loaded_video_num += 1;
-
-                $("#loading-progress").html(globalStatus.loaded_video_num+ "/" +globalStatus.video_num);
+                $("#loading-progress").html(
+                    globalStatus.loaded_video_num+ "/" 
+                    + globalStatus.videos_original_url.length);
                 resolve();
             }
         }
-
         req.onerror = function() {};
         req.send();
     });
+}
+
+
+function _addVideosPairHtml() {
+    let $video_pool = $("#video-pool");
+    ["distortion", "flickering"].forEach(function(presentation,key1,arr1) {
+        globalStatus.videos_pairs[presentation].forEach(function(pair,key2,arr2){
+            let refuid = pair["refuid"];
+            let ref_video = pair["ref_video"];
+            let crf = pair["crf"];
+            let qp = pair["qp"];
+            let side_of_reference = pair["side_of_reference"];
+            let url_left = pair["videos_pair"][0];
+            let url_right = pair["videos_pair"][1];
+
+            let video_pair_html = `
+                    <div class="video-cover"
+                            id=vc-${ref_video}-crf${crf}-${presentation}
+                            data-qp=${qp}
+                            data-ref_video = ${ref_video}
+                            data-refuid= ${refuid}
+                            data-crf= ${crf}
+                            data-presentation = ${presentation}
+                            data-side_of_reference= ${side_of_reference}
+                            style="z-index:-1; height: ${globalStatus.video_h}px; width: ${globalStatus.video_w * 2 + 20}px; visibility:hidden;"
+                            >
+                            
+                            <video class="vd-${ref_video}-crf${crf}-${presentation}" id="left-${ref_video}-crf${crf}-${presentation}" loop="loop" autoplay muted height="${globalStatus.video_h}" width="${globalStatus.video_w}">
+                                <source src=${url_left} 
+                                    type='video/mp4'
+                                >
+                            </video>
+
+                            <video class="vd-${ref_video}-crf${crf}-${presentation}" id="right-${ref_video}-crf${crf}-${presentation}" loop="loop" autoplay muted height="${globalStatus.video_h}" width="${globalStatus.video_w}">
+                                <source src=${url_right} 
+                                    type='video/mp4'
+                                >
+                            </video>
+                    </div>`
+            $(video_pair_html).appendTo($video_pool);
+        })
+    })
+
+
 }
 
 function _shuffle(arr) {
