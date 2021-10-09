@@ -69,17 +69,16 @@ if __name__ == "__main__":
     import copy
 
     decisions = [str(randint(1,3)) for _ in range(30)]
-    # decisions = ['1', '3', '2']
+    decisions = ['1', '3', '2']
 
     qp_obj = QuestPlusJnd()
 
     codec = "266"
 
-    # t1 = time.process_time()
-    # for _ in range(10):
-    #     next_stim = qp_obj.update_params(qp_obj.gen_qp_param(codec), decisions)
-    next_stim = qp_obj.update_params(qp_obj.gen_qp_param(codec), [0])
+    t1 = time.process_time()
+
+    next_stim = qp_obj.update_params(qp_obj.gen_qp_param(codec), decisions)
     print(next_stim)
 
-    # t2 = time.process_time()
-    # print((t2-t1)*1000)
+    t2 = time.process_time()
+    print((t2-t1)*1000)

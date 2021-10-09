@@ -10,7 +10,6 @@ if __name__ == "__main__":
 
     dist_path = Path("../../../../GUI/dist/")
 
-
     with open(dist_path / "index.html", "r") as fi:
         html = fi.read()
         html = html.replace(
