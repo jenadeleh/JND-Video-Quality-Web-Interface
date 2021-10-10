@@ -83,6 +83,7 @@ class Participant(models.Model):
 
 class Assignment(models.Model):
     auid = models.UUIDField(primary_key=True,  default=uuid.uuid4, editable=False)
+    puid = models.UUIDField(default=uuid.uuid4, editable=False)
     exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
     workerid = models.CharField(max_length=20, default="", editable=False, null=False, blank=False) # pname
     result = jsonfield.JSONField(default={})

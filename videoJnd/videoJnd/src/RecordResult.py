@@ -28,8 +28,7 @@ def record_result(recv_data:dict) -> dict:
 
         Assignment(auid = uuid.uuid4()
                     , exp = exp_obj
-                    , pname = p_obj.name
-                    , email = p_obj.email
+                    , workerid = recv_data["workerid"]
                     , puid = recv_data["puid"]
                     , result = _result
                     , calibration = cali_info
@@ -38,7 +37,7 @@ def record_result(recv_data:dict) -> dict:
         videos_count = p_obj.videos_count
 
         for video_result in _result:
-            video_obj = VideoObj.objects.filter(vuid=video_result["vuid"])
+            video_obj = EncodedRefVideoObj.objects.filter(vuid=video_result["vuid"])
 
             if video_obj:
                 video_obj = video_obj[0]

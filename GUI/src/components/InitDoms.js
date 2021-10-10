@@ -6,7 +6,7 @@ import { globalStatus } from "./GlobalStatus";
 
 export function initDoms() {
     $('#start-exp-btn').on('click', (e)=> {
-        actStartExpBtn();
+        actStartExpBtn(e);
     });
     
     $('.decision-btn').on('click',(e)=> {
@@ -14,7 +14,7 @@ export function initDoms() {
     });
 
     $('#next-hit-btn').on('click', (e)=> {
-        actNextHitBtn();
+        actNextHitBtn(e);
     });
 
     $('#quit-exp-btn').on('click', (e)=> {
@@ -23,15 +23,15 @@ export function initDoms() {
     });
 
     $("#cali-adjust-dist").on('click', (e)=> {
-        adjustDist();
+        adjustDist(e);
     });
 
     $("#read-inst-btn").on('click', (e)=> {
-        readInst();
+        readInst(e);
     });
 
     let $cf_form = $("#cf-form");
-    $cf_form.on("submit", () =>{ 
+    $cf_form.on("submit", () =>{
         let params = {};
         $cf_form.serializeArray().forEach((element)=>{
             params[element.name] = element.value;
