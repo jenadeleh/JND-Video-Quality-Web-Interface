@@ -1,10 +1,9 @@
 
-from videoJnd.models import EncodedRefVideoObj, Experiment, Participant, InterfaceText
+from videoJnd.models import EncodedRefVideoObj, Participant, InterfaceText
 from django.utils import timezone
-import ast
 import threading
 import time
-import calendar
+
 
 from videoJnd.src.Log import logger
 
@@ -39,23 +38,34 @@ def resource_monitor(recv_data:dict) -> dict:
 
 def _start_thread(p_obj):
     puid = str(p_obj.puid)
-    thread = threading.Thread(target=_release_videos, name=puid, args=(monitor_threads, idle_threads, p_obj,))
+    thread = threading.Thread(
+        target=_release_videos, 
+        name=puid, 
+        args=(
+            monitor_threads, 
+            idle_threads, 
+            p_obj,
+        )
+    )
     thread.start()
     monitor_threads.append(puid)
 
-def _release_videos(monitor_threads:list, idle_threads:list, p_obj:object) -> None:
-    videos = ast.literal_eval(p_obj.videos)
-    videos_uid = [v["vuid"]for v in videos]
+def _release_videos(
+    monitor_threads:list, 
+    idle_threads:list, 
+    p_obj:object
+) -> None:
+
+    ref_video = p_obj.ongoing_encoded_ref_videos["ongoing_encoded_ref_videos"] 
+    #  ['src-006_codec-266_ratingIdx-2', 'src-001_codec-266_ratingIdx-2', 'src-121_codec-266_ratingIdx-1']
     duration = p_obj.exp.download_time +  p_obj.exp.wait_time# compensation for network delay 
-
-
 
     if p_obj.ongoing:
         start_date = p_obj.start_date
         time_diff = (timezone.now() - start_date).total_seconds()
 
         if time_diff >= duration:
-            _config_released_resource(monitor_threads, idle_threads, p_obj, videos_uid)
+            _config_released_resource(monitor_threads, idle_threads, p_obj, ref_video)
         else:
             counter = int((duration - time_diff)*1000)
             for _ in range(counter):
@@ -64,25 +74,35 @@ def _release_videos(monitor_threads:list, idle_threads:list, p_obj:object) -> No
                 else:
                     time.sleep(0.001)
             # logger.info("++++ %s ++++" % str(idle_threads))
-            _config_released_resource(monitor_threads, idle_threads, p_obj, videos_uid)
+            _config_released_resource(monitor_threads, idle_threads, p_obj, ref_video)
 
-def _config_released_resource(monitor_threads:list, idle_threads:list, p_obj:object, videos_uid:list) -> None:
+def _config_released_resource(
+    monitor_threads:list, 
+    idle_threads:list, 
+    p_obj:object, 
+    ref_video:list
+) -> None:
+
     # logger.info("_____release %s _______" % p_obj.puid)
     # logger.info(str(monitor_threads) + str(idle_threads))
     puid = str(p_obj.puid)
     if puid not in idle_threads:
         p_obj.ongoing = False
-        p_obj.videos = ""
+        p_obj.ongoing_videos_pairs = {"distortion":[], "flickering":[]}
+        p_obj.ongoing_encoded_ref_videos = {"ongoing_encoded_ref_videos":[]}
         p_obj.start_date = None
         p_obj.save()
 
-        ongoing_videos_obj = VideoObj.objects.filter(ongoing=True)
-        for v in ongoing_videos_obj:
-            if str(v.vuid) in videos_uid:
-                v.ongoing = False
-                v.cur_participant = ""
-                v.cur_participant_uid = ""
-                v.save()
+        ongoing_ref_videos_obj = EncodedRefVideoObj.objects.filter(ongoing=True)
+
+        for ref_video_obj in ongoing_ref_videos_obj:
+            if str(ref_video_obj.ref_video) in ref_video:
+                ref_video_obj.ongoing = False
+                ref_video_obj.cur_workerid = None
+                ref_video_obj.cur_worker_uid = None
+                ref_video_obj.worker_start_date = None
+                ref_video_obj.save()
+
 
         # logger.info("--- Release videos from participant: %s ---" % (p_obj.name))
     else:
@@ -98,7 +118,7 @@ def add_idle_thread(puid:str) -> None:
     if puid not in idle_threads:
         idle_threads.append(puid)
 
-    # logger.info("===== new %s ====" % str(idle_threads))
+    logger.info("===== new %s ====" % str(idle_threads))
 
 def wait_release_resources():
     logger.info("--- Release videos ---")
@@ -119,21 +139,23 @@ def release_resource(recv_data:dict) -> None:
         p_obj = Participant.objects.filter(puid=recv_data["puid"]).first()
 
         if p_obj and p_obj.videos:
-            videos = ast.literal_eval(p_obj.videos)
-            videos_uid = [v["vuid"]for v in videos]
-
+            ref_video = p_obj.ongoing_encoded_ref_videos["ongoing_encoded_ref_videos"] 
             p_obj.ongoing = False
-            p_obj.videos = ""
+            p_obj.ongoing_videos_pairs = {"distortion":[], "flickering":[]}
+            p_obj.ongoing_encoded_ref_videos = {"ongoing_encoded_ref_videos":[]}
             p_obj.start_date = None
             p_obj.save()
 
-            ongoing_videos_obj = VideoObj.objects.filter(ongoing=True)
-            for v in ongoing_videos_obj:
-                if str(v.vuid) in videos_uid:
-                    v.ongoing = False
-                    v.cur_participant = ""
-                    v.cur_participant_uid = ""
-                    v.save()
+            ongoing_ref_videos_obj = EncodedRefVideoObj.objects.filter(ongoing=True)
+
+            for ref_video_obj in ongoing_ref_videos_obj:
+                if str(ref_video_obj.ref_video) in ref_video:
+                    ref_video_obj.ongoing = False
+                    ref_video_obj.cur_workerid = None
+                    ref_video_obj.cur_worker_uid = None
+                    ref_video_obj.worker_start_date = None
+                    ref_video_obj.save()
+
     except Exception as e:
         logger.error(str(e))
 

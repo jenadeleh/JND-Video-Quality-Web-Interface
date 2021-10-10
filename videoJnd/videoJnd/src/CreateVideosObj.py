@@ -30,7 +30,7 @@ def _create_encoded_ref_videos_db(exp_db_obj:object) -> None:
 
                     ref_video = f"src-{source_video}_codec-{codec}_ratingIdx-{ratingIdx+1}"
 
-                    videoGroups = {}
+                    videoGroupsResult = {}
 
                     for crf in config["CRF"]:
                         reference_url = config["URL_PREFIX"] + \
@@ -59,14 +59,14 @@ def _create_encoded_ref_videos_db(exp_db_obj:object) -> None:
                                 , qp = "{qp}"
                             )
 
-                        videoGroups[crf] = {
+                        videoGroupsResult[crf] = {
                             "reference_url": reference_url
                             , "distortion_url": distortion_url
                             , "flickering_url": flickering_url
                             , "proc_distortion_d_code": []
                             , "proc_flickering_d_code": []
-                            , "ori_distortion_d_code": []
-                            , "ori_flickering_d_code": []
+                            , "side_of_reference_distortion": []
+                            , "side_of_reference_flickering": []
                             , "ori_distortion_decision": []
                             , "ori_flickering_decision": []
                         }
@@ -74,9 +74,11 @@ def _create_encoded_ref_videos_db(exp_db_obj:object) -> None:
                     EncodedRefVideoObj(
                         ref_video = ref_video
                         , exp = exp_db_obj
-                        , videoGroups = videoGroups
+                        , videoGroupsResult = videoGroupsResult
                         , ratingIdx = ratingIdx + 1
                         , codec = codec
+                        , target_qp_num = config["QP_TRIAL_NUM"]
+                        , curr_qp_cnt = 0
                     ).save()
 
     return None

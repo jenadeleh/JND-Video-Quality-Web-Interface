@@ -211,10 +211,13 @@ function _addVideosPairHtml() {
 }
 
 function _startCountExpireTime(timeout_type){
-    sendMsg({"action":"resource_monitor", 
-      "workerid": getLocalData("workerid"), 
-      "puid":getLocalData("puid"), 
-      "euid":getLocalData("euid")}
+    sendMsg(
+      {
+        "action":"resource_monitor", 
+        "workerid": getLocalData("workerid"), 
+        "puid":getLocalData("puid"), 
+        "euid":getLocalData("euid")
+      }
     ).then(response => {
       if (response["status"] == "successful") {
         globalStatus.start_time = response["data"]["start_date"];

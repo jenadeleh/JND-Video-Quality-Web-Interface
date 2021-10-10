@@ -11,7 +11,8 @@ def process_request(request):
     if request.method == "POST":
         if request.body:
                 recv_data = json.loads(request.body)
-                print(recv_data)
+                if  recv_data["action"] != "record_result":
+                    print(recv_data)
 
                 if recv_data["action"] == "req_inst_cf":
                     response = req_inst_cf(recv_data["puid"])
@@ -23,21 +24,21 @@ def process_request(request):
                     response = req_videos(recv_data)
 
                 elif recv_data["action"] == "resource_monitor":
-                    # response = resource_monitor(recv_data)
-                    response = {"status":"failed", "restype":"request-body", "data":"empty request body"}
-                    logger.info("\n---------------------\n%s\n---------------------" % str(recv_data))
+                    response = resource_monitor(recv_data)
+                    # response = {"status":"pass"}
+
 
                 elif recv_data["action"] == "stop_expire_timer":
-                    # response = add_idle_thread(recv_data["puid"])
-                    logger.info("\n---------------------\n%s\n---------------------" % str(recv_data))
+                    response = add_idle_thread(recv_data["puid"])
+                    # response = {"status":"pass"}
+                    
+                elif recv_data["action"] == "release_resource":
+                    # response = release_resource(recv_data)
+                    response = {"status":"pass"}
+                    pass
 
                 elif recv_data["action"] == "record_result":
-                    response = record_result(recv_data)
-
-                elif recv_data["action"] == "release_resource":
-                    logger.info("\n---------------------\n%s\n---------------------" % str(recv_data))
-                    # response = release_resource(recv_data)
-                    
+                    response = record_result(recv_data)        
         else:
             response = {"status":"failed", "restype":"request-body", "data":"empty request body"}
     else:

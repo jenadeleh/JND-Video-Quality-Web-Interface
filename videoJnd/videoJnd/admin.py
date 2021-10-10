@@ -57,17 +57,21 @@ class ExperimentAdmin(admin.ModelAdmin):
 class EncodedRefVideoObjAdmin(admin.ModelAdmin):
     list_display = (
         "exp" 
+        , "refuid"
         , "ref_video"
         , "ratingIdx"
         , "codec"
         , "ongoing"
         , "is_finished"
-        , "cur_workerid" 
-        , "videoGroups"
+        , "cur_workerid"
+        , "target_qp_num"
+        , "curr_qp_cnt" 
+        , "videoGroupsResult"
     )
 
     search_fields = [
         "exp"
+        , "refuid"
         , "ratingIdx"
         , "ongoing"
         , "is_finished"

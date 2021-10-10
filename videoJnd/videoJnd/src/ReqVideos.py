@@ -55,9 +55,9 @@ def req_videos(recv_data:dict) -> dict:
                         distortion_videos_pairs
                         , flickering_videos_pairs
                     ) = _output_videos_pairs(
-                            recv_data["workerid"],
-                            recv_data["puid"], 
-                            avl_encoded_ref_videos_objs
+                        recv_data["workerid"],
+                        recv_data["puid"], 
+                        avl_encoded_ref_videos_objs
                     )
 
                     ongoing_videos_pairs = {
@@ -122,7 +122,10 @@ def select_encoded_ref_videos(cur_exp_obj:object, puid:str) -> list:
     ]
 
     if len(avl_encoded_ref_videos_objs) >= exp_config["MAX_ENCODED_REF_VIDEO_PER_HIT"]:
-        selected_encoded_ref_videos = random.sample(avl_encoded_ref_videos_objs, exp_config["MAX_ENCODED_REF_VIDEO_PER_HIT"])
+        selected_encoded_ref_videos = random.sample(
+            avl_encoded_ref_videos_objs, 
+            exp_config["MAX_ENCODED_REF_VIDEO_PER_HIT"]
+        )
         return selected_encoded_ref_videos
     else:
         # if number of available videos is less than MAX_ENCODED_REF_VIDEO_PER_HIT, continue to return avl_encoded_ref_videos_objs
@@ -142,7 +145,12 @@ def _shuffle_videos_pairs(videos_pairs_list:list) -> list:
     random.shuffle(videos_pairs_list)
     return videos_pairs_list
 
-def _output_videos_pairs(workerid:str, puid:str , avl_encoded_ref_videos_objs:list) -> tuple:
+def _output_videos_pairs(
+    workerid:str, 
+    puid:str, 
+    avl_encoded_ref_videos_objs:list
+) -> tuple:
+
     output_distortion_videos_pairs = []
     output_flickering_videos_pairs = []
 
@@ -167,17 +175,17 @@ def _gen_videos_pairs(encoded_ref_video_obj:object) -> tuple:
 
     refuid = str(encoded_ref_video_obj.refuid)
     ref_video = encoded_ref_video_obj.ref_video
-    videoGroups = encoded_ref_video_obj.videoGroups
+    videoGroupsResult = encoded_ref_video_obj.videoGroupsResult
     codec = encoded_ref_video_obj.codec
 
     distortion_videos_pairs = []
     flickering_videos_pairs = []
     
-    for crf, crf_group in videoGroups.items():
+    for crf, crf_group in videoGroupsResult.items():
         prev_distortion_qp = crf_group["proc_distortion_d_code"]
         prev_flickering_qp = crf_group["proc_flickering_d_code"]
 
-        if encoded_ref_video_obj.qp_cnt == 0: 
+        if encoded_ref_video_obj.curr_qp_cnt == 0: 
             # initial qp value, codec264=30, codec266=37
             prev_distortion_qp = [0]
             prev_flickering_qp = [0]

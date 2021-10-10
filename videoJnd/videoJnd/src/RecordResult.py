@@ -1,21 +1,14 @@
 from django.utils import timezone
-
 from videoJnd.src.QuestPlusJnd import QuestPlusJnd
 from videoJnd.models import EncodedRefVideoObj, Experiment, Participant, Assignment
 from videoJnd.src.GetConfig import get_config
-
 from videoJnd.src.ResourceMonitor import add_idle_thread
-
-
-import random
 import uuid
-import copy
-import ast
+
 
 config = get_config()
 
 def record_result(recv_data:dict) -> dict:
-
     p_obj = Participant.objects.filter(puid=recv_data["puid"])
     if p_obj:
         p_obj = p_obj[0]
@@ -24,46 +17,56 @@ def record_result(recv_data:dict) -> dict:
         os_info = recv_data["data"]["os_info"]
         
         exp_obj = Experiment.objects.filter(euid=recv_data["euid"])[0]
-        qp_trail_num = exp_obj.configuration["QP_TRIAL_NUM"]
 
-        Assignment(auid = uuid.uuid4()
-                    , exp = exp_obj
-                    , workerid = recv_data["workerid"]
-                    , puid = recv_data["puid"]
-                    , result = _result
-                    , calibration = cali_info
-                    , operation_system = os_info).save()
+        auid = uuid.uuid4()
+        Assignment(
+            auid = auid
+            , exp = exp_obj
+            , workerid = recv_data["workerid"]
+            , puid = recv_data["puid"]
+            , result = {"result": _result}
+            , calibration = cali_info
+            , operation_system = os_info
+        ).save()
 
-        videos_count = p_obj.videos_count
-
+        finished_ref_videos = p_obj.finished_ref_videos
+        process_count = {k["refuid"]:0 for k in _result}
         for video_result in _result:
-            video_obj = EncodedRefVideoObj.objects.filter(vuid=video_result["vuid"])
+            ref_video_obj = EncodedRefVideoObj.objects.filter(refuid=video_result["refuid"])
+            if ref_video_obj:
+                ref_video_obj = ref_video_obj[0]
 
-            if video_obj:
-                video_obj = video_obj[0]
-
-                # update videos count
-                if video_obj.source_video in videos_count:
-                    videos_count[video_obj.source_video] += 1
+                # record the number of specific ref_video that participant has finished
+                if ref_video_obj.ref_video in finished_ref_videos:
+                    finished_ref_videos[ref_video_obj.ref_video] += 1
                 else:
-                    videos_count[video_obj.source_video] = 1
+                    finished_ref_videos[ref_video_obj.ref_video] = 1
 
+                if ref_video_obj.ongoing:
+                    _update_video_db(video_result, ref_video_obj, str(auid))
+                # else:
+                #     return {
+                #         "status":"failed", 
+                #         "restype": "record_result",
+                #         "data":"video %s is not ongoing" % recv_data["puid"]
+                #     }
 
-                if video_obj.ongoing:
-                    _update_video_db(video_result, video_obj, qp_trail_num)
+                process_count[video_result["refuid"]] += + 1
+                if process_count[video_result["refuid"]] == 2*config["RATING_PER_ENCODED_REF_VIDEO"]: 
+                    # record result of distortion and flicerking
+                    ref_video_obj.ongoing = False
+                    ref_video_obj.save()
 
-                else:
-                    return {"status":"failed", 
-                            "restype": "record_result",
-                            "data":"video %s is not ongoing" % video_result["vuid"]}
             else:
-                return {"status":"failed", 
-                        "restype": "record_result",
-                        "data":"video %s is not exist" % video_result["vuid"]}
+                return {
+                    "status": "failed", 
+                    "restype": "record_result",
+                    "data": "video %s is not exist" % recv_data["puid"]
+                }
 
         _set_p_onging_false(p_obj)
 
-        p_obj.videos_count = videos_count
+        p_obj.finished_ref_videos = finished_ref_videos
         p_obj.save()
 
 
@@ -71,48 +74,73 @@ def record_result(recv_data:dict) -> dict:
     else:
         return {"status":"failed", "restype": "record_result", "data":"participant is not exist"}
 
-def _update_video_db(video_result:dict, video_obj:object, qp_trail_num:int) -> None:
-    decision_code = _encode_decision(video_result["side"], video_result["decision"])
-    video_obj.result_orig = _add_new_item(video_obj.result_orig, 
-                                            decision_code + "-" + video_result["side"] + "-" + video_result["decision"])
+def _update_video_db(
+    video_result:dict, 
+    ref_video_obj:object, 
+    auid:str
+) -> None:
 
-    video_obj.result_code = _add_new_item(video_obj.result_code, decision_code)
-    video_obj.qp = _add_new_item(video_obj.qp, video_result["qp"])
-    video_obj.ongoing = False
-    
+    # update videoGroupsResult
+    refuid = video_result["refuid"]
+    presentation = video_result["presentation"]
+
+    video_result["crf"]
+    video_result["qp"]
+
+    decision_code = _encode_decision(
+        video_result["side_of_reference"], 
+        video_result["decision"]
+    )
+
+    videoGroupsResult = ref_video_obj.videoGroupsResult
+
+    videoGroupsResult[video_result["crf"]][
+        f"ori_{presentation}_decision"
+    ].append(video_result["decision"])
+
+    videoGroupsResult[video_result["crf"]][
+        f"side_of_reference_{presentation}"
+    ].append(video_result["side_of_reference"])
+
+    videoGroupsResult[video_result["crf"]][
+        f"proc_{presentation}_d_code"
+    ].append(decision_code)
+
+    ref_video_obj.videoGroupsResult = videoGroupsResult
+
+    # update assigments sequence
+    assigments_sequence = ref_video_obj.assigments_sequence
+    assigments_sequence["sequence"].append(auid)
+    ref_video_obj.assigments_sequence = assigments_sequence
+
+    # decide ref_video_obj is finished or not
     if decision_code != "4": # exclude decision code 4
-        video_obj.qp_count = video_obj.qp_count + 1
-    if video_obj.qp_count == qp_trail_num:
-        video_obj.is_finished = True
-    
-    video_obj.cur_participant = None
-    video_obj.cur_participant_uid = None
-    video_obj.participant_start_date = None
+        ref_video_obj.curr_qp_cnt = ref_video_obj.curr_qp_cnt + 1
 
-    video_obj.save()
+    if ref_video_obj.curr_qp_cnt == ref_video_obj.target_qp_num:
+        ref_video_obj.is_finished = True
+    
+    # set some status
+    # ref_video_obj.ongoing = False
+    ref_video_obj.cur_workerid = None
+    ref_video_obj.cur_worker_uid = None
+    ref_video_obj.worker_start_date = None
+    ref_video_obj.save()
 
 def _set_p_onging_false(p_obj: object) -> None:
     p_obj.ongoing = False
-    p_obj.videos = ""
+    p_obj.ongoing_videos_pairs = {"distortion":[], "flickering":[]}
+    p_obj.ongoing_encoded_ref_videos = {"ongoing_encoded_ref_videos":[]}
     p_obj.start_date = None
     p_obj.save()
 
-def _encode_decision(side:str, decision:str) -> str:
+def _encode_decision(side_of_reference:str, decision:str) -> str:
     if decision == "R" or decision == "L":
-        if decision == side:
+        if decision == side_of_reference:
             return "1"
-        elif decision != side:
+        elif decision != side_of_reference:
             return "2"
     elif decision == "not sure":
         return "3"
     elif decision == "no decision":
         return "4"
-
-def _add_new_item(crr_str:str, new_item:str) -> str:
-    if crr_str:
-        crr_str += ","+new_item
-    else:
-        crr_str = new_item
-    
-    return crr_str
-

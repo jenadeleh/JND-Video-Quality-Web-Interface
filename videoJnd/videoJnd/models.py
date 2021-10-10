@@ -26,25 +26,26 @@ class EncodedRefVideoObj(models.Model):
     exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
     ratingIdx = models.IntegerField(default=0, editable=False)
     codec = models.CharField(max_length=10, editable=False, null=True, blank=True)
-    qp_cnt = models.IntegerField(default=0, editable=False)
+    target_qp_num = models.IntegerField(default=0, editable=False)
     # status
-    remain_qp_cnt = models.IntegerField(default=0, editable=False)
+    curr_qp_cnt = models.IntegerField(default=0, editable=False)
     ongoing = models.BooleanField(default=False, editable=False)
     is_finished = models.BooleanField(default=False, editable=False)
     cur_workerid = models.CharField(max_length=50, editable=False, null=True, blank=True)
-    cur_participant_uid = models.CharField(max_length=64, editable=False, null=True, blank=True, default="")
+    cur_worker_uid = models.CharField(max_length=64, editable=False, null=True, blank=True, default="")
+    worker_start_date = models.DateTimeField(editable=False, blank=True, null=True)
     # result
-    videoGroups  = jsonfield.JSONField(default={})
+    videoGroupsResult  = jsonfield.JSONField(default={})
     """
     {
         "264":{
             "reference_url": ""
             , "distortion_url": ""
             , "flickering_url": ""
-            , "proc_distortion_d_code": []
+            , "proc_distortion_d_code": [] 
             , "proc_flickering_d_code": []
-            , "ori_distortion_d_code": []
-            , "ori_flickering_d_code": []
+            , "side_of_reference_distortion": []
+            , "side_of_reference_flickering": []
             , "ori_distortion_decision": []
             , "ori_flickering_decision": []
         },
@@ -54,13 +55,14 @@ class EncodedRefVideoObj(models.Model):
             , "flickering_url": ""
             , "proc_distortion_d_code": []
             , "proc_flickering_d_code": []
-            , "ori_distortion_d_code": []
-            , "ori_flickering_d_code": []
+            , "side_of_reference_distortion": []
+            , "side_of_reference_flickering": []
             , "ori_distortion_decision": []
             , "ori_flickering_decision": []
         },
     }
     """
+    assigments_sequence = jsonfield.JSONField(default={"sequence":[]})
 
 
     def __str__(self):
