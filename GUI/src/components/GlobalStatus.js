@@ -46,4 +46,8 @@ export const globalStatus = {
     task_num:0,
     videos_url_mapping:{}, //original url to cache url
     videos_pairs_sequence:[],
+    training_description: "",
+    quiz_description:"",
+    flickering_test_description:"",
+    quality_test_description:"",
 }

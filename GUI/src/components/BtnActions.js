@@ -75,6 +75,7 @@ export function processHit() {
 
   clearTimeout(globalStatus.FIRST_DURATION_TIMER);
   clearTimeout(globalStatus.SECOND_DURATION_TIMER);       
+  
 
   if (globalStatus.videos_pairs_sequence.length > 0) {
     displayNextVideo();

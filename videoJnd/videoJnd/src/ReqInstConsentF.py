@@ -39,7 +39,10 @@ def req_inst_cf(puid:str) -> dict:
                         "decision_timeout_msg": interface_text.decision_timeout_msg,
                         "instruction_btn_text": interface_text.instruction_btn_text,
                         "consent_btn_text": interface_text.consent_btn_text,
-                        "assignment_num_text": interface_text.assignment_num_text
+                        "training_description": interface_text.training_description,
+                        "quiz_description": interface_text.quiz_description,
+                        "flickering_test_description": interface_text.flickering_test_description,
+                        "quality_test_description": interface_text.quality_test_description,
                     }
                 }
 

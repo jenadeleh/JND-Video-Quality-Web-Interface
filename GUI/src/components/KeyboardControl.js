@@ -17,7 +17,7 @@ export function keyboardControl(){
                 } else if(globalStatus.exp_status == "dist_panel") {
                     adjustDist();
                 } else if(globalStatus.exp_status == "decision" && $("#start-exp-btn").attr("disabled")!="disabled") {
-                    actStartExpBtn();
+                    // actStartExpBtn();
                 } else if(
                     globalStatus.exp_status == "next-hit-panel" && 
                     $("#next-hit-btn").prop("disabled") == false

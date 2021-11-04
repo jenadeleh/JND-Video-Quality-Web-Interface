@@ -108,7 +108,36 @@ class InterfaceText(models.Model):
     no_available_exp = RichTextField("When there is no experiment available, display", default="", null=False, blank=False)
     waiting_timeout_msg = models.TextField("When the HIT is expired, display", max_length=4096, default="", null=False, blank=False) # for hit
     download_timeout_msg = models.TextField("When download timeout, display", max_length=4096, default="", null=False, blank=False) # for hit
-    assignment_num_text = models.TextField("Tell user how many assignments they have finished", max_length=4096, default="The number of the completed assignments: placeholder. (you can edit this text on 'interface text' page. Please use 'placeholder' to represent the number.)") # for hit
+    assignment_num_text = models.TextField(
+        "Tell user how many assignments they have finished", 
+        max_length=4096, 
+        default="The number of the completed assignments: placeholder. (you can edit this text on 'interface text' page. Please use 'placeholder' to represent the number.)"
+    ) # for hit
+    training_description = RichTextField(
+        "Description of training", 
+        default="Description of training", 
+        null=False, 
+        blank=False
+    )
+    quiz_description = RichTextField(
+        "Description of quiz", 
+        default="Description of quiz", 
+        null=False, 
+        blank=False
+    )
+
+    flickering_test_description = RichTextField(
+        "Flickering test description", 
+        default="Flickering test description", 
+        null=False, 
+        blank=False
+    )
+    quality_test_description = RichTextField(
+        "Quality test description", 
+        default="Quality test description", 
+        null=False, 
+        blank=False
+    )
 
     def __str__(self):
         return self.title

@@ -33,6 +33,8 @@ export function reqLoadVideos(workerid, puid, euid) {
       
       // _startCountExpireTime("download");
       _addAllVideosToDom();
+      show_test_description("flickering");
+
     } else if (response["status"] == "failed") {
       $(".exp-panel").css("display", "none");
       $("#msg-panel").html(response["data"]).css("display", "inline");
@@ -72,9 +74,21 @@ export function displayNextVideo() {
     $(`#vc-${videoDomId}`).css("visibility", "visible")
                           .css("z-index", 1);
 
-    // console.log("--- next video ---")
-    // console.log(globalStatus.cur_video["source_video"])
-    recordTime();
+    if (
+      globalStatus.videos_pairs_sequence.length == globalStatus.task_num/2 - 1
+    ) { // flickering and quality
+      globalStatus.canMakeDecision = false;
+      $("#left-btn, #right-btn").attr("disabled", true);
+      $(`#left-${videoDomId}`).get(0).pause();
+      $(`#right-${videoDomId}`).get(0).pause();
+      $("#start-exp-btn").css("display", "inline-block")
+                        .attr("disabled",false);
+      show_test_description("quality");
+    } else {
+      // console.log("--- next video ---")
+      // console.log(globalStatus.cur_video["source_video"])
+      recordTime();
+    }
 }
 
 export function recordTime() {
@@ -98,6 +112,29 @@ export function constructDomId(cur_video_pair) {
   return `${ref_video}-crf${crf}-${presentation}`;
 }
 
+export function show_test_description(test) {
+  if (test == "flickering") {
+    $("#reminder-modal-text").html(globalStatus.flickering_test_description);
+    $("#start-exp-btn").html("<strong>Start flickering test</strong>");
+  } else if (test == "quality") {
+    $("#reminder-modal-text").html(globalStatus.quality_test_description);
+    $("#start-exp-btn").html("<strong>Start quality test</strong>");
+  }
+  
+  $("#reminder-modal-btn").html("I got it!");
+  $("#reminder-modal").modal("show");
+}
+
+export function show_session_description(session) {
+  if (session == "training") {
+    $("#reminder-modal-text").html(globalStatus.training_description);
+  } else if (session == "quiz") {
+    $("#reminder-modal-text").html(globalStatus.quiz_description);
+  }
+  
+  $("#reminder-modal-btn").html("I got it!");
+  $("#reminder-modal").modal("show");
+}
 
 function _extract_videos_url(videos_pairs) {
   let videos_original_url = [];
@@ -134,6 +171,8 @@ function _addAllVideosToDom() {
     _startCountExpireTime("wait");
   });
 }
+
+
 
 function _loadVideoAsync(video_ori_url) {
   return new Promise(function(resolve, reject) {
