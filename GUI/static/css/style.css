@@ -74,6 +74,16 @@ input#cf-submit-btn{
     color: white;
 }
 
+#cancel-cf-btn {
+  padding:5px 15px; 
+  background:rgb(211, 84, 0); 
+  border:0 none;
+  cursor:pointer;
+  -webkit-border-radius: 5px;
+  border-radius: 5px; 
+  color: white;
+}
+
 #task-progressbar {
     color: #000000;
     visibility: visible;

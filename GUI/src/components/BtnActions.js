@@ -94,34 +94,43 @@ export function adjustDist() {
 export function readInst() {
   $("#inst-panel").css("display", "none");
   globalStatus.exp_status = "";
-  if (globalStatus.ispexist) {
-    passCF_action();
-  } else {
-    $("#cf-panel").css("display", "inline");
+  // if (globalStatus.ispexist) {
+  //   passCF_action();
+  // } else {
+  //   $("#cf-panel").css("display", "inline");
+  // }
+
+  if (getLocalData("workerid")){
+    $("#ask-for-wid").html("Please confirm your worker ID.")
+    $("#cf-workerid").val(getLocalData("workerid"))
   }
+  
+  $("#cf-panel").css("display", "inline");
 }
 
 function _endHit() {
-  displayEndHitPanel();
   _sendResult();
 }
 
-export function displayEndHitPanel() {
+export function displayEndHitPanel(code) {
   $(".video-cover").remove();
   $(".decision-btn").attr("disabled", true);
   $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "hidden");
   $("#hit-end-panel").css("display", "inline");
   $("#video-spinner").css("display", "none")
                     .removeClass("d-flex");
-  $("#finish-asgm-num").html(
-    globalStatus.assignment_num_text.replace(
-      "placeholder", globalStatus.finished_assignment_num+1
-    )
-  );
-  globalStatus.exp_status = "next-hit-panel";
-  globalStatus.loaded_video_num = 0;
-  $("#loading-progress").html(globalStatus.loaded_video_num+ "/" +globalStatus.video_num);
-  updateProgressBar(0, globalStatus.video_num);
+
+  $("#hit-end-text").html("your code");
+
+  // $("#finish-asgm-num").html(
+  //   globalStatus.assignment_num_text.replace(
+  //     "placeholder", globalStatus.finished_assignment_num+1
+  //   )
+  // );
+  // globalStatus.exp_status = "next-hit-panel";
+  // globalStatus.loaded_video_num = 0;
+  // $("#loading-progress").html(globalStatus.loaded_video_num+ "/" +globalStatus.video_num);
+  // updateProgressBar(0, globalStatus.video_num);
 }
 
 function _sendResult() {
@@ -146,6 +155,14 @@ function _sendResult() {
       "cali_info": cali_info
     }
   };
+
   globalStatus.result = [];
-  sendMsg(send_data);
+
+  sendMsg(send_data).then(response => {
+    if (response["status"] == "successful") {
+      displayEndHitPanel(response["code"]);
+    } else if (response["status"] == "failed") {
+      displayEndHitPanel(response["error"]);s
+    }
+  });
 }

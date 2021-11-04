@@ -31,15 +31,16 @@
         <div>
             <form id="cf-form" action="">
                 <p>
-                    <label for="workerid">Please enter your worker id:</label>
+                    <label for="workerid"><h3 id="ask-for-wid">Please enter your worker id:</h3></label>
                     <input type="text" 
+                            style="font-size:28px;"
                             id="cf-workerid" 
                             name="workerid" 
                             minlength="2" 
                             maxlength="25" 
                             size="30" required>
                 </p>
-
+                </br>
                 <p>
                     <input type="checkbox" 
                             id="cf-checkbox"
@@ -47,7 +48,8 @@
                         I agree to all of the items listed above and consent to participate in this study.
                 </p>
 
-                <input type="submit" id="cf-submit-btn">
+                <input type="submit" id="cf-submit-btn">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button id="cancel-cf-btn" onClick="window.location.reload();">Cancel</button>
             </form>
         </div>
     </div>
@@ -108,8 +110,13 @@
                 </div>
 
             <div id="hit-end-panel">
-                <span id="hit-end-text"></span></br>
-                <h4 id="finish-asgm-num"></h4></br>
+                <h4><span style="font-family:Calibri,sans-serif"><span style="font-family:&quot;Arial&quot;,sans-serif">Thank you very much for participating in this study!</span></span></h4>
+                <h4><span style="font-family:Calibri,sans-serif"><strong><span style="font-family:&quot;Arial&quot;,sans-serif">IMPORTANT: Please copy the code below to the experiment page in&nbsp;Mechanical Turk in order to get your compensation!</span></strong></span></h4>
+                </br>
+                <h2 id="hit-end-text"></h2></br>
+                <button id='home-page-btn' onClick="window.location.reload();" class='btn btn-success ctl'>Home Page</button>
+
+                <!-- <h4 id="finish-asgm-num"></h4></br>
 
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#instruction-modal">
                     Read instruction again
@@ -118,7 +125,7 @@
                 </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <button id='quit-exp-btn' class='btn btn-danger ctl'>
                     Quit experiment
-                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  -->
             </div>
 
             <div id="decision-timeout-msg">Please make your decision.</div>

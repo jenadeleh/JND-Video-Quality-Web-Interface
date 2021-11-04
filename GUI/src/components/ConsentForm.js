@@ -105,8 +105,9 @@ function _render_consent_form(consent_form) {
 }
 
 function _render_end_hit_text(text_end_hit, btn_text_end_hit) {
-  $("#hit-end-text").html(text_end_hit);
-  $("#next-hit-btn").html(btn_text_end_hit);
+  // $("#hit-end-text").html(text_end_hit);
+  // $("#next-hit-btn").html(btn_text_end_hit);
+  $("#home-page-btn").html(btn_text_end_hit);
 }
 
 function _render_question_text(question) {
