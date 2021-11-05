@@ -15,7 +15,7 @@ def home(request):
     return render(request,'index.html')
 
 
-# wait_release_resources()
+wait_release_resources()
 
 @csrf_exempt
 def scheduler(request):

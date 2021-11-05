@@ -86,14 +86,12 @@ export function isPC() {
 }
 
 export function isCorrectBrowser() {
-    // must use Chrome 
+    // must use firefox 
 
-    return true;
 
     let userAgentInfo = navigator.userAgent.toLowerCase();
     if (
-        // userAgentInfo.indexOf("firefox") != -1 || 
-        userAgentInfo.indexOf("chrome") != -1
+        userAgentInfo.indexOf("firefox") != -1
     ) {
         return true;
     } 

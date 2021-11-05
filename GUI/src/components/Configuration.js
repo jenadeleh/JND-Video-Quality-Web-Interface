@@ -5,10 +5,10 @@ export const config = {
         "maximize_browser": "Please maximize your browser.",
         "same_monitor": "Please use the same monitor. Or refresh the website to restart the experiment.",
         "scale_browser": "Please don't change the browser zoom level. You can set it back from browser menu, or using the CMD/CTRL and +/- key combination, or using CMD/CTRL and mouse scroll combination. Thank you.",
-        "correct_browser":"To enable all interface features, please use Chrome.",
+        "correct_browser":"To enable all interface features, please use Firefox.", //size of blob, https://www.coder.work/article/932269
     },
     FIRST_DURATION: 5000, // ms
-    SECOND_DURATION: 3000, // ms
+    SECOND_DURATION: 3000, // mss
     MONITOR_MIN_HEIGHT: 17,  // cm
     IMAGE_WIDTH_CM: 13.797, 
     IMAGE_HEIGHT_CM: 10.347, 

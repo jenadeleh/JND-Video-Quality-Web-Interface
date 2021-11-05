@@ -177,15 +177,20 @@ function _addAllVideosToDom() {
 function _loadVideoAsync(video_ori_url) {
   return new Promise(function(resolve, reject) {
 
-    let tmp_url = "http://134.34.224.174/media/VideoJND_studies/Study_1crf_JND_videos/JND_264_640x480/SRC089_640x480_30/crf_12/videoSRC089_640x480_30_qp_00_crf_12.mp4";
+    // big size
+    // let tmp_url = "http://134.34.224.174/media/VideoJND_studies/Study_1crf_JND_videos/JND_264_640x480/SRC089_640x480_30/crf_12/videoSRC089_640x480_30_qp_00_crf_12.mp4";
 
-    // let tmp_url = "http://134.34.224.174/media/VideoJND_studies/Study_1crf_JND_videos/JND_266_640x480/SRC173_640x480_24/crf_12/videoSRC173_640x480_24_qp_37_crf_12.mp4";
+    // small size
+    // let tmp_url = "http://134.34.224.174/media/VideoJND_studies/Study_1crf_JND_videos/JND_264_640x480/SRC089_640x480_30/crf_12/videoSRC089_640x480_30_qp_30_crf_12.mp4"
+    
 
     let req = new XMLHttpRequest();
-    req.open('GET', tmp_url, true);
+    req.open('GET', video_ori_url, true);
     req.responseType = 'blob';
+    req.timeout = 2000; //ms
     req.onload = function() {
       if (this.status === 200) {
+
         let videoBlob = this.response;
         let video_local_url = URL.createObjectURL(videoBlob);
         globalStatus.videos_url_mapping[video_ori_url] = video_local_url;

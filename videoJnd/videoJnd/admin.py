@@ -95,7 +95,8 @@ class EncodedRefVideoObjAdmin(admin.ModelAdmin):
 @admin.register(Participant)
 class ParticipantAdmin(admin.ModelAdmin):
     list_display = (
-        "workerid"
+        "puid"
+        , "workerid"
         , "exp"
         , "ongoing"
         , "start_date"
@@ -117,7 +118,7 @@ class AssignmentAdmin(admin.ModelAdmin):
         "auid"
         , "exp"
         , "workerid"
-        , "result"
+        # , "result"
         , "submit_time"
     )
 

@@ -42,14 +42,7 @@ def record_result(recv_data:dict) -> dict:
                 else:
                     finished_ref_videos[ref_video_obj.ref_video] = 1
 
-                if ref_video_obj.ongoing:
-                    _update_video_db(video_result, ref_video_obj, str(auid))
-                # else:
-                #     return {
-                #         "status":"failed", 
-                #         "restype": "record_result",
-                #         "data":"video %s is not ongoing" % recv_data["puid"]
-                #     }
+                _update_video_db(video_result, ref_video_obj, str(auid))
 
                 process_count[video_result["refuid"]] += + 1
                 if process_count[video_result["refuid"]] == 2*config["RATING_PER_ENCODED_REF_VIDEO"]: 
@@ -70,7 +63,7 @@ def record_result(recv_data:dict) -> dict:
         p_obj.save()
 
 
-        return {"status":"successful", "restype": "record_result",}
+        return {"status":"successful", "restype": "record_result", "code":auid}
     else:
         return {"status":"failed", "restype": "record_result", "data":"participant is not exist"}
 
@@ -83,9 +76,6 @@ def _update_video_db(
     # update videoGroupsResult
     refuid = video_result["refuid"]
     presentation = video_result["presentation"]
-
-    video_result["crf"]
-    video_result["qp"]
 
     decision_code = _encode_decision(
         video_result["side_of_reference"], 
@@ -121,7 +111,7 @@ def _update_video_db(
         ref_video_obj.is_finished = True
     
     # set some status
-    # ref_video_obj.ongoing = False
+    ref_video_obj.ongoing = False
     ref_video_obj.cur_workerid = None
     ref_video_obj.cur_worker_uid = None
     ref_video_obj.worker_start_date = None

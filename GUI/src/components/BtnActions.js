@@ -120,7 +120,7 @@ export function displayEndHitPanel(code) {
   $("#video-spinner").css("display", "none")
                     .removeClass("d-flex");
 
-  $("#hit-end-text").html("your code");
+  $("#hit-end-text").html(code);
 
   // $("#finish-asgm-num").html(
   //   globalStatus.assignment_num_text.replace(
@@ -162,7 +162,7 @@ function _sendResult() {
     if (response["status"] == "successful") {
       displayEndHitPanel(response["code"]);
     } else if (response["status"] == "failed") {
-      displayEndHitPanel(response["error"]);s
+      displayEndHitPanel(response["error"]);
     }
   });
 }
