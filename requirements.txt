@@ -1,6 +1,7 @@
 asgiref @ file:///tmp/build/80754af9/asgiref_1625643473416/work
 certifi==2021.5.30
 Django @ file:///tmp/build/80754af9/django_1620309509374/work
+django==3.2.2
 django-ckeditor==6.1.0
 django-cors-headers==3.10.0
 django-js-asset==1.2.2
