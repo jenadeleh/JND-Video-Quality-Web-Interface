@@ -49,9 +49,6 @@ class ExperimentAdmin(admin.ModelAdmin):
             p_column_names = [f.name for f in Participant._meta.get_fields()] # participant
             a_column_names = [f.name for f in Assignment._meta.get_fields()] # assignment
 
-
-            print(e_column_names)
-
             for exp_obj in queryset:
                 exp_name = exp_obj.name
 
@@ -81,8 +78,8 @@ class ExperimentAdmin(admin.ModelAdmin):
                         zf.writestr(f_name, df.to_csv(index=False))
                 
                 response = HttpResponse(buffer.getvalue(), content_type='application/zip')
-                response['Content-Disposition'] = 'attachment; filename={}.zip'.format("videoJND_Result_%s" % \
-                                                                     (time.strftime("%Y-%m-%d_%H-%M-%S")))
+                response['Content-Disposition'] = 'attachment; filename={}.zip'.format("%s_videoJND_Result_%s" % \
+                                                                     (exp_name, time.strftime("%Y-%m-%d_%H-%M-%S")))
                 return response
 
         except Exception as e:
