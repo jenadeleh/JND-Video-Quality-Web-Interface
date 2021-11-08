@@ -83,7 +83,7 @@ def _config_released_resource(
     ref_video:list
 ) -> None:
 
-    # logger.info("_____release %s _______" % p_obj.puid)
+    logger.info("_____release %s _______" % p_obj.puid)
     # logger.info(str(monitor_threads) + str(idle_threads))
     puid = str(p_obj.puid)
     if puid not in idle_threads:
@@ -103,8 +103,7 @@ def _config_released_resource(
                 ref_video_obj.worker_start_date = None
                 ref_video_obj.save()
 
-
-        # logger.info("--- Release videos from participant: %s ---" % (p_obj.name))
+        logger.info("--- Release videos from participant: %s ---" % (p_obj.name))
     else:
         if puid in idle_threads:
             idle_threads.remove(puid)
@@ -118,7 +117,7 @@ def add_idle_thread(puid:str) -> None:
     if puid not in idle_threads:
         idle_threads.append(puid)
 
-    logger.info("===== new %s ====" % str(idle_threads))
+        logger.info("===== new idle thread %s ====" % str(idle_threads))
 
 def wait_release_resources():
     logger.info("--- Release videos ---")
@@ -135,10 +134,10 @@ def release_resource(recv_data:dict) -> None:
         if recv_data["puid"] in monitor_threads:
             add_idle_thread(recv_data["puid"])
 
-        # logger.info("===== release_resource ====" )
+        logger.info("===== release_resource ====" )
         p_obj = Participant.objects.filter(puid=recv_data["puid"]).first()
 
-        if p_obj and p_obj.videos:
+        if p_obj and len(p_obj.ongoing_encoded_ref_videos["ongoing_encoded_ref_videos"])>0:
             ref_video = p_obj.ongoing_encoded_ref_videos["ongoing_encoded_ref_videos"] 
             p_obj.ongoing = False
             p_obj.ongoing_videos_pairs = {"distortion":[], "flickering":[]}
@@ -158,11 +157,3 @@ def release_resource(recv_data:dict) -> None:
 
     except Exception as e:
         logger.error(str(e))
-
-
-
-
-
-            
-
-    

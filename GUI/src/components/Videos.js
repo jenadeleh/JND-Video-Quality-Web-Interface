@@ -31,7 +31,7 @@ export function reqLoadVideos(workerid, puid, euid) {
       updateProgressBar(0, globalStatus.task_num);
       $("#loading-progress").html("0/" + globalStatus.videos_original_url.length);
       
-      // _startCountExpireTime("download");
+      _startCountExpireTime("download");
       _addAllVideosToDom();
       show_test_description("flickering");
 
@@ -115,10 +115,10 @@ export function constructDomId(cur_video_pair) {
 export function show_test_description(test) {
   if (test == "flickering") {
     $("#reminder-modal-text").html(globalStatus.flickering_test_description);
-    $("#start-exp-btn").html("<strong>Start flickering test</strong>");
+    $("#start-exp-btn").html("<h4>Click here to start flickering test</h4>");
   } else if (test == "quality") {
     $("#reminder-modal-text").html(globalStatus.quality_test_description);
-    $("#start-exp-btn").html("<strong>Start quality test</strong>");
+    $("#start-exp-btn").html("<h4>Click here to start quality test</h4>");
   }
   
   $("#reminder-modal-btn").html("I got it!");
@@ -166,7 +166,7 @@ function _addAllVideosToDom() {
   Promise.all(tasks).then(() => {
     _addVideosPairHtml();
     displayFirstVideo();
-    // clearTimeout(globalStatus.EXPIRE_TIMER);
+    clearTimeout(globalStatus.EXPIRE_TIMER);
     // console.log("----- clearTimer -----" + "download");
     _startCountExpireTime("wait");
   });
@@ -176,14 +176,7 @@ function _addAllVideosToDom() {
 
 function _loadVideoAsync(video_ori_url) {
   return new Promise(function(resolve, reject) {
-
-    // big size
-    // let tmp_url = "http://134.34.224.174/media/VideoJND_studies/Study_1crf_JND_videos/JND_264_640x480/SRC089_640x480_30/crf_12/videoSRC089_640x480_30_qp_00_crf_12.mp4";
-
-    // small size
-    // let tmp_url = "http://134.34.224.174/media/VideoJND_studies/Study_1crf_JND_videos/JND_264_640x480/SRC089_640x480_30/crf_12/videoSRC089_640x480_30_qp_30_crf_12.mp4"
-    
-
+    console.log(video_ori_url)
     let req = new XMLHttpRequest();
     req.open('GET', video_ori_url, true);
     req.responseType = 'blob';
@@ -312,8 +305,10 @@ function _showTimeoutMsg(timeout_type) {
   globalStatus.warning_status = "timer";
   if (timeout_type=="download") {
     $("#warning-msg").html(globalStatus.download_timeout_msg);
+    $("#hit-end-panel-msg").html("<h3>"+globalStatus.download_timeout_msg+"</h3>");
   } else if (timeout_type=="wait") {
     $("#warning-msg").html(globalStatus.waiting_timeout_msg);
+    $("#hit-end-panel-msg").html("<h3>"+globalStatus.waiting_timeout_msg+"</h3>");
   }
   
   $("#next-hit-btn").attr("disabled", true);

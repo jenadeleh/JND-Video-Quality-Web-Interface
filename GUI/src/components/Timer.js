@@ -12,7 +12,7 @@ export function setTimer() {
 
 function _SECOND_DURATION_timer() {
     globalStatus.SECOND_DURATION_TIMER = setTimeout(()=> { 
-        addResultToCurVideo("no decision"); 
+        addResultToCurVideo("no decision");
         processHit();
     }, config.SECOND_DURATION);  
 }
