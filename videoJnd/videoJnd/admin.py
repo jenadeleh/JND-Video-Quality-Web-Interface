@@ -136,7 +136,7 @@ class ParticipantAdmin(admin.ModelAdmin):
         , "start_date"
         , "finished_ref_videos"
         , "ongoing_encoded_ref_videos"
-        , "ongoing_videos_pairs"
+        # , "ongoing_videos_pairs"
     )
 
     list_filter = ("exp", "ongoing")

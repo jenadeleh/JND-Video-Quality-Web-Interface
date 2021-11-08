@@ -4,9 +4,10 @@ from videoJnd.src.QuestPlusJnd import QuestPlusJnd
 from videoJnd.models import Experiment, Participant, InterfaceText, Assignment, EncodedRefVideoObj
 from videoJnd.src.GenUrl import gen_video_url, random_side
 import random
-
+from videoJnd.src.GetConfig import get_config
 
 qp_obj = QuestPlusJnd()
+
 
 def req_videos(recv_data:dict) -> dict:
     cur_exp_obj = Experiment.objects.filter(euid=recv_data["euid"])
@@ -102,8 +103,8 @@ def select_encoded_ref_videos(cur_exp_obj:object, puid:str) -> list:
         cur_p = Participant.objects.filter(puid=puid, exp=cur_exp_obj)
         if cur_p:
             cur_p = cur_p[0]
-            for encoded_ref_video,remain_num in cur_p.finished_ref_videos.items():
-                if remain_num >= cur_exp_obj.max_ref_per_worker:
+            for encoded_ref_video,rating_num in cur_p.finished_ref_videos.items():
+                if rating_num >= cur_exp_obj.max_ref_per_worker * 2: # flickering + distortion
                     removed_encoded_ref_videos.append(encoded_ref_video)
 
     # filter encoded reference videos that are not finished and not ongoing

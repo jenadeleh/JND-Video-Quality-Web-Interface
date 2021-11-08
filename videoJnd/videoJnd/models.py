@@ -14,7 +14,7 @@ class Experiment(models.Model):
     configuration = jsonfield.JSONField(default=get_config())
     download_time = models.IntegerField("Download Time Limitation(seconds)", default=300, editable=True, validators=[MinValueValidator(10)])
     wait_time = models.IntegerField("Waiting Time Limitation(seconds)", default=300, editable=True, validators=[MinValueValidator(10)])
-    max_ref_per_worker = models.IntegerField("Maximum number of reference videos for a worker to annotate", default=2, editable=True)
+    max_ref_per_worker = models.IntegerField("Maximum rating number of a reference videos for a worker", default=2, editable=True)
     pub_date = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
     
     def __str__(self):
