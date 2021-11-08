@@ -1,0 +1,133 @@
+.main {
+    margin: auto;
+    width: 80%;
+    display: flex;
+    justify-content: center; 
+} 
+
+#msg-panel{
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+}
+
+#video-pool {
+    position: relative;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+}
+
+.video-cover {
+    width: 100%;
+    height: 100%;
+    position:absolute;
+    background-color: #FFFFFF;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+}
+
+.video-cover > video {
+    display: inline-block;
+    margin:5px;
+}
+
+#guide-panel
+, #instruction-btn {
+    text-align: center;
+    position: relative;
+    vertical-align:middle;
+}
+
+.submit
+, .tocsv {
+    display: none;
+}
+
+#question {
+    font-size: 24px;
+}
+
+#msg-panel,
+#inst-panel,
+#cali-panel,
+#dist-panel,
+#hit-panel,
+#cf-panel,
+#instruction-modal,
+#cali-inst-modal,
+#reminder-modal,
+#hit-end-panel,
+#decision-timeout-msg,
+#warning-cover {
+    display: none;
+}
+
+input#cf-submit-btn{
+    padding:5px 15px; 
+    background:rgb(0, 156, 34); 
+    border:0 none;
+    cursor:pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px; 
+    color: white;
+}
+
+#cancel-cf-btn {
+  padding:5px 15px; 
+  background:rgb(211, 84, 0); 
+  border:0 none;
+  cursor:pointer;
+  -webkit-border-radius: 5px;
+  border-radius: 5px; 
+  color: white;
+}
+
+#start-exp-btn {
+  color: black;
+}
+
+#task-progressbar {
+    color: #000000;
+    visibility: visible;
+}
+
+#cali-fit-btn {
+    visibility: hidden;
+}
+
+#cali-frame {
+    position: relative;
+    margin-left: 25%;
+    border-radius: 15px;
+    width:562px;
+    height:354px;
+    max-width: 1124px;
+    max-height: 708px;
+    border-style: solid;
+    border-color: red;
+}
+
+#warning-cover{
+    text-align: center;
+    font-size: 32px;
+    visibility: hidden;
+    position: absolute;
+    width:100%;
+    height: 100%;
+    background: rgba(213, 213, 213, 0.9);
+    z-index: 9999;
+}
+
+#warning-msg {
+    text-align: center;
+    width:80%;
+    position: relative;
+    margin: auto;
+}
+
+#read-inst-div {
+    display: flex;
+    justify-content: flex-end;  
+}

@@ -3,18 +3,23 @@ from pathlib import Path
 import shutil
 
 if __name__ == "__main__":
+    hit = "studyhit"
+
 
     js_path = Path("../../static/js/")
     css_path = Path("../../static/css/")
     html_path = Path("../../templates/")
+    
+    dist_path = Path(f"../../../../gui_{hit}/dist/")
 
-    dist_path = Path("../../../../GUI/dist/")
+    if hit == "studyhit":
+      dist_path = Path(f"../../../../GUI/dist/")
 
     with open(dist_path / "index.html", "r") as fi:
         html = fi.read()
         html = html.replace(
             """<script type="text/javascript" src="bundle.js"></script></body>""",
-            """<script type="text/javascript" src="../static/js/bundle.js"></script></body>"""
+            """<script type="text/javascript" src="../static/js/{hit}_bundle.js"></script></body>"""
         )
 
     with open(dist_path / "index.html", "w") as fi:
@@ -30,10 +35,10 @@ if __name__ == "__main__":
     with open(dist_path / "bundle.js", "w") as fi:
         fi.write(bundle)
 
-    shutil.copy(dist_path / "bundle.js", js_path / "bundle.js")
-    shutil.copy(dist_path / "bundle.js.map", js_path / "bundle.js.map")
+    shutil.copy(dist_path / "bundle.js", js_path / "{hit}_bundle.js")
+    shutil.copy(dist_path / "bundle.js.map", js_path / "{hit}_bundle.js.map")
     shutil.copy(dist_path / "css/style.css", css_path / "style.css")
-    shutil.copy(dist_path / "index.html", html_path / "index.html")
+    shutil.copy(dist_path / "index.html", html_path / "{hit}.html")
 
 
 

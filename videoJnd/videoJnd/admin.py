@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.http import HttpResponse
-from .models import Instruction, ConsentForm, Experiment, Participant, Assignment, InterfaceText, EncodedRefVideoObj
+from .models import Instruction, ConsentForm, Experiment, StudyParticipant, StudyAssignment, InterfaceText, EncodedRefVideoObj, QuaAssignment
 
 admin.site.site_header = "JND Video Study"
 admin.site.site_title = "JND Video Study"
@@ -18,11 +18,14 @@ from videoJnd.src.CreateVideosObj import createEncodedRefVideosDB
 class ExperimentAdmin(admin.ModelAdmin):
     list_display = (
         "name"
-        , "euid"
+        # , "euid"
         , "active"
-        , "download_time"
-        , "wait_time"
+        # , "download_time"
+        # , "wait_time"
         , "description"
+        , "qua_hit_worker_num"
+        , "qua_hit_count"
+        , "study_hit_count"
         , "pub_date"
     )
 
@@ -47,14 +50,14 @@ class ExperimentAdmin(admin.ModelAdmin):
             ] # experiment
             v_column_names = [f.name for f in EncodedRefVideoObj._meta.get_fields()] # reference video
             p_column_names = [f.name for f in Participant._meta.get_fields()] # participant
-            a_column_names = [f.name for f in Assignment._meta.get_fields()] # assignment
+            a_column_names = [f.name for f in StudyAssignment._meta.get_fields()] # assignment
 
             for exp_obj in queryset:
                 exp_name = exp_obj.name
 
                 v_objs = EncodedRefVideoObj.objects.filter(exp=exp_obj)
                 p_objs = Participant.objects.filter(exp=exp_obj)
-                a_objs = Assignment.objects.filter(exp=exp_obj)
+                a_objs = StudyAssignment.objects.filter(exp=exp_obj)
 
                 e_data = [tuple([getattr(exp_obj, c) for c in e_column_names])]
                 v_data = [tuple([getattr(v, c) for c in v_column_names]) for v in v_objs]
@@ -126,8 +129,8 @@ class EncodedRefVideoObjAdmin(admin.ModelAdmin):
         return False
 
 
-@admin.register(Participant)
-class ParticipantAdmin(admin.ModelAdmin):
+@admin.register(StudyParticipant)
+class StudyParticipantAdmin(admin.ModelAdmin):
     list_display = (
         "puid"
         , "workerid"
@@ -146,8 +149,8 @@ class ParticipantAdmin(admin.ModelAdmin):
     def has_add_permission(self, request, obj=None):
         return False
 
-@admin.register(Assignment)
-class AssignmentAdmin(admin.ModelAdmin):
+@admin.register(StudyAssignment)
+class StudyAssignmentAdmin(admin.ModelAdmin):
     list_display = (
         "auid"
         , "exp"
@@ -157,34 +160,28 @@ class AssignmentAdmin(admin.ModelAdmin):
     )
 
     list_per_page = 200
-
     list_filter = (["exp"])
 
+    def has_add_permission(self, request, obj=None):
+        return False
 
-    actions = ["export_as_csv"]
+@admin.register(QuaAssignment)
+class QuaAssignmentAdmin(admin.ModelAdmin):
+    list_display = (
+        "auid"
+        , "exp"
+        , "workerid"
+        # , "result"
+        , "submit_time"
+    )
 
     list_per_page = 200
-
-    def export_as_csv(self, request, queryset):
-        try:
-            csv_name = "jnd_video_result_" + time.strftime("%Y-%m-%d_%H-%M-%S")
-            meta = self.model._meta
-            column_names = [field.name for field in meta.fields if field.name not in ["id"]]
-            response = HttpResponse(content_type='text/csv')
-            response['Content-Disposition'] = 'attachment; filename={}.csv'.format(csv_name)
-            writer = csv.writer(response)
-            writer.writerow(column_names)
-
-            for obj in queryset:
-                writer.writerow([str(getattr(obj, field)) for field in column_names])
-
-            return response
-        except Exception as e:
-            print("admin page got error: " + str(e))
-
-    export_as_csv.short_description = "Export Selected"
+    list_filter = (["exp"])
 
     def has_add_permission(self, request, obj=None):
+        return False
+    
+    def has_delete_permission(self, request, obj=None):
         return False
 
 

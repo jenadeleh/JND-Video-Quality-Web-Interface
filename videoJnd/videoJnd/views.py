@@ -10,10 +10,12 @@ from django.utils import timezone
 from videoJnd.src.ProcessRequest import process_request
 from videoJnd.src.ResourceMonitor import wait_release_resources
 
-# home page
-def home(request):
-    return render(request,'index.html')
+# studyhit page
+def studyhit(request):
+    return render(request,'studyhit.html')
 
+def quahit(request):
+    return render(request,'quahit.html')
 
 wait_release_resources()
 

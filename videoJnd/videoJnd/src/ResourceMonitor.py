@@ -1,5 +1,5 @@
 
-from videoJnd.models import EncodedRefVideoObj, Participant, InterfaceText
+from videoJnd.models import EncodedRefVideoObj, StudyParticipant, InterfaceText
 from django.utils import timezone
 import threading
 import time
@@ -12,7 +12,7 @@ monitor_threads = []
 idle_threads = [] # when user start the exp. before expiration, threading does nothing
 
 def resource_monitor(recv_data:dict) -> dict:
-    p_obj = Participant.objects.filter(puid=recv_data["puid"]).first()
+    p_obj = StudyParticipant.objects.filter(puid=recv_data["puid"]).first()
 
     # if not p_obj.start_date:
     #     p_obj.start_date  = timezone.now()
@@ -121,7 +121,7 @@ def add_idle_thread(puid:str) -> None:
 
 def wait_release_resources():
     logger.info("--- Release videos ---")
-    ongoing_p_obj = Participant.objects.filter(ongoing=True)
+    ongoing_p_obj = StudyParticipant.objects.filter(ongoing=True)
 
     if ongoing_p_obj:
         for p_obj in ongoing_p_obj:
@@ -135,7 +135,7 @@ def release_resource(recv_data:dict) -> None:
             add_idle_thread(recv_data["puid"])
 
         logger.info("===== release_resource ====" )
-        p_obj = Participant.objects.filter(puid=recv_data["puid"]).first()
+        p_obj = StudyParticipant.objects.filter(puid=recv_data["puid"]).first()
 
         if p_obj and len(p_obj.ongoing_encoded_ref_videos["ongoing_encoded_ref_videos"])>0:
             ref_video = p_obj.ongoing_encoded_ref_videos["ongoing_encoded_ref_videos"] 

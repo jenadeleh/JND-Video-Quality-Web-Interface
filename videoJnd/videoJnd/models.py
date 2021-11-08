@@ -16,6 +16,11 @@ class Experiment(models.Model):
     wait_time = models.IntegerField("Waiting Time Limitation(seconds)", default=300, editable=True, validators=[MinValueValidator(10)])
     max_ref_per_worker = models.IntegerField("Maximum rating number of a reference videos for a worker", default=2, editable=True)
     pub_date = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
+    qua_hit_worker_num = models.IntegerField("Number of Qua. HIT", default=10, editable=True)
+    qua_hit_count = models.IntegerField("Number of finished Qua. HIT", default=0, editable=False)
+    study_hit_count = models.IntegerField("Number of finished study HIT", default=0, editable=False)
+    training_videos_json = jsonfield.JSONField(default={})
+    quiz_video_json = jsonfield.JSONField(default={})
     
     def __str__(self):
         return self.name
@@ -68,7 +73,7 @@ class EncodedRefVideoObj(models.Model):
     def __str__(self):
         return self.ref_video   
 
-class Participant(models.Model):
+class StudyParticipant(models.Model):
     puid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     workerid = models.CharField(max_length=20, default="", editable=False, null=False, blank=False) # pname
     exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
@@ -79,11 +84,23 @@ class Participant(models.Model):
     ongoing_videos_pairs = jsonfield.JSONField(default={"distortion":[], "flickering":[]}) 
     finished_ref_videos = jsonfield.JSONField(default={}) # limitation of the number for each reference video for each worker
     
-
     def __str__(self):
         return self.workerid
 
-class Assignment(models.Model):
+class StudyAssignment(models.Model): # study HIT
+    auid = models.UUIDField(primary_key=True,  default=uuid.uuid4, editable=False)
+    puid = models.UUIDField(default=uuid.uuid4, editable=False)
+    exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
+    workerid = models.CharField(max_length=20, default="", editable=False, null=False, blank=False) # pname
+    result = jsonfield.JSONField(default={})
+    calibration = models.TextField(max_length=40960, default="", editable=False)
+    operation_system = models.TextField(max_length=40960, default="", editable=False)
+    submit_time = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
+    
+    def __str__(self):
+        return str(self.auid)
+
+class QuaAssignment(models.Model): # qua HIT
     auid = models.UUIDField(primary_key=True,  default=uuid.uuid4, editable=False)
     puid = models.UUIDField(default=uuid.uuid4, editable=False)
     exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)

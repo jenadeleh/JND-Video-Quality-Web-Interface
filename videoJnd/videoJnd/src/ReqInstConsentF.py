@@ -1,4 +1,4 @@
-from videoJnd.models import Instruction, ConsentForm, InterfaceText, Participant, Experiment
+from videoJnd.models import Instruction, ConsentForm, InterfaceText, StudyParticipant, Experiment
 from videoJnd.src.ReqVideos import select_encoded_ref_videos
 from videoJnd.src.Log import logger
 
@@ -18,7 +18,7 @@ def req_inst_cf(puid:str) -> dict:
             if len(avl_encoded_ref_videos_objs)>0:
                 isPExist = False
                 if puid:
-                    cur_p = Participant.objects.filter(puid=puid, exp=exp_obj)
+                    cur_p = StudyParticipant.objects.filter(puid=puid, exp=exp_obj)
                     if cur_p:
                         isPExist = True
 

@@ -1,6 +1,6 @@
 from django.utils import timezone
 
-from videoJnd.models import Participant, Experiment
+from videoJnd.models import StudyParticipant, Experiment
 from videoJnd.src.Log import logger
 import uuid
 
@@ -9,14 +9,14 @@ def user_register(recv_data:dict) -> dict:
         active_exps = Experiment.objects.filter(active=True)
         if active_exps:
             active_exp = active_exps[0]
-            p_obj = Participant.objects.filter(workerid=recv_data["workerid"])
+            p_obj = StudyParticipant.objects.filter(workerid=recv_data["workerid"])
 
             if p_obj:
               puid = p_obj[0].puid
 
             else:
               puid = uuid.uuid4()
-              Participant(
+              StudyParticipant(
                   puid = puid
                   , workerid = recv_data["workerid"]
                   , exp = active_exp
