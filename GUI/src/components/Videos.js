@@ -176,7 +176,6 @@ function _addAllVideosToDom() {
 
 function _loadVideoAsync(video_ori_url) {
   return new Promise(function(resolve, reject) {
-    console.log(video_ori_url)
     let req = new XMLHttpRequest();
     req.open('GET', video_ori_url, true);
     req.responseType = 'blob';

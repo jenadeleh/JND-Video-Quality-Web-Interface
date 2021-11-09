@@ -7,42 +7,26 @@ import { getLocalData } from "../utils/ManageLocalData";
 import { displayEndHitPanel } from "./BtnActions";
 
 
-export function reqLoadVideos(workerid, puid, euid) {
+export function reqLoadVideos(workerid, euid) {
   $("#video-pool, #video-spinner").css("height", globalStatus.video_h)
                                   .css("width", globalStatus.video_w);
 
-  let data = {
-    "action":"req_videos", 
-    "workerid": workerid, 
-    "puid":puid, 
-    "euid":euid
+  if (globalStatus.session=="training") {
+    globalStatus.videos_pairs = globalStatus.training_videos;
+  } else if (globalStatus.session == "quiz") {
+    globalStatus.videos_pairs = globalStatus.quiz_videos;
   }
+  
+  globalStatus.task_num = globalStatus.videos_pairs["distortion"].length 
+                        + globalStatus.videos_pairs["flickering"].length;
 
-  sendMsg(data).then(response => {
-    if (response["status"] == "successful") {
-      globalStatus.download_time = response["data"]["download_time"];
-      globalStatus.wait_time = response["data"]["wait_time"];
-      globalStatus.videos_pairs = response["data"]["videos_pairs"];
-      globalStatus.task_num = globalStatus.videos_pairs["distortion"].length 
-                              + globalStatus.videos_pairs["flickering"].length;
-      globalStatus.finished_assignment_num = response["data"]["finished_assignment_num"];
-
-      _extract_videos_url(globalStatus.videos_pairs);
-      updateProgressBar(0, globalStatus.task_num);
-      $("#loading-progress").html("0/" + globalStatus.videos_original_url.length);
-      
-      _startCountExpireTime("download");
-      _addAllVideosToDom();
-      show_test_description("flickering");
-
-    } else if (response["status"] == "failed") {
-      $(".exp-panel").css("display", "none");
-      $("#msg-panel").html(response["data"]).css("display", "inline");
-      clearTimeout(globalStatus.FIRST_DURATION_TIMER);
-      clearTimeout(globalStatus.SECOND_DURATION_TIMER);
-      return response["data"];
-    }
-  });
+  _extract_videos_url(globalStatus.videos_pairs);
+  updateProgressBar(0, globalStatus.task_num);
+  $("#loading-progress").html("0/" + globalStatus.videos_original_url.length);
+  
+  _startCountExpireTime("download");
+  _addAllVideosToDom();
+  show_test_description("flickering");
 }
 
 export function displayFirstVideo() {
@@ -59,6 +43,20 @@ export function displayFirstVideo() {
   $(`#right-${videoDomId}`).get(0).pause();
   $(`#vc-${videoDomId}`).css("visibility", "visible");
   $("#start-exp-btn").attr("disabled",false);
+}
+
+function _addAllVideosToDom() {
+  const tasks = Array.from(
+    globalStatus.videos_original_url, (video_ori_url) => _loadVideoAsync(video_ori_url)
+  );
+
+  Promise.all(tasks).then(() => {
+    _addVideosPairHtml();
+    displayFirstVideo();
+    clearTimeout(globalStatus.EXPIRE_TIMER);
+    // console.log("----- clearTimer -----" + "download");
+    // _startCountExpireTime("wait");
+  });
 }
 
 export function displayNextVideo() {
@@ -158,25 +156,10 @@ function _extract_videos_url(videos_pairs) {
   globalStatus.videos_pairs_sequence = videos_pairs_sequence;
 }
 
-function _addAllVideosToDom() {
-  const tasks = Array.from(
-    globalStatus.videos_original_url, (video_ori_url) => _loadVideoAsync(video_ori_url)
-  );
-
-  Promise.all(tasks).then(() => {
-    _addVideosPairHtml();
-    displayFirstVideo();
-    clearTimeout(globalStatus.EXPIRE_TIMER);
-    // console.log("----- clearTimer -----" + "download");
-    _startCountExpireTime("wait");
-  });
-}
-
 
 
 function _loadVideoAsync(video_ori_url) {
   return new Promise(function(resolve, reject) {
-    console.log(video_ori_url)
     let req = new XMLHttpRequest();
     req.open('GET', video_ori_url, true);
     req.responseType = 'blob';
@@ -206,8 +189,6 @@ function _addVideosPairHtml() {
     globalStatus.videos_pairs[presentation].forEach(function(pair,key2,arr2){
       let ref_video = pair["ref_video"];
       let crf = pair["crf"];
-      // let url_left = pair["videos_pair"][0];
-      // let url_right = pair["videos_pair"][1];
 
       let url_left =  globalStatus.videos_url_mapping[pair["videos_pair"][0]];
       let url_right =  globalStatus.videos_url_mapping[pair["videos_pair"][1]];
@@ -223,7 +204,7 @@ function _addVideosPairHtml() {
                 
           <video 
             // class="vd-${ref_video}-crf${crf}-${presentation}"
-            id="left-${ref_video}-crf${crf}-${presentation}" 
+            id="left-${ref_video}-crf${crf}-${presentation}"
             loop="loop" 
             autoplay 
             muted 
@@ -256,23 +237,7 @@ function _addVideosPairHtml() {
 }
 
 function _startCountExpireTime(timeout_type){
-    sendMsg(
-      {
-        "action":"resource_monitor", 
-        "workerid": getLocalData("workerid"), 
-        "puid":getLocalData("puid"), 
-        "euid":getLocalData("euid")
-      }
-    ).then(response => {
-      if (response["status"] == "successful") {
-        globalStatus.start_time = response["data"]["start_date"];
-        globalStatus.waiting_timeout_msg = response["data"]["waiting_timeout_msg"];
-        globalStatus.download_timeout_msg = response["data"]["download_timeout_msg"];
-        _setExpireTimer(timeout_type);
-      } else if (response["status"] == "failed") {
-        console.log("Error: _startCountExpireTime")
-      }
-    }); 
+  _setExpireTimer(timeout_type);
 }
 
 function _setExpireTimer(timeout_type) {
@@ -286,10 +251,6 @@ function _setExpireTimer(timeout_type) {
 
   globalStatus.EXPIRE_TIMER = setTimeout(()=> {
     _showTimeoutMsg(timeout_type);
-    sendMsg({
-      "action":"release_resource", 
-      "puid":getLocalData("puid")
-    });
   }, duration);
 }
 

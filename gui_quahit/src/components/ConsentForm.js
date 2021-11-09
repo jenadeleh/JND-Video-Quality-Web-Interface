@@ -5,7 +5,7 @@ import { checkCaliStatus, calibration, passCali } from "./Calibration"
 import { globalStatus } from "./GlobalStatus"
 
 export function req_inst_cf() {
-    let data = {"action":"req_inst_cf", "puid":getLocalData("puid")};
+    let data = {"action":"req_inst_cf", "puid":getLocalData("puid"), "quahit":"yes"};
     sendMsg(data).then(response => {
         _process_response(response)
     }).catch(err => {
@@ -14,20 +14,7 @@ export function req_inst_cf() {
 }
 
 export function submitCf(workerid) {
-    let data = {"action":"user_register", "workerid":workerid};
-    sendMsg(data).then(response => {
-        if (response["status"] == "successful") {
-            let { euid, puid } = response["data"];
-            storeLocalData("euid", euid);
-            storeLocalData("puid", puid);
-            passCF_action();
-        } else if (response["status"] == "failed") {
-            $("#msg-panel").html(response["data"]).css("display", "inline");
-            return response["data"];
-        }
-    }).catch(err => {actNextHitBtn();actNextHitBtn();
-        console.log("submitCf errors: " + err.message);  
-    });
+  passCF_action();
 }
 
 export function passCF_action() {
@@ -45,10 +32,7 @@ export function passCF_action() {
 function _process_response(response) {
     if (response["status"] == "successful") {
         _render_interface_text(response["data"]);
-
         $("#inst-panel").css("display", "inline");
-        
-        globalStatus.ispexist = response["data"]["ispexist"];
 
     } else if (response["status"] == "failed") {
         $("#msg-panel").html(response["data"]).css("display", "inline");
@@ -58,7 +42,6 @@ function _process_response(response) {
 
 function _render_interface_text(response_data) {
   let {
-    ispexist, 
     instruction, 
     consent_form, 
     question, 
@@ -73,12 +56,26 @@ function _render_interface_text(response_data) {
     quiz_description,
     flickering_test_description,
     quality_test_description,
+    quiz_videos, 
+    training_videos,
+    euid,
+    wait_time,
+    download_time,
+    download_timeout_msg, 
+    waiting_timeout_msg,
   } = response_data
 
+  storeLocalData("euid", euid);
+  globalStatus.download_time = download_time;
+  globalStatus.wait_time = wait_time;
   globalStatus.training_description = training_description;
   globalStatus.training_description = quiz_description;
   globalStatus.flickering_test_description = flickering_test_description;
   globalStatus.quality_test_description = quality_test_description;
+  globalStatus.training_videos = training_videos;
+  globalStatus.quiz_videos = quiz_videos;
+  globalStatus.download_timeout_msg = download_timeout_msg;
+  globalStatus.waiting_timeout_msg = waiting_timeout_msg;
 
   _render_instruction(instruction);
   _render_consent_form(consent_form);

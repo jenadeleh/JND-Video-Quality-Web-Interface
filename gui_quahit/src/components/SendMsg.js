@@ -10,7 +10,7 @@ export const sendMsg = (data) => {
             contentType: 'application/json; charset=UTF-8',
             dataType: 'json', 
         }).done((response) => {
-            // console.log(response)
+            console.log(response)
             resolve(response);
         }).fail((err) => {
             resolve(err);

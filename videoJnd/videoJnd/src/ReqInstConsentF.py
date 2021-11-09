@@ -1,54 +1,93 @@
 from videoJnd.models import Instruction, ConsentForm, InterfaceText, StudyParticipant, Experiment
 from videoJnd.src.ReqVideos import select_encoded_ref_videos
 from videoJnd.src.Log import logger
-
-def req_inst_cf(puid:str) -> dict:
+from videoJnd.src.GetConfig import get_config
+config = get_config()
+URL_PREFIX = config["URL_PREFIX"] 
+def req_inst_cf(recv_data:dict) -> dict:
+    puid = recv_data["puid"]
+    
     try:
         active_exps = Experiment.objects.filter(active=True)
         interface_text = InterfaceText.objects.all()[0]
-
+        instruction = Instruction.objects.all()[0]
+        consent_form = ConsentForm.objects.all()[0]
+        
         if len(active_exps)>0:
             exp_obj = active_exps[0]
-            
-            if puid:
-                avl_encoded_ref_videos_objs  = select_encoded_ref_videos(exp_obj, puid)
-            else: 
-                avl_encoded_ref_videos_objs  = select_encoded_ref_videos(exp_obj, "")
 
-            if len(avl_encoded_ref_videos_objs)>0:
-                isPExist = False
-                if puid:
-                    cur_p = StudyParticipant.objects.filter(puid=puid, exp=exp_obj)
-                    if cur_p:
-                        isPExist = True
+            data = {
+                "instruction":instruction.description, 
+                "consent_form": consent_form.description,
+                "question": interface_text.question,
+                "text_end_hit": interface_text.text_end_hit,
+                "text_end_exp": interface_text.text_end_exp,
+                "btn_text_end_hit": interface_text.btn_text_end_hit,
+                "decision_timeout_msg": interface_text.decision_timeout_msg,
+                "instruction_btn_text": interface_text.instruction_btn_text,
+                "consent_btn_text": interface_text.consent_btn_text,
+                "training_description": interface_text.training_description,
+                "quiz_description": interface_text.quiz_description,
+                "flickering_test_description": interface_text.flickering_test_description,
+                "quality_test_description": interface_text.quality_test_description,
 
-                instruction = Instruction.objects.all()[0]
-                consent_form = ConsentForm.objects.all()[0]
-                
+            }
+
+            if "quahit" in recv_data:
+                training_videos = exp_obj.training_videos_json
+                quiz_videos = exp_obj.quiz_video_json
+                for t in ["flickering", "distortion"]:
+                  for idx, item in enumerate(training_videos[t]):
+                    training_videos[t][idx]["videos_pair"] = [
+                      URL_PREFIX + l for l in training_videos[t][idx]["videos_pair"]
+                    ]
+                  for idx, item in enumerate(quiz_videos[t]):
+                    quiz_videos[t][idx]["videos_pair"] = [
+                      URL_PREFIX + l for l in quiz_videos[t][idx]["videos_pair"]
+                    ]
+
+                data["training_videos"] = training_videos
+                data["quiz_videos"] = quiz_videos
+                data["euid"] = exp_obj.euid
+                data["download_time"] = exp_obj.download_time
+                data["wait_time"] = exp_obj.wait_time
+                data["download_time"] = exp_obj.download_time
+                data["wait_time"] = exp_obj.wait_time
+                data["download_timeout_msg"] = interface_text.download_timeout_msg
+                data["waiting_timeout_msg"] = interface_text.waiting_timeout_msg
+
                 response_data =  {
                     "status":"successful", 
                     "restype": "req_inst_cf", 
-                    "data":{
-                        "ispexist": isPExist, 
-                        "instruction":instruction.description, 
-                        "consent_form": consent_form.description,
-                        "question": interface_text.question,
-                        "text_end_hit": interface_text.text_end_hit,
-                        "text_end_exp": interface_text.text_end_exp,
-                        "btn_text_end_hit": interface_text.btn_text_end_hit,
-                        "decision_timeout_msg": interface_text.decision_timeout_msg,
-                        "instruction_btn_text": interface_text.instruction_btn_text,
-                        "consent_btn_text": interface_text.consent_btn_text,
-                        "training_description": interface_text.training_description,
-                        "quiz_description": interface_text.quiz_description,
-                        "flickering_test_description": interface_text.flickering_test_description,
-                        "quality_test_description": interface_text.quality_test_description,
-                    }
+                    "data":data
                 }
 
                 return response_data
+
             else:
-                return {"status":"failed", "data":interface_text.no_available_exp, "restype": "req_inst_cf"}
+                if puid:
+                    avl_encoded_ref_videos_objs  = select_encoded_ref_videos(exp_obj, puid)
+                else: 
+                    avl_encoded_ref_videos_objs  = select_encoded_ref_videos(exp_obj, "")
+
+                if len(avl_encoded_ref_videos_objs)>0:
+                    isPExist = False
+                    if puid:
+                        cur_p = StudyParticipant.objects.filter(puid=puid, exp=exp_obj)
+                        if cur_p:
+                            isPExist = True
+
+                    data["ispexist"] = isPExist
+                    
+                    response_data =  {
+                        "status":"successful", 
+                        "restype": "req_inst_cf", 
+                        "data":data
+                    }
+
+                    return response_data
+                else:
+                    return {"status":"failed", "data":interface_text.no_available_exp, "restype": "req_inst_cf"}
         else:
             return {"status":"failed", "data":interface_text.no_available_exp, "restype": "req_inst_cf"}
 

@@ -12,6 +12,8 @@ import {
   constructDomId
 } from "./Videos";
 
+// TODO: check result is correct, give hint, try again, timeout, try again
+
 export function actStartExpBtn(e) {
   $("#start-exp-btn").attr("disabled", true)
                   .css("display", "none");
@@ -29,8 +31,33 @@ export function actStartExpBtn(e) {
 
 export function actDecisionBtn(e) {
   let decision = $(e.target).attr("data-decision");
-  addResultToCurVideo(decision);
-  processHit();
+  if (globalStatus.session=="training") {
+    let gt = globalStatus.cur_video_pair["ground_truth"].split(",");
+
+    console.log(`your decision: ${decision}, gt: ${gt}`);
+    if (gt.indexOf(decision) == -1) {
+      $("#hint").html("Hint:" + globalStatus.cur_video_pair["message"]);
+      clearTimeout(globalStatus.FIRST_DURATION_TIMER);
+      clearTimeout(globalStatus.SECOND_DURATION_TIMER);
+      $("#hint-frame").css("display", "inline-block");
+      $("#left-btn, #right-btn").attr("disabled", true);
+      $("#not-sure-btn").attr("disabled", true)
+                      .removeClass("btn-primary")
+                      .addClass("btn-secondary");
+
+      // TODO: coaching
+      // TODO: no decision, coaching
+      // TODO: 
+    } else {
+      processHit();
+      console.log("correct answer")
+    }
+  } else {
+    addResultToCurVideo(decision);
+    processHit();
+  }
+
+
 }
 
 export function actNextHitBtn() {
@@ -47,7 +74,6 @@ export function actNextHitBtn() {
   // request new videos
   reqLoadVideos(
     getLocalData("workerid"), 
-    getLocalData("puid"), 
     getLocalData("euid")
   );
 }
@@ -94,12 +120,7 @@ export function adjustDist() {
 export function readInst() {
   $("#inst-panel").css("display", "none");
   globalStatus.exp_status = "";
-  // if (globalStatus.ispexist) {
-  //   passCF_action();
-  // } else {
-  //   $("#cf-panel").css("display", "inline");
-  // }
-
+  
   if (getLocalData("workerid")){
     $("#ask-for-wid").html("Please confirm your worker ID.")
     $("#cf-workerid").val(getLocalData("workerid"))
@@ -109,7 +130,9 @@ export function readInst() {
 }
 
 function _endHit() {
-  _sendResult();
+  if (globalStatus.session=="quiz") {
+    _sendResult();
+  }
 }
 
 export function displayEndHitPanel(code) {
@@ -121,16 +144,6 @@ export function displayEndHitPanel(code) {
                     .removeClass("d-flex");
 
   $("#hit-end-text").html(code);
-
-  // $("#finish-asgm-num").html(
-  //   globalStatus.assignment_num_text.replace(
-  //     "placeholder", globalStatus.finished_assignment_num+1
-  //   )
-  // );
-  // globalStatus.exp_status = "next-hit-panel";
-  // globalStatus.loaded_video_num = 0;
-  // $("#loading-progress").html(globalStatus.loaded_video_num+ "/" +globalStatus.video_num);
-  // updateProgressBar(0, globalStatus.video_num);
 }
 
 function _sendResult() {
@@ -145,9 +158,8 @@ function _sendResult() {
   ].forEach((el)=>{cali_info[el] = getLocalData(el);});
 
   let send_data = {
-    "action":"record_result",
+    "action":"record_quiz_result",
     "euid":getLocalData("euid"),
-    "puid": getLocalData("puid"),
     "workerid": getLocalData("workerid"),
     "data": {
       "result":globalStatus.result,
