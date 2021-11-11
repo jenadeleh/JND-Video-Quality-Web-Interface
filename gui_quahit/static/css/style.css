@@ -60,6 +60,9 @@
 #reminder-modal,
 #hit-end-panel,
 #decision-timeout-msg,
+#next-hit-btn,
+#home-page-btn,
+#start-training-btn,
 #warning-cover {
     display: none;
 }

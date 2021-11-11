@@ -128,7 +128,7 @@ function _hideWarningCover() {
         $("#warning-cover").css("visibility", "hidden");
         $("#warning-msg").html();
         globalStatus.isWarning = false;
-        if (globalStatus.canMakeDecision == true) {
+        if (globalStatus.canMakeDecision == true && globalStatus.coaching==false) {
             $("#left-btn").attr("disabled", false);
             $("#right-btn").attr("disabled", false);
             if (globalStatus.isNotSureBtnAvl == true) {

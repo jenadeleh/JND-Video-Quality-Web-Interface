@@ -104,7 +104,7 @@
       "crf":"12",
       "qp":"17",
       "videos_pair":[
-        "JND_266_640x480/SRC006_640x480_30/crf_12/videoSRC121_640x480_30_qp_17_crf_12.mp4",
+        "JND_266_640x480/SRC006_640x480_30/crf_12/videoSRC006_640x480_30_qp_17_crf_12.mp4",
         "JND_266_640x480/SRC006_640x480_30/crf_12/videoSRC006_640x480_30_qp_00_crf_12.mp4"
       ],
       "side_of_reference":"R",

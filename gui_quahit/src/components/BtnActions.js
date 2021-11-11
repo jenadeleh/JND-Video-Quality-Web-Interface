@@ -4,6 +4,8 @@ import { updateProgressBar } from "./ProgressBar";
 import { getLocalData } from "../utils/ManageLocalData";
 import { sendMsg } from "./SendMsg";
 import { passCF_action } from "./ConsentForm";
+import { setTimer } from "./Timer";
+
 import { 
   displayNextVideo, 
   reqLoadVideos, 
@@ -12,7 +14,6 @@ import {
   constructDomId
 } from "./Videos";
 
-// TODO: check result is correct, give hint, try again, timeout, try again
 
 export function actStartExpBtn(e) {
   $("#start-exp-btn").attr("disabled", true)
@@ -34,30 +35,39 @@ export function actDecisionBtn(e) {
   if (globalStatus.session=="training") {
     let gt = globalStatus.cur_video_pair["ground_truth"].split(",");
 
-    console.log(`your decision: ${decision}, gt: ${gt}`);
     if (gt.indexOf(decision) == -1) {
-      $("#hint").html("Hint:" + globalStatus.cur_video_pair["message"]);
-      clearTimeout(globalStatus.FIRST_DURATION_TIMER);
-      clearTimeout(globalStatus.SECOND_DURATION_TIMER);
-      $("#hint-frame").css("display", "inline-block");
-      $("#left-btn, #right-btn").attr("disabled", true);
-      $("#not-sure-btn").attr("disabled", true)
-                      .removeClass("btn-primary")
-                      .addClass("btn-secondary");
-
-      // TODO: coaching
-      // TODO: no decision, coaching
-      // TODO: 
+      coaching();
     } else {
       processHit();
-      console.log("correct answer")
     }
   } else {
     addResultToCurVideo(decision);
     processHit();
   }
+}
 
+export function coaching() {
+  globalStatus.coaching = true;
+  $("#decision-timeout-msg").css("display", "none");
+  $(`#vc-${globalStatus.curVideoDomId}`).css("visibility", "visible")
+  $("#hint").html("Hint:" + globalStatus.cur_video_pair["message"]);
+  clearTimeout(globalStatus.FIRST_DURATION_TIMER);
+  clearTimeout(globalStatus.SECOND_DURATION_TIMER);
+  $("#hint-frame").css("display", "inline-block");
+  $("#not-sure-btn").attr("disabled", true)
+                  .removeClass("btn-primary")
+                  .addClass("btn-secondary");
+  globalStatus.isNotSureBtnAvl = false;
+  $("#left-btn, #right-btn").attr("disabled", true);
+}
 
+export function tryAgainAction() {
+  globalStatus.coaching = false;
+  clearTimeout(globalStatus.FIRST_DURATION_TIMER);
+  clearTimeout(globalStatus.SECOND_DURATION_TIMER);
+  $("#hint-frame").css("display", "none");
+  $("#left-btn, #right-btn").attr("disabled", false);
+  setTimer();
 }
 
 export function actNextHitBtn() {
@@ -112,10 +122,22 @@ export function processHit() {
 }
 
 export function adjustDist() {
+  _displatStartTrainingMsg();
+  $("#dist-panel").css("display", "none");
+  $("#hit-panel").css("display", "inline");
+  // actNextHitBtn();
+}
+
+export function startTraining() {
+  $("#start-training-btn").css("display", "none");
   $("#dist-panel").css("display", "none");
   $("#hit-panel").css("display", "inline");
   actNextHitBtn();
 }
+
+
+
+
 
 export function readInst() {
   $("#inst-panel").css("display", "none");
@@ -130,9 +152,49 @@ export function readInst() {
 }
 
 function _endHit() {
-  if (globalStatus.session=="quiz") {
+  if (globalStatus.session=="training") {
+    _displatStartQuizMsg();
+  } else if (globalStatus.session=="quiz") {
     _sendResult();
-  }
+  } 
+}
+
+function _displatStartQuizMsg() {
+  globalStatus.session = "quiz";
+  $(".video-cover").remove();
+  $(".decision-btn").attr("disabled", true);
+  $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "hidden");
+  $("#hit-end-panel").css("display", "inline");
+  $("#video-spinner").css("display", "none")
+                    .removeClass("d-flex");
+
+  $("#hit-end-panel-msg").css("visibility", "hidden")
+  $("#hit-end-text").html("You will start the quiz session");
+  $("#next-hit-btn").css("display", "inline-block");
+
+  globalStatus.exp_status = "next-hit-panel";
+  globalStatus.loaded_video_num = 0;
+  updateProgressBar(0, globalStatus.video_num);
+  globalStatus.videos_original_url = []
+  globalStatus.videos_pairs_sequence = []
+  globalStatus.videos_pairs = {};
+  globalStatus.task_num = 0;
+  globalStatus.videos_url_mapping = {};
+}
+
+
+function _displatStartTrainingMsg() {
+  globalStatus.session = "training";
+  $(".video-cover").remove();
+  $(".decision-btn").attr("disabled", true);
+  $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "hidden");
+  $("#hit-end-panel").css("display", "inline");
+  $("#video-spinner").css("display", "none")
+                    .removeClass("d-flex");
+
+  $("#hit-end-panel-msg").css("visibility", "hidden")
+  $("#hit-end-text").html("You will start the training session");
+  $("#start-training-btn").css("display", "inline-block");
 }
 
 export function displayEndHitPanel(code) {
@@ -140,8 +202,12 @@ export function displayEndHitPanel(code) {
   $(".decision-btn").attr("disabled", true);
   $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "hidden");
   $("#hit-end-panel").css("display", "inline");
+  $("#hit-end-panel-msg").css("visibility", "visible")
   $("#video-spinner").css("display", "none")
                     .removeClass("d-flex");
+
+  $("#home-page-btn").css("display", "inline-block");
+  $("#next-hit-btn").css("display", "none");
 
   $("#hit-end-text").html(code);
 }

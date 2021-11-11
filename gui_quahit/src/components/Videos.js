@@ -36,6 +36,7 @@ export function displayFirstVideo() {
   let cur_video_pair = globalStatus.videos_pairs_sequence.shift(); // removes the first element
   let videoDomId = constructDomId(cur_video_pair)
 
+  globalStatus.curVideoDomId = videoDomId;
   globalStatus.cur_video_pair = cur_video_pair;
   globalStatus.exp_status = "decision";
 
@@ -67,7 +68,8 @@ export function displayNextVideo() {
 
     // display next video
     let cur_video_pair = globalStatus.videos_pairs_sequence.shift();
-    let videoDomId = constructDomId(cur_video_pair)
+    let videoDomId = constructDomId(cur_video_pair);
+    globalStatus.curVideoDomId = videoDomId;
     globalStatus.cur_video_pair = cur_video_pair
     $(`#vc-${videoDomId}`).css("visibility", "visible")
                           .css("z-index", 1);

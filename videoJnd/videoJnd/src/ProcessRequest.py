@@ -1,6 +1,7 @@
 import json
 from videoJnd.src.ReqVideos import req_videos
 from videoJnd.src.RecordResult import record_study_result
+from videoJnd.src.RecordQuaResult import record_qua_result
 from videoJnd.src.ReqInstConsentF import req_inst_cf
 from videoJnd.src.UserRegister import user_register
 from videoJnd.src.ResourceMonitor import resource_monitor, add_idle_thread, release_resource
@@ -11,7 +12,7 @@ def process_request(request):
       if request.method == "POST":
           if request.body:
                   recv_data = json.loads(request.body)
-                  if  recv_data["action"] != "record_result":
+                  if  recv_data["action"] not in  ["record_result", "record_quiz_result"]:
                       print(recv_data)
 
                   if recv_data["action"] == "req_inst_cf":
@@ -25,19 +26,19 @@ def process_request(request):
 
                   elif recv_data["action"] == "resource_monitor":
                       response = resource_monitor(recv_data)
-                      # response = {"status":"pass"}
 
                   elif recv_data["action"] == "stop_expire_timer":
                       response = add_idle_thread(recv_data["puid"])
-                      # response = {"status":"pass"}
                       
                   elif recv_data["action"] == "release_resource":
                       response = release_resource(recv_data)
-                      # response = {"status":"pass"}
-                      # pass
 
                   elif recv_data["action"] == "record_result":
-                      response = record_study_result(recv_data)        
+                      response = record_study_result(recv_data)
+
+                  elif recv_data["action"] == "record_quiz_result":
+                    response = record_qua_result(recv_data)
+
           else:
               response = {"status":"failed", "restype":"request-body", "data":"empty request body"}
       else:

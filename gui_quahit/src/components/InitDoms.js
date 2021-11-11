@@ -1,8 +1,9 @@
 import * as $ from 'jquery';
-import { readInst, actStartExpBtn, actDecisionBtn, actNextHitBtn, adjustDist} from "./BtnActions"
+import { readInst, actStartExpBtn, actDecisionBtn, actNextHitBtn, adjustDist, tryAgainAction} from "./BtnActions"
 import { submitCf } from "./ConsentForm"
 import { storeLocalData } from "../utils/ManageLocalData"
 import { globalStatus } from "./GlobalStatus";
+import { startTraining } from "./BtnActions";
 
 export function initDoms() {
     $('#start-exp-btn').on('click', (e)=> {
@@ -29,6 +30,15 @@ export function initDoms() {
     $("#read-inst-btn").on('click', (e)=> {
         readInst(e);
     });
+
+    $("#try-again-btn").on('click', (e)=> {
+      tryAgainAction(e);
+    });
+
+    $("#start-training-btn").on('click', (e)=> {
+      startTraining(e);
+    });
+    
 
     let $cf_form = $("#cf-form");
     $cf_form.on("submit", () =>{

@@ -1,7 +1,7 @@
 import * as $ from 'jquery';
 import { config } from "./Configuration"
 import { globalStatus } from "./GlobalStatus"
-import { addResultToCurVideo, processHit } from "./BtnActions"
+import { addResultToCurVideo, processHit, coaching } from "./BtnActions"
 
 export function setTimer() {
     globalStatus.FIRST_DURATION_TIMER = setTimeout(()=> { 
@@ -11,15 +11,20 @@ export function setTimer() {
 }
 
 function _SECOND_DURATION_timer() {
-    globalStatus.SECOND_DURATION_TIMER = setTimeout(()=> { 
-        addResultToCurVideo("no decision");
-        processHit();
-    }, config.SECOND_DURATION);  
+    globalStatus.SECOND_DURATION_TIMER = setTimeout(()=> {
+        if (globalStatus.session =="training") {
+          coaching();
+        } else {
+          addResultToCurVideo("no decision");
+          processHit();
+        }
+    }, config.SECOND_DURATION);
 }
 
 function _display_warning_info() {
     $("#decision-timeout-msg").css("display", "inline-block");
     $(".video-cover").css("visibility", "hidden");
+    // $(`#vc-${globalStatus.curVideoDomId}`).css("visibility", "hidden");
     $("#not-sure-btn").removeClass("btn-secondary").addClass("btn-primary");
     globalStatus.isNotSureBtnAvl = true;
     if (globalStatus.isWarning == false) {

@@ -115,7 +115,7 @@ function _render_question_text(question) {
 }
 
 function _render_timeout_text(decision_timeout_msg) {
-  $("#decision-timeout-msg").html(decision_timeout_msg);
+  $("#decision-timeout-msg").html(`<h3>${decision_timeout_msg}</h3>`);
 }
 
 function _render_read_inst_btn_text(instruction_btn_text) {

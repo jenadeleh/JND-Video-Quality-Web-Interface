@@ -50,4 +50,6 @@ export const globalStatus = {
     quiz_description:"",
     flickering_test_description:"",
     quality_test_description:"",
+    coaching: false,
+    curVideoDomId:"",
 }
