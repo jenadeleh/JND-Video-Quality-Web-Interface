@@ -88,7 +88,7 @@ export function isPC() {
 export function isCorrectBrowser() {
     // must use firefox 
 
-
+    
     let userAgentInfo = navigator.userAgent.toLowerCase();
     if (
         userAgentInfo.indexOf("firefox") != -1

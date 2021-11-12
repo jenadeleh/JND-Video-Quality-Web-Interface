@@ -4,6 +4,7 @@ import shutil
 
 if __name__ == "__main__":
     hit = "studyhit"
+    # hit = "quahit"
 
 
     js_path = Path("../../static/js/")
@@ -15,11 +16,15 @@ if __name__ == "__main__":
     if hit == "studyhit":
       dist_path = Path(f"../../../../GUI/dist/")
 
+    
+    new_html_line = """<script type="text/javascript" src="../static/js/""" + "%s_bundle.js"  % hit + """"></script></body>"""
+
+
     with open(dist_path / "index.html", "r") as fi:
         html = fi.read()
         html = html.replace(
             """<script type="text/javascript" src="bundle.js"></script></body>""",
-            """<script type="text/javascript" src="../static/js/{hit}_bundle.js"></script></body>"""
+            new_html_line
         )
 
     with open(dist_path / "index.html", "w") as fi:
@@ -35,10 +40,14 @@ if __name__ == "__main__":
     with open(dist_path / "bundle.js", "w") as fi:
         fi.write(bundle)
 
-    shutil.copy(dist_path / "bundle.js", js_path / "{hit}_bundle.js")
-    shutil.copy(dist_path / "bundle.js.map", js_path / "{hit}_bundle.js.map")
+    bundle = "%s_bundle.js" % hit
+    bundle_map = "%s_bundle.js.map" % hit
+    html = "%s.html" % hit
+
+    shutil.copy(dist_path / "bundle.js", js_path / bundle)
+    shutil.copy(dist_path / "bundle.js.map", js_path / bundle_map)
     shutil.copy(dist_path / "css/style.css", css_path / "style.css")
-    shutil.copy(dist_path / "index.html", html_path / "{hit}.html")
+    shutil.copy(dist_path / "index.html", html_path / html)
 
 
 

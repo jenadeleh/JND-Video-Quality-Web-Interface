@@ -179,7 +179,7 @@ function _loadVideoAsync(video_ori_url) {
     let req = new XMLHttpRequest();
     req.open('GET', video_ori_url, true);
     req.responseType = 'blob';
-    req.timeout = 2000; //ms
+    // req.timeout = 2000; //ms
     req.onload = function() {
       if (this.status === 200) {
 

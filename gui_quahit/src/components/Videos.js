@@ -162,15 +162,18 @@ function _extract_videos_url(videos_pairs) {
 
 function _loadVideoAsync(video_ori_url) {
   return new Promise(function(resolve, reject) {
+    
+    console.log(video_ori_url)
     let req = new XMLHttpRequest();
     req.open('GET', video_ori_url, true);
     req.responseType = 'blob';
-    req.timeout = 2000; //ms
+    // req.timeout = 2000; //ms
     req.onload = function() {
       if (this.status === 200) {
-
+        console.log("---", video_ori_url)
         let videoBlob = this.response;
         let video_local_url = URL.createObjectURL(videoBlob);
+        // let video_local_url = video_ori_url;
         globalStatus.videos_url_mapping[video_ori_url] = video_local_url;
         globalStatus.loaded_video_num += 1;
         $("#loading-progress").html(

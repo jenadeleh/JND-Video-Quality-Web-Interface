@@ -5,6 +5,7 @@ from django.utils.timezone import now
 from django.core.validators import MaxValueValidator, MinValueValidator 
 import jsonfield
 from videoJnd.src.GetConfig import get_config
+from videoJnd.src.GetTrainQuizGt import get_training_gt, get_quiz_gt
 
 class Experiment(models.Model):
     euid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -19,8 +20,8 @@ class Experiment(models.Model):
     qua_hit_worker_num = models.IntegerField("Number of Qua. HIT", default=10, editable=True)
     qua_hit_count = models.IntegerField("Number of finished Qua. HIT", default=0, editable=False)
     study_hit_count = models.IntegerField("Number of finished study HIT", default=0, editable=False)
-    training_videos_json = jsonfield.JSONField(default={})
-    quiz_video_json = jsonfield.JSONField(default={})
+    training_videos_json = jsonfield.JSONField(default=get_training_gt())
+    quiz_video_json = jsonfield.JSONField(default=get_quiz_gt())
     
     def __str__(self):
         return self.name

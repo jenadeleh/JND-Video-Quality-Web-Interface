@@ -121,6 +121,7 @@ export function displayEndHitPanel(code) {
                     .removeClass("d-flex");
 
   $("#hit-end-text").html(code);
+  $("#home-page-btn").css("display", "inline");
 
   // $("#finish-asgm-num").html(
   //   globalStatus.assignment_num_text.replace(
