@@ -31,7 +31,7 @@ def req_inst_cf(recv_data:dict) -> dict:
                 "quiz_description": interface_text.quiz_description,
                 "flickering_test_description": interface_text.flickering_test_description,
                 "quality_test_description": interface_text.quality_test_description,
-
+                "no_decision_training_msg": interface_text.no_decision_training_msg,
             }
 
             if "quahit" in recv_data:

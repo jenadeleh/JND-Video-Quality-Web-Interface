@@ -32,25 +32,40 @@ export function actStartExpBtn(e) {
 
 export function actDecisionBtn(e) {
   let decision = $(e.target).attr("data-decision");
-  if (globalStatus.session=="training") {
-    let gt = globalStatus.cur_video_pair["ground_truth"].split(",");
+  let gt = globalStatus.cur_video_pair["ground_truth"];
+  let isCorrect = true;
 
-    if (gt.indexOf(decision) == -1) {
-      coaching();
-    } else {
+  if (gt.indexOf(decision) == -1) {
+    isCorrect = false;
+  }
+
+  if (globalStatus.session=="training") {
+    
+    if (isCorrect==false) {
+      coaching(decision);
+    } else if (isCorrect==true) {
       processHit();
     }
   } else {
+    if (isCorrect==false) {
+      globalStatus.isPassQuiz = false;
+    } 
     addResultToCurVideo(decision);
     processHit();
   }
 }
 
-export function coaching() {
+export function coaching(decision) {
   globalStatus.coaching = true;
   $("#decision-timeout-msg").css("display", "none");
   $(`#vc-${globalStatus.curVideoDomId}`).css("visibility", "visible")
-  $("#hint").html("Hint:" + globalStatus.cur_video_pair["message"]);
+
+  if (decision) {
+    $("#hint").html("Hint:" + globalStatus.cur_video_pair["message"]);
+  } else {
+    $("#hint").html("Hint:" + globalStatus.no_decision_training_msg);
+  }
+  
   clearTimeout(globalStatus.FIRST_DURATION_TIMER);
   clearTimeout(globalStatus.SECOND_DURATION_TIMER);
   $("#hint-frame").css("display", "inline-block");
@@ -62,6 +77,10 @@ export function coaching() {
 }
 
 export function tryAgainAction() {
+  let videoDomId = globalStatus.curVideoDomId;
+  $(`#left-${videoDomId}`).get(0).currentTime = 0;
+  $(`#right-${videoDomId}`).get(0).currentTime = 0;
+
   globalStatus.coaching = false;
   clearTimeout(globalStatus.FIRST_DURATION_TIMER);
   clearTimeout(globalStatus.SECOND_DURATION_TIMER);
@@ -229,6 +248,7 @@ function _sendResult() {
     "workerid": getLocalData("workerid"),
     "data": {
       "result":globalStatus.result,
+      "isPassQuiz": globalStatus.isPassQuiz,
       "os_info": globalStatus.os_info,
       "cali_info": cali_info
     }
@@ -239,6 +259,10 @@ function _sendResult() {
   sendMsg(send_data).then(response => {
     if (response["status"] == "successful") {
       displayEndHitPanel(response["code"]);
+      if (globalStatus.isPassQuiz == false) {
+        displayEndHitPanel("You failed the quiz.\n" + response["code"]);
+      }
+      
     } else if (response["status"] == "failed") {
       displayEndHitPanel(response["error"]);
     }

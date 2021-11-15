@@ -64,6 +64,7 @@ function _render_interface_text(response_data) {
     download_time,
     download_timeout_msg, 
     waiting_timeout_msg,
+    no_decision_training_msg,
   } = response_data
 
   storeLocalData("euid", euid);
@@ -79,6 +80,7 @@ function _render_interface_text(response_data) {
   globalStatus.waiting_timeout_msg = waiting_timeout_msg;
   globalStatus.flickering_question = flickering_question;
   globalStatus.distortion_question = distortion_question;
+  globalStatus.no_decision_training_msg = no_decision_training_msg;
 
   _render_instruction(instruction);
   _render_consent_form(consent_form);

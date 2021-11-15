@@ -55,4 +55,6 @@ export const globalStatus = {
     session: "training",
     flickering_question:"",
     distortion_question:"",
+    isPassQuiz:true,
+    no_decision_training_msg:"",
 }

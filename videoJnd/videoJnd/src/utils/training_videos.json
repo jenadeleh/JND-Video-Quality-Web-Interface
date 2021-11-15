@@ -10,7 +10,7 @@
           "JND_264_640x480/SRC001_640x480_30/crf_12/videoSRC001_640x480_30_qp_00_crf_12.mp4"
         ],
         "side_of_reference":"L, R",
-        "ground_truth":"not sure",
+        "ground_truth":["not sure"],
         "message": "Your answer is not correct. There is no flicker effect in either video. If you can't see a flickering effect, please watch the entire 5-second video playback and select the 'not sure' button, which will be activated after the side-by-side video playback is complete."
      },
      {
@@ -23,7 +23,7 @@
           "JND_266_640x480/SRC006_640x480_30/crf_12/videoSRC006_640x480_30_qp_00_crf_12.mp4"
         ],
         "side_of_reference":"R",
-        "ground_truth":"L",
+        "ground_truth":["L"],
         "message": "Your answer is not correct. The flickering effect is noticeable in the video on the left side. Please select the video where you see the flickering effect."
      },
      {
@@ -36,7 +36,7 @@
           "JND_264_640x480/SRC019_640x480_30/crf_12/videoSRC019_640x480_30_qp_00_27_crf_12.mp4"
         ],
         "side_of_reference":"L",
-        "ground_truth":"R, not sure",
+        "ground_truth":["R", "not sure"],
         "message": "Your answer is not correct. You chose the reference video, but you were supposed to choose the flickering video. If you see a flickering effect, select the video that flickers, or if you don't see a flickering effect in the videos, select the 'not sure' button after the side-by-side videos playback is finished."
      },
      {
@@ -49,7 +49,7 @@
           "JND_266_640x480/SRC135_640x480_30/crf_12/videoSRC135_640x480_30_qp_00_crf_12.mp4"
         ],
         "side_of_reference":"R",
-        "ground_truth":"L, not sure",
+        "ground_truth":["L", "not sure"],
         "message": "Your answer is not correct. You chose the reference video, but you were supposed to choose the flickering video. If you see a flickering effect, select the video that flickers, or if you don't see a flickering effect in the videos, select the 'not sure' button after the side-by-side videos playback is finished."
      }
   ],
@@ -64,7 +64,7 @@
         "JND_266_640x480/SRC207_640x480_24/crf_12/videoSRC207_640x480_24_qp_00_crf_12.mp4"
       ],
       "side_of_reference":"L, R",
-      "ground_truth":"not sure",
+      "ground_truth":["not sure"],
       "message": "Your answer is not correct. No compression distortion is visible in either video, and both videos have the same perceptual quality. If both videos have the same perceptual quality, you should watch the entire 5-second videos and then click the 'not sure' button that will be activated after the side-by-side videos playback is completed."
     },
     {
@@ -77,7 +77,7 @@
         "JND_264_640x480/SRC111_640x480_24/crf_12/videoSRC111_640x480_24_qp_40_crf_12.mp4"
       ],
       "side_of_reference":"L",
-      "ground_truth":"L",
+      "ground_truth":["L"],
       "message": "Your answer is not correct. The compression distortion is noticeable in the video on the right side, and the video on the left side is of higher quality. Please select the video with higher quality."
     },
     {
@@ -90,7 +90,7 @@
         "JND_264_640x480/SRC155_640x480_30/crf_12/videoSRC155_640x480_30_qp_25_crf_12.mp4"
       ],
       "side_of_reference":"L",
-      "ground_truth":"L, not sure",
+      "ground_truth":["L", "not sure"],
       "message": "Your answer is not correct. You chose the compressed video (the lower quality video) instead of the video with better quality. If you see a quality difference between two videos, please select the video with the higher quality (in this example, the video on the left side). If you can't see a quality difference between the two videos, watch the entire 5-second side-by-side videos and press the 'not sure' button."
     },
     {
@@ -103,7 +103,7 @@
         "JND_266_640x480/SRC121_640x480_30/crf_12/videoSRC121_640x480_30_qp_00_crf_12.mp4"
       ],
       "side_of_reference":"R",
-      "ground_truth":"R, not sure",
+      "ground_truth":["R", "not sure"],
       "message": "Your answer is not correct. You chose the compressed video (the lower quality video) instead of the video with better quality. If you see a quality difference between two side-by-side videos, please select the video with the higher quality (in this example, the video on the right side). If you can't see a quality difference between the two videos, watch the entire 5-second video playback and press the 'not sure' button."
     }
   ]

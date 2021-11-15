@@ -73,7 +73,8 @@ export function displayNextVideo() {
     globalStatus.cur_video_pair = cur_video_pair
     $(`#vc-${videoDomId}`).css("visibility", "visible")
                           .css("z-index", 1);
-
+    $(`#left-${videoDomId}`).get(0).play();
+    $(`#right-${videoDomId}`).get(0).play();
     if (
       globalStatus.videos_pairs_sequence.length == globalStatus.task_num/2 - 1
     ) { // flickering and quality
@@ -115,9 +116,11 @@ export function constructDomId(cur_video_pair) {
 export function show_test_description(test) {
   if (test == "flickering") {
     $("#reminder-modal-text").html(globalStatus.flickering_test_description);
+    $("#question").html(globalStatus.flickering_question);
     $("#start-exp-btn").html("<h4>Click here to start flickering test</h4>");
   } else if (test == "quality") {
     $("#reminder-modal-text").html(globalStatus.quality_test_description);
+    $("#question").html(globalStatus.distortion_question);
     $("#start-exp-btn").html("<h4>Click here to start quality test</h4>");
   }
   
@@ -125,21 +128,21 @@ export function show_test_description(test) {
   $("#reminder-modal").modal("show");
 }
 
-export function show_session_description(session) {
-  if (test == "flickering") {
-    $("#question").html(globalStatus.flickering_question);
-    $("#reminder-modal-text").html(globalStatus.flickering_test_description);
-    $("#start-exp-btn").html("<h4>Click here to start flickering test</h4>");
-  } else if (test == "quality") {
+// export function show_session_description(session) {
+//   if (test == "flickering") {
+//     $("#question").html(globalStatus.flickering_question);
+//     $("#reminder-modal-text").html(globalStatus.flickering_test_description);
+//     $("#start-exp-btn").html("<h4>Click here to start flickering test</h4>");
+//   } else if (test == "quality") {
     
-    $("#question").html(globalStatus.distortion_question);
-    $("#reminder-modal-text").html(globalStatus.quality_test_description);
-    $("#start-exp-btn").html("<h4>Click here to start quality test</h4>");
-  }
+//     $("#question").html(globalStatus.distortion_question);
+//     $("#reminder-modal-text").html(globalStatus.quality_test_description);
+//     $("#start-exp-btn").html("<h4>Click here to start quality test</h4>");
+//   }
   
-  $("#reminder-modal-btn").html("I got it!");
-  $("#reminder-modal").modal("show");
-}
+//   $("#reminder-modal-btn").html("I got it!");
+//   $("#reminder-modal").modal("show");
+// }
 
 function _extract_videos_url(videos_pairs) {
   let videos_original_url = [];
@@ -226,10 +229,8 @@ function _addVideosPairHtml() {
           >
                 
           <video 
-            // class="vd-${ref_video}-crf${crf}-${presentation}"
             id="left-${ref_video}-crf${crf}-${presentation}" 
             loop="loop" 
-            autoplay 
             muted 
             height="${globalStatus.video_h}" 
             width="${globalStatus.video_w}"
@@ -240,10 +241,8 @@ function _addVideosPairHtml() {
           </video>
 
           <video 
-            // class="vd-${ref_video}-crf${crf}-${presentation}" 
             id="right-${ref_video}-crf${crf}-${presentation}" 
             loop="loop" 
-            autoplay 
             muted 
             height="${globalStatus.video_h}" 
             width="${globalStatus.video_w}"

@@ -126,17 +126,28 @@ class InterfaceText(models.Model):
     no_available_exp = RichTextField("When there is no experiment available, display", default="", null=False, blank=False)
     waiting_timeout_msg = models.TextField("When the HIT is expired, display", max_length=4096, default="", null=False, blank=False) # for hit
     download_timeout_msg = models.TextField("When download timeout, display", max_length=4096, default="", null=False, blank=False) # for hit
+
+    no_decision_training_msg = models.TextField(
+      "Message for making 'no decision' in training", 
+      max_length=4096, 
+      default="", 
+      null=False, 
+      blank=False
+    ) # for image
+
     assignment_num_text = models.TextField(
         "Tell user how many assignments they have finished", 
         max_length=4096, 
         default="The number of the completed assignments: placeholder. (you can edit this text on 'interface text' page. Please use 'placeholder' to represent the number.)"
     ) # for hit
+
     training_description = RichTextField(
         "Description of training", 
         default="Description of training", 
         null=False, 
         blank=False
     )
+    
     quiz_description = RichTextField(
         "Description of quiz", 
         default="Description of quiz", 

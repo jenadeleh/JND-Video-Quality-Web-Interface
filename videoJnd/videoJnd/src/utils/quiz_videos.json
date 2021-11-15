@@ -72,7 +72,7 @@
         "JND_266_640x480/SRC040_640x480_30/crf_12/videoSRC040_640x480_30_qp_00_crf_12.mp4"
       ],
       "side_of_reference":"L, R",
-      "ground_truth":"not sure"
+      "ground_truth":["not sure"]
     },
     {
       "ref_video":"src-207_codec-264",
@@ -84,7 +84,7 @@
         "JND_264_640x480/SRC207_640x480_24/crf_12/videoSRC207_640x480_24_qp_46_crf_12.mp4"
       ],
       "side_of_reference":"L",
-      "ground_truth":"L"
+      "ground_truth":["L"]
     },
     {
       "ref_video":"src-057_codec-266",
@@ -96,7 +96,7 @@
         "JND_266_640x480/SRC057_640x480_30/crf_12/videoSRC057_640x480_30_qp_26_crf_12.mp4"
       ],
       "side_of_reference":"L",
-      "ground_truth":"L, not sure"
+      "ground_truth":["L", "not sure"]
     },
     {
       "ref_video":"src-006_codec-266",
@@ -108,7 +108,7 @@
         "JND_266_640x480/SRC006_640x480_30/crf_12/videoSRC006_640x480_30_qp_00_crf_12.mp4"
       ],
       "side_of_reference":"R",
-      "ground_truth":"R, not sure"
+      "ground_truth":["R", "not sure"]
     },
     {
       "ref_video":"src-061_codec-264",
@@ -120,7 +120,7 @@
         "JND_264_640x480/SRC061_640x480_30/crf_12/videoSRC061_640x480_30_qp_00_crf_12.mp4"
       ],
       "side_of_reference":"R",
-      "ground_truth":"R"
+      "ground_truth":["R"]
     }
   ]
 }
