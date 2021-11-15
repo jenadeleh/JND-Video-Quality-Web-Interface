@@ -115,7 +115,8 @@ class QuaAssignment(models.Model): # qua HIT
 
 class InterfaceText(models.Model):
     title = models.CharField(primary_key=True, max_length=20, default="InterfaceText", editable=False)
-    question = models.TextField("Question of the task", max_length=4096, default="", null=False, blank=False)
+    flickering_question = RichTextField("Question for flickering test", max_length=4096, default="", null=False, blank=False)
+    distortion_question = RichTextField("Question for distortion test", max_length=4096, default="", null=False, blank=False)
     text_end_exp = RichTextField("When the experiment is done, display", default="", null=False, blank=False)
     text_end_hit = RichTextField("When the HIT is done, display", default="", null=False, blank=False)
     decision_timeout_msg = models.TextField("When user doesn't make a decision, display", max_length=4096, default="", null=False, blank=False) # for image

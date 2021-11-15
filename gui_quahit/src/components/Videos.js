@@ -114,9 +114,12 @@ export function constructDomId(cur_video_pair) {
 
 export function show_test_description(test) {
   if (test == "flickering") {
+    $("#question").html(globalStatus.flickering_question);
     $("#reminder-modal-text").html(globalStatus.flickering_test_description);
     $("#start-exp-btn").html("<h4>Click here to start flickering test</h4>");
   } else if (test == "quality") {
+    
+    $("#question").html(globalStatus.distortion_question);
     $("#reminder-modal-text").html(globalStatus.quality_test_description);
     $("#start-exp-btn").html("<h4>Click here to start quality test</h4>");
   }

@@ -61,7 +61,8 @@ function _render_interface_text(response_data) {
     ispexist, 
     instruction, 
     consent_form, 
-    question, 
+    flickering_question,
+    distortion_question,
     text_end_hit, 
     text_end_exp, 
     btn_text_end_hit, 
@@ -79,10 +80,12 @@ function _render_interface_text(response_data) {
   globalStatus.training_description = quiz_description;
   globalStatus.flickering_test_description = flickering_test_description;
   globalStatus.quality_test_description = quality_test_description;
+  globalStatus.flickering_question = flickering_question;
+  globalStatus.distortion_question = distortion_question;
 
   _render_instruction(instruction);
   _render_consent_form(consent_form);
-  _render_question_text(question);
+  _render_question_text(flickering_question);
   _render_end_hit_text(text_end_hit, btn_text_end_hit);
   _render_timeout_text(decision_timeout_msg);
   _render_read_inst_btn_text(instruction_btn_text);

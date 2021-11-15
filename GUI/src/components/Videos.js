@@ -126,10 +126,15 @@ export function show_test_description(test) {
 }
 
 export function show_session_description(session) {
-  if (session == "training") {
-    $("#reminder-modal-text").html(globalStatus.training_description);
-  } else if (session == "quiz") {
-    $("#reminder-modal-text").html(globalStatus.quiz_description);
+  if (test == "flickering") {
+    $("#question").html(globalStatus.flickering_question);
+    $("#reminder-modal-text").html(globalStatus.flickering_test_description);
+    $("#start-exp-btn").html("<h4>Click here to start flickering test</h4>");
+  } else if (test == "quality") {
+    
+    $("#question").html(globalStatus.distortion_question);
+    $("#reminder-modal-text").html(globalStatus.quality_test_description);
+    $("#start-exp-btn").html("<h4>Click here to start quality test</h4>");
   }
   
   $("#reminder-modal-btn").html("I got it!");

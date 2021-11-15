@@ -53,4 +53,6 @@ export const globalStatus = {
     training_videos: {},
     quiz_videos: {},
     session: "training",
+    flickering_question:"",
+    distortion_question:"",
 }

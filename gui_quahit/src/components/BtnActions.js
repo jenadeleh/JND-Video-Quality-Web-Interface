@@ -169,7 +169,7 @@ function _displatStartQuizMsg() {
                     .removeClass("d-flex");
 
   $("#hit-end-panel-msg").css("visibility", "hidden")
-  $("#hit-end-text").html("You will start the quiz session");
+  $("#hit-end-text").html(globalStatus.quiz_description);
   $("#next-hit-btn").css("display", "inline-block");
 
   globalStatus.exp_status = "next-hit-panel";
@@ -193,7 +193,7 @@ function _displatStartTrainingMsg() {
                     .removeClass("d-flex");
 
   $("#hit-end-panel-msg").css("visibility", "hidden")
-  $("#hit-end-text").html("You will start the training session");
+  $("#hit-end-text").html(globalStatus.training_description);
   $("#start-training-btn").css("display", "inline-block");
 }
 

@@ -19,7 +19,8 @@ def req_inst_cf(recv_data:dict) -> dict:
             data = {
                 "instruction":instruction.description, 
                 "consent_form": consent_form.description,
-                "question": interface_text.question,
+                "flickering_question": interface_text.flickering_question,
+                "distortion_question": interface_text.distortion_question,
                 "text_end_hit": interface_text.text_end_hit,
                 "text_end_exp": interface_text.text_end_exp,
                 "btn_text_end_hit": interface_text.btn_text_end_hit,

@@ -52,4 +52,6 @@ export const globalStatus = {
     quality_test_description:"",
     coaching: false,
     curVideoDomId:"",
+    flickering_question:"",
+    distortion_question:"",
 }
