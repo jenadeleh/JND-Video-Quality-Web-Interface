@@ -103,7 +103,7 @@ def _config_released_resource(
                 ref_video_obj.worker_start_date = None
                 ref_video_obj.save()
 
-        logger.info("--- Release videos from participant: %s ---" % (p_obj.name))
+        logger.info("--- Release videos from participant: %s ---" % (p_obj.workerid))
     else:
         if puid in idle_threads:
             idle_threads.remove(puid)
