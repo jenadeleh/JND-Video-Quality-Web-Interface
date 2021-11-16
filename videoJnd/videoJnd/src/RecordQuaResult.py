@@ -10,9 +10,6 @@ config = get_config()
 
 def record_qua_result(recv_data:dict) -> dict:
 	try:
-		_result = recv_data["data"]["result"]
-		cali_info = recv_data["data"]["cali_info"]
-		os_info = recv_data["data"]["os_info"]
 		exp_obj = Experiment.objects.filter(euid=recv_data["euid"])[0]
 
 		auid = uuid.uuid4()
@@ -20,9 +17,10 @@ def record_qua_result(recv_data:dict) -> dict:
 			auid = auid
 			, exp = exp_obj
 			, workerid = recv_data["workerid"]
-			, result = {"result": _result}
-			, calibration = cali_info
-			, operation_system = os_info
+			, result = {"result": recv_data["data"]["result"]}
+			, calibration = recv_data["data"]["cali_info"]
+			, operation_system = recv_data["data"]["os_info"]
+      , isPassQuiz = recv_data["data"]["isPassQuiz"]
 		).save()
 
 		exp_obj.qua_hit_count = exp_obj.qua_hit_count + 1

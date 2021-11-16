@@ -45,34 +45,39 @@ class ExperimentAdmin(admin.ModelAdmin):
             e_column_names = [
                 f.name for f in Experiment._meta.get_fields() \
                     if f.name not in [
-                        "encodedrefvideoobj", "participant", "assignment"
+                        "encodedrefvideoobj", "studyparticipant", "studyassignment", "quaassignment"
                     ]
             ] # experiment
             v_column_names = [f.name for f in EncodedRefVideoObj._meta.get_fields()] # reference video
-            p_column_names = [f.name for f in Participant._meta.get_fields()] # participant
-            a_column_names = [f.name for f in StudyAssignment._meta.get_fields()] # assignment
+            p_column_names = [f.name for f in StudyParticipant._meta.get_fields()] # study participant
+            a_column_names = [f.name for f in StudyAssignment._meta.get_fields()] # study assignment
+            q_column_names = [f.name for f in QuaAssignment._meta.get_fields()] # qua. assignment
 
             for exp_obj in queryset:
                 exp_name = exp_obj.name
 
                 v_objs = EncodedRefVideoObj.objects.filter(exp=exp_obj)
-                p_objs = Participant.objects.filter(exp=exp_obj)
+                p_objs = StudyParticipant.objects.filter(exp=exp_obj)
                 a_objs = StudyAssignment.objects.filter(exp=exp_obj)
+                q_objs = QuaAssignment.objects.filter(exp=exp_obj)
 
                 e_data = [tuple([getattr(exp_obj, c) for c in e_column_names])]
                 v_data = [tuple([getattr(v, c) for c in v_column_names]) for v in v_objs]
                 p_data = [tuple([getattr(p, c) for c in p_column_names]) for p in p_objs]
                 a_data = [tuple([getattr(a, c) for c in a_column_names]) for a in a_objs]
+                q_data = [tuple([getattr(q, c) for c in q_column_names]) for q in q_objs]
 
                 e_df = pd.DataFrame(e_data, columns = e_column_names) 
                 v_df = pd.DataFrame(v_data, columns = v_column_names) 
                 p_df = pd.DataFrame(p_data, columns = p_column_names)
                 a_df = pd.DataFrame(a_data, columns = a_column_names)
+                q_df = pd.DataFrame(q_data, columns = q_column_names)
 
                 result_df[f"{exp_name}_config"] = e_df
                 result_df[f"{exp_name}_refvideo"] = v_df
-                result_df[f"{exp_name}_participant"] = p_df
-                result_df[f"{exp_name}_assignment"] = a_df
+                result_df[f"{exp_name}_studyHITparticipant"] = p_df
+                result_df[f"{exp_name}_studyHitassignment"] = a_df
+                result_df[f"{exp_name}_quaHITassignment"] = q_df
 
                 buffer = io.BytesIO()
                 with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as zf:
@@ -171,6 +176,7 @@ class QuaAssignmentAdmin(admin.ModelAdmin):
         "auid"
         , "exp"
         , "workerid"
+        , "isPassQuiz"
         # , "result"
         , "submit_time"
     )
