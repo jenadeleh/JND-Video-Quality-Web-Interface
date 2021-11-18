@@ -12,7 +12,7 @@ export const config = {
     MONITOR_MIN_HEIGHT: 17,  // cm
     IMAGE_WIDTH_CM: 13.797, 
     IMAGE_HEIGHT_CM: 10.347, 
-    DISTANCE: 30,
+    DISTANCE: 60,
     ENV_MIN_W: 1360,
     ENV_MIN_H: 760,
     SERVER_URL: "http://127.0.0.1:8000/scheduler" // http://127.0.0.1:8000/scheduler  

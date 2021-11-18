@@ -40,6 +40,8 @@ export function displayFirstVideo() {
   globalStatus.cur_video_pair = cur_video_pair;
   globalStatus.exp_status = "decision";
 
+  console.log("current gt: " + globalStatus.cur_video_pair["ground_truth"]);
+
   $(`#left-${videoDomId}`).get(0).pause();
   $(`#right-${videoDomId}`).get(0).pause();
   $(`#vc-${videoDomId}`).css("visibility", "visible");
@@ -68,11 +70,15 @@ export function displayNextVideo() {
 
     // display next video
     let cur_video_pair = globalStatus.videos_pairs_sequence.shift();
+    
+
     let videoDomId = constructDomId(cur_video_pair);
     globalStatus.curVideoDomId = videoDomId;
     globalStatus.cur_video_pair = cur_video_pair
     $(`#vc-${videoDomId}`).css("visibility", "visible")
                           .css("z-index", 1);
+
+    console.log("current gt: " + globalStatus.cur_video_pair["ground_truth"]);
 
     $(`#left-${videoDomId}`).get(0).play();
     $(`#right-${videoDomId}`).get(0).play();
@@ -118,12 +124,12 @@ export function show_test_description(test) {
   if (test == "flickering") {
     $("#question").html(globalStatus.flickering_question);
     $("#reminder-modal-text").html(globalStatus.flickering_test_description);
-    $("#start-exp-btn").html("<h4>Click here to start flickering test</h4>");
+    $("#start-exp-btn").html("<h4>Click here to start the flicker test</h4>");
   } else if (test == "quality") {
     
     $("#question").html(globalStatus.distortion_question);
     $("#reminder-modal-text").html(globalStatus.quality_test_description);
-    $("#start-exp-btn").html("<h4>Click here to start quality test</h4>");
+    $("#start-exp-btn").html("<h4>Click here to start the quality test</h4>");
   }
   
   $("#reminder-modal-btn").html("I got it!");

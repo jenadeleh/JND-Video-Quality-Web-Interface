@@ -117,11 +117,11 @@ export function show_test_description(test) {
   if (test == "flickering") {
     $("#reminder-modal-text").html(globalStatus.flickering_test_description);
     $("#question").html(globalStatus.flickering_question);
-    $("#start-exp-btn").html("<h4>Click here to start flickering test</h4>");
+    $("#start-exp-btn").html("<h4>Click here to start the flicker test</h4>");
   } else if (test == "quality") {
     $("#reminder-modal-text").html(globalStatus.quality_test_description);
     $("#question").html(globalStatus.distortion_question);
-    $("#start-exp-btn").html("<h4>Click here to start quality test</h4>");
+    $("#start-exp-btn").html("<h4>Click here to start the quality test</h4>");
   }
   
   $("#reminder-modal-btn").html("I got it!");

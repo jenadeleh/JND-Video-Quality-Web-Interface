@@ -39,20 +39,23 @@ export function actDecisionBtn(e) {
     isCorrect = false;
   }
 
+  console.log(decision + " gt: " + gt + " isCorrect: " + isCorrect)
+
   if (globalStatus.session=="training") {
-    
     if (isCorrect==false) {
       coaching(decision);
     } else if (isCorrect==true) {
       processHit();
     }
   } else {
-    if (isCorrect==false) {
-      globalStatus.isPassQuiz = false;
+    if (isCorrect==true) {
+      globalStatus.passQuizNum += 1;
     } 
     addResultToCurVideo(decision);
     processHit();
   }
+
+  console.log(globalStatus.passQuizNum)
 }
 
 export function coaching(decision) {
@@ -155,9 +158,6 @@ export function startTraining() {
 }
 
 
-
-
-
 export function readInst() {
   $("#inst-panel").css("display", "none");
   globalStatus.exp_status = "";
@@ -242,13 +242,17 @@ function _sendResult() {
     "px_cm_rate"
   ].forEach((el)=>{cali_info[el] = getLocalData(el);});
 
+  let isPassQuiz = (globalStatus.passQuizNum >= 1) ? true:false;
+
+  console.log("final " + globalStatus.passQuizNum + " pass quiz: " + isPassQuiz)
+
   let send_data = {
     "action":"record_quiz_result",
     "euid":getLocalData("euid"),
     "workerid": getLocalData("workerid"),
     "data": {
       "result":globalStatus.result,
-      "isPassQuiz": globalStatus.isPassQuiz,
+      "isPassQuiz": isPassQuiz,
       "os_info": globalStatus.os_info,
       "cali_info": cali_info
     }

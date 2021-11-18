@@ -1,5 +1,5 @@
 import * as $ from 'jquery';
-import { getLocalData } from "../utils/ManageLocalData";
+import { getLocalData, storeLocalData } from "../utils/ManageLocalData";
 import { config } from "./Configuration"; 
 import { globalStatus } from "./GlobalStatus";
 
@@ -119,6 +119,12 @@ export function showWarningCover(message) {
 
         if (globalStatus.canMakeDecision == true) {
             $(".decision-btn").attr("disabled", true);
+        }
+
+        if (message=="same_monitor") {
+            $(window).bind('beforeunload',function(){
+                storeLocalData("hasCalibrated", "false");
+            });
         }
     }
 }

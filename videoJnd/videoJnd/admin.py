@@ -182,7 +182,8 @@ class QuaAssignmentAdmin(admin.ModelAdmin):
     )
 
     list_per_page = 200
-    list_filter = (["exp"])
+    search_fields = ["exp"]
+    list_filter = ["exp"]
 
     def has_add_permission(self, request, obj=None):
         return False

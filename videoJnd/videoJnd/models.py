@@ -40,6 +40,8 @@ class EncodedRefVideoObj(models.Model):
     cur_workerid = models.CharField(max_length=50, editable=False, null=True, blank=True)
     cur_worker_uid = models.CharField(max_length=64, editable=False, null=True, blank=True, default="")
     worker_start_date = models.DateTimeField(editable=False, blank=True, null=True)
+    #TODO: qp sequence
+    
     # result
     videoGroupsResult  = jsonfield.JSONField(default={})
     """
