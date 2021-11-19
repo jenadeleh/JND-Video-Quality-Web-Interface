@@ -48,14 +48,14 @@ export function actDecisionBtn(e) {
       processHit();
     }
   } else {
-    if (isCorrect==true) {
-      globalStatus.passQuizNum += 1;
+    if (isCorrect==false) {
+      globalStatus.failedQuizNum += 1;
     } 
     addResultToCurVideo(decision);
     processHit();
   }
 
-  console.log(globalStatus.passQuizNum)
+  console.log(globalStatus.failedQuizNum)
 }
 
 export function coaching(decision) {
@@ -242,9 +242,9 @@ function _sendResult() {
     "px_cm_rate"
   ].forEach((el)=>{cali_info[el] = getLocalData(el);});
 
-  let isPassQuiz = (globalStatus.passQuizNum >= 1) ? true:false;
+  let isPassQuiz = (globalStatus.failedQuizNum <=1) ? true:false;
 
-  console.log("final " + globalStatus.passQuizNum + " pass quiz: " + isPassQuiz)
+//   console.log("failed " + globalStatus.failedQuizNum + " pass quiz: " + isPassQuiz)
 
   let send_data = {
     "action":"record_quiz_result",

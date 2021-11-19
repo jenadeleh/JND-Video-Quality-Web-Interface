@@ -40,7 +40,7 @@ export function displayFirstVideo() {
   globalStatus.cur_video_pair = cur_video_pair;
   globalStatus.exp_status = "decision";
 
-  console.log("current gt: " + globalStatus.cur_video_pair["ground_truth"]);
+//   console.log("current gt: " + globalStatus.cur_video_pair["ground_truth"]);
 
   $(`#left-${videoDomId}`).get(0).pause();
   $(`#right-${videoDomId}`).get(0).pause();
@@ -78,7 +78,7 @@ export function displayNextVideo() {
     $(`#vc-${videoDomId}`).css("visibility", "visible")
                           .css("z-index", 1);
 
-    console.log("current gt: " + globalStatus.cur_video_pair["ground_truth"]);
+    // console.log("current gt: " + globalStatus.cur_video_pair["ground_truth"]);
 
     $(`#left-${videoDomId}`).get(0).play();
     $(`#right-${videoDomId}`).get(0).play();
