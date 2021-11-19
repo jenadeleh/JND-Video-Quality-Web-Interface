@@ -13,13 +13,44 @@ class Experiment(models.Model):
     active = models.BooleanField(default=False, editable=True)
     description = models.TextField(max_length=4096, default="This is a demo.", editable=True)
     configuration = jsonfield.JSONField(default=get_config())
-    download_time = models.IntegerField("Download Time Limitation(seconds)", default=300, editable=True, validators=[MinValueValidator(10)])
-    wait_time = models.IntegerField("Waiting Time Limitation(seconds)", default=300, editable=True, validators=[MinValueValidator(10)])
-    max_ref_per_worker = models.IntegerField("Maximum rating number of a reference videos for a worker", default=2, editable=True)
-    pub_date = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
-    qua_hit_worker_num = models.IntegerField("Number of Qua. HIT", default=10, editable=True)
-    qua_hit_count = models.IntegerField("Number of finished Qua. HIT", default=0, editable=False)
-    study_hit_count = models.IntegerField("Number of finished study HIT", default=0, editable=False)
+    download_time = models.IntegerField(
+        "Download Time Limitation(seconds)", 
+        default=300, 
+        editable=True, 
+        validators=[MinValueValidator(10)]
+    )
+    wait_time = models.IntegerField(
+        "Waiting Time Limitation(seconds)", 
+        default=300, 
+        editable=True, 
+        validators=[MinValueValidator(10)]
+    )
+    max_qp_one_ref_worker = models.IntegerField(
+        "Maximum rating number of a reference videos for a worker", 
+        default=1, 
+        editable=True
+    )
+    pub_date = models.DateTimeField(
+        editable=False, 
+        blank=True, 
+        auto_now=True, 
+        null=True
+    )
+    qua_hit_worker_num = models.IntegerField(
+        "Number of Qua. HIT", 
+        default=10, 
+        editable=True
+    )
+    qua_hit_count = models.IntegerField(
+        "Number of finished Qua. HIT", 
+        default=0, 
+        editable=False
+    )
+    study_hit_count = models.IntegerField(
+        "Number of finished study HIT", 
+        default=0, 
+        editable=False
+    )
     training_videos_json = jsonfield.JSONField(default=get_training_gt())
     quiz_video_json = jsonfield.JSONField(default=get_quiz_gt())
     
@@ -32,9 +63,9 @@ class EncodedRefVideoObj(models.Model):
     exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
     ratingIdx = models.IntegerField(default=0, editable=False)
     codec = models.CharField(max_length=10, editable=False, null=True, blank=True)
-    target_qp_num = models.IntegerField(default=0, editable=False)
+    target_qp_num = models.IntegerField("Target QP number of a ref video", default=0, editable=False)
     # status
-    curr_qp_cnt = models.IntegerField(default=0, editable=False)
+    curr_qp_cnt = models.IntegerField("QP count of two tests", default=0, editable=False)
     ongoing = models.BooleanField(default=False, editable=False)
     is_finished = models.BooleanField(default=False, editable=False)
     cur_workerid = models.CharField(max_length=50, editable=False, null=True, blank=True)
@@ -99,6 +130,10 @@ class StudyAssignment(models.Model): # study HIT
     calibration = models.TextField(max_length=40960, default="", editable=False)
     operation_system = models.TextField(max_length=40960, default="", editable=False)
     submit_time = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
+    paid = models.BooleanField(default=False, editable=False)
+    amount = models.IntegerField("Dollar", default=0, editable=False)
+    paid_time = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
+    comment = models.TextField(max_length=2048, default="", editable=False)
     
     def __str__(self):
         return str(self.auid)
@@ -112,23 +147,138 @@ class QuaAssignment(models.Model): # qua HIT
     calibration = models.TextField(max_length=40960, default="", editable=False)
     operation_system = models.TextField(max_length=40960, default="", editable=False)
     submit_time = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
+    paid = models.BooleanField(default=False, editable=False)
+    amount = models.IntegerField("Dollar", default=0, editable=False)
+    paid_time = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
+    comment = models.TextField(max_length=2048, default="", editable=False)
+
     
     def __str__(self):
         return str(self.auid)
 
 class InterfaceText(models.Model):
-    title = models.CharField(primary_key=True, max_length=20, default="InterfaceText", editable=False)
-    flickering_question = RichTextField("Question for flickering test", max_length=4096, default="", null=False, blank=False)
-    distortion_question = RichTextField("Question for distortion test", max_length=4096, default="", null=False, blank=False)
-    text_end_exp = RichTextField("When the experiment is done, display", default="", null=False, blank=False)
-    text_end_hit = RichTextField("When the HIT is done, display", default="", null=False, blank=False)
-    decision_timeout_msg = models.TextField("When user doesn't make a decision, display", max_length=4096, default="", null=False, blank=False) # for image
-    btn_text_end_hit = models.TextField("Text of the button when the HIT is done", max_length=4096, default="", null=False, blank=False)
-    instruction_btn_text = models.CharField("Text of the button in the instruction page", max_length=20, default="", null=False, blank=False)
-    consent_btn_text = models.CharField("Text of the button in the consent form page", max_length=20, default="", null=False, blank=False)
-    no_available_exp = RichTextField("When there is no experiment available, display", default="", null=False, blank=False)
-    waiting_timeout_msg = models.TextField("When the HIT is expired, display", max_length=4096, default="", null=False, blank=False) # for hit
-    download_timeout_msg = models.TextField("When download timeout, display", max_length=4096, default="", null=False, blank=False) # for hit
+    title = models.CharField(
+        primary_key=True, 
+        max_length=20, 
+        default="InterfaceText", 
+        editable=False
+    )
+    
+    flickering_question = RichTextField(
+        "Question for flickering test", 
+        max_length=4096, 
+        default="", 
+        null=False, 
+        blank=False
+    )
+    
+    distortion_question = RichTextField(
+        "Question for distortion test", 
+        max_length=4096, 
+        default="", 
+        null=False, 
+        blank=False
+    )
+    
+    text_end_exp = RichTextField(
+        "When the experiment is done, display", 
+        default="", 
+        null=False, 
+        blank=False
+    )
+    
+    text_end_hit = RichTextField(
+        "When the HIT is done, display", 
+        default="", 
+        null=False, 
+        blank=False
+    )
+    
+    decision_timeout_msg = models.TextField(
+        "When user doesn't make a decision, display", 
+        max_length=4096, 
+        default="", 
+        null=False, 
+        blank=False
+    ) # for image
+    
+    btn_text_end_hit = models.TextField(
+        "Text of the button when the HIT is done", 
+        max_length=4096, 
+        default="", 
+        null=False, 
+        blank=False
+    )
+    
+    instruction_btn_text = models.CharField(
+        "Text of the button in the instruction page", 
+        max_length=20, 
+        default="", 
+        null=False, 
+        blank=False
+    )
+    
+    consent_btn_text = models.CharField(
+        "Text of the button in the consent form page", 
+        max_length=20, 
+        default="", 
+        null=False, 
+        blank=False
+    )
+    
+    no_available_exp = RichTextField(
+        "When there is no experiment available, display", 
+        default="", 
+        null=False, 
+        blank=False
+    )
+    
+    waiting_timeout_msg = models.TextField(
+        "When the HIT is expired, display", 
+        max_length=4096, 
+        default="", 
+        null=False, 
+        blank=False
+    ) # for hit
+    
+    download_timeout_msg = models.TextField(
+        "When download timeout, display", 
+        max_length=4096, 
+        default="", 
+        null=False, 
+        blank=False
+    ) # for hit
+    
+    fail_quiz_text = RichTextField(
+        "Text for failed quiz session", 
+        max_length=4096, 
+        default="Sorry, you failed the quiz session", 
+        null=False, 
+        blank=False
+    )
+
+    pass_quiz_text = RichTextField(
+        "Text for passed quiz session", 
+        max_length=4096, 
+        default="You passed the quiz session", 
+        null=False, 
+        blank=False
+    )
+
+    pass_training_question_text = models.TextField(
+        "Text for passing a training question", 
+        max_length=4096, 
+        default="You pass one question!", 
+        null=False, 
+        blank=False
+    )
+
+    traing_pass_text_timeout = models.IntegerField(
+        "Time for showing text for passing one training question (second)", 
+        default=1, 
+        editable=True, 
+        validators=[MinValueValidator(1)]
+    )
 
     no_decision_training_msg = models.TextField(
       "Message for making 'no decision' in training", 

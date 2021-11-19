@@ -47,8 +47,8 @@ def record_study_result(recv_data:dict) -> dict:
 
                 _update_video_db(video_result, ref_video_obj, str(auid))
 
-                process_count[video_result["refuid"]] += + 1
-                if process_count[video_result["refuid"]] == 2*config["RATING_PER_ENCODED_REF_VIDEO"]: 
+                process_count[video_result["refuid"]] += 1
+                if process_count[video_result["refuid"]] == 2*config["RATING_PER_ENCODED_REF_VIDEO"]: #???
                     # record result of distortion and flicerking
                     ref_video_obj.ongoing = False
                     ref_video_obj.save()
@@ -110,7 +110,7 @@ def _update_video_db(
     if decision_code != "4": # exclude decision code 4
         ref_video_obj.curr_qp_cnt = ref_video_obj.curr_qp_cnt + 1
 
-    if ref_video_obj.curr_qp_cnt == ref_video_obj.target_qp_num:
+    if ref_video_obj.curr_qp_cnt == 2 * ref_video_obj.target_qp_num:
         ref_video_obj.is_finished = True
     
     # set some status

@@ -65,6 +65,10 @@ function _render_interface_text(response_data) {
     download_timeout_msg, 
     waiting_timeout_msg,
     no_decision_training_msg,
+    pass_quiz_text,
+    fail_quiz_text,
+    pass_training_question_text,
+    traing_pass_text_timeout,
   } = response_data
 
   storeLocalData("euid", euid);
@@ -81,6 +85,11 @@ function _render_interface_text(response_data) {
   globalStatus.flickering_question = flickering_question;
   globalStatus.distortion_question = distortion_question;
   globalStatus.no_decision_training_msg = no_decision_training_msg;
+  globalStatus.fail_quiz_text = fail_quiz_text;
+  globalStatus.pass_quiz_text = pass_quiz_text;
+  globalStatus.pass_training_question_text = pass_training_question_text;
+  globalStatus.traing_pass_text_timeout = traing_pass_text_timeout;
+  
 
   _render_instruction(instruction);
   _render_consent_form(consent_form);

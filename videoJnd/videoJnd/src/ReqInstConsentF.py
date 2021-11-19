@@ -56,6 +56,11 @@ def req_inst_cf(recv_data:dict) -> dict:
                 data["wait_time"] = exp_obj.wait_time
                 data["download_timeout_msg"] = interface_text.download_timeout_msg
                 data["waiting_timeout_msg"] = interface_text.waiting_timeout_msg
+                data["fail_quiz_text"] = interface_text.fail_quiz_text
+                data["pass_quiz_text"] = interface_text.pass_quiz_text
+                data["pass_training_question_text"] = interface_text.pass_training_question_text
+                data["traing_pass_text_timeout"] = interface_text.traing_pass_text_timeout
+                
 
                 response_data =  {
                     "status":"successful", 

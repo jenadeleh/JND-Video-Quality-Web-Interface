@@ -56,5 +56,10 @@ export const globalStatus = {
     flickering_question:"",
     distortion_question:"",
     failedQuizNum:0,
+    isPassQuiz: false,
     no_decision_training_msg:"",
+    fail_quiz_text: "",
+    pass_quiz_text: "",
+    pass_training_question_text: "",
+    traing_pass_text_timeout:0,
 }

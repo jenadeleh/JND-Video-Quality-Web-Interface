@@ -31,8 +31,9 @@ class ExperimentAdmin(admin.ModelAdmin):
 
     list_per_page = 50
     list_editable =["active"]
-    search_fields = ["name"]
+    # search_fields = ["name"]
     actions = ["export_result"]
+    list_filter = ["name"]
     
     def save_model(self, request, obj, form, change):
         super(ExperimentAdmin, self).save_model(request, obj, form, change)
@@ -148,7 +149,6 @@ class StudyParticipantAdmin(admin.ModelAdmin):
     )
 
     list_filter = ("exp", "ongoing")
-
     list_per_page = 200
 
     def has_add_permission(self, request, obj=None):
@@ -162,10 +162,15 @@ class StudyAssignmentAdmin(admin.ModelAdmin):
         , "workerid"
         # , "result"
         , "submit_time"
+        , "paid"
+        , "amount"
+        , "paid_time"
+        , "comment"
     )
 
     list_per_page = 200
-    list_filter = (["exp"])
+    # search_fields = ["exp"]
+    list_filter = ["exp"]
 
     def has_add_permission(self, request, obj=None):
         return False
@@ -179,11 +184,15 @@ class QuaAssignmentAdmin(admin.ModelAdmin):
         , "isPassQuiz"
         # , "result"
         , "submit_time"
+        , "paid"
+        , "amount"
+        , "paid_time"
+        , "comment"
     )
 
     list_per_page = 200
-    search_fields = ["exp"]
-    list_filter = ["exp"]
+    # search_fields = ["exp", "isPassQuiz"]
+    list_filter = ["exp", "isPassQuiz"]
 
     def has_add_permission(self, request, obj=None):
         return False

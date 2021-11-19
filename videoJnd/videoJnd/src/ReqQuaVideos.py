@@ -104,7 +104,7 @@ def select_encoded_ref_videos(cur_exp_obj:object, puid:str) -> list:
         if cur_p:
             cur_p = cur_p[0]
             for encoded_ref_video,rating_num in cur_p.finished_ref_videos.items():
-                if rating_num >= cur_exp_obj.max_ref_per_worker * 2: # flickering + distortion
+                if rating_num >= cur_exp_obj.max_qp_one_ref_worker * 2: # flickering + distortion
                     removed_encoded_ref_videos.append(encoded_ref_video)
 
     # filter encoded reference videos that are not finished and not ongoing
