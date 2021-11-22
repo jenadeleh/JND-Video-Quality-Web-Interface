@@ -35,6 +35,8 @@ def record_study_result(recv_data:dict) -> dict:
         finished_ref_videos = p_obj.finished_ref_videos
         process_count = {k["refuid"]:0 for k in _result}
         for video_result in _result:
+            presentation = video_result["presentation"]
+
             ref_video_obj = EncodedRefVideoObj.objects.filter(refuid=video_result["refuid"])
             if ref_video_obj:
                 ref_video_obj = ref_video_obj[0]
@@ -45,7 +47,7 @@ def record_study_result(recv_data:dict) -> dict:
                 else:
                     finished_ref_videos[ref_video_obj.ref_video] = 1
 
-                _update_video_db(video_result, ref_video_obj, str(auid))
+                _update_video_db(presentation, video_result, ref_video_obj, str(auid))
 
                 process_count[video_result["refuid"]] += 1
                 if process_count[video_result["refuid"]] == 2*config["RATING_PER_ENCODED_REF_VIDEO"]: #???
@@ -71,6 +73,7 @@ def record_study_result(recv_data:dict) -> dict:
         return {"status":"failed", "restype": "record_result", "data":"participant is not exist"}
 
 def _update_video_db(
+    presentation: str,
     video_result:dict, 
     ref_video_obj:object, 
     auid:str
@@ -80,10 +83,16 @@ def _update_video_db(
     refuid = video_result["refuid"]
     presentation = video_result["presentation"]
 
-    decision_code = _encode_decision(
-        video_result["side_of_reference"], 
-        video_result["decision"]
-    )
+    if presentation == "flickering":
+        decision_code = _encode_decision_flickering(
+            video_result["side_of_reference"], 
+            video_result["decision"]
+        )
+    elif presentation == "distortion":
+        decision_code = _encode_decision_distortion(
+            video_result["side_of_reference"], 
+            video_result["decision"]
+        )
 
     videoGroupsResult = ref_video_obj.videoGroupsResult
 
@@ -127,7 +136,8 @@ def _set_p_onging_false(p_obj: object) -> None:
     p_obj.start_date = None
     p_obj.save()
 
-def _encode_decision(side_of_reference:str, decision:str) -> str:
+
+def _encode_decision_flickering(side_of_reference:str, decision:str) -> str:
     if decision == "R" or decision == "L":
         if decision == side_of_reference:
             return "1"
@@ -137,3 +147,15 @@ def _encode_decision(side_of_reference:str, decision:str) -> str:
         return "3"
     elif decision == "no decision":
         return "4"
+
+def _encode_decision_distortion(side_of_reference:str, decision:str) -> str:
+    if decision == "R" or decision == "L":
+        if decision == side_of_reference:
+            return "2"
+        elif decision != side_of_reference:
+            return "1"
+    elif decision == "not sure":
+        return "3"
+    elif decision == "no decision":
+        return "4"
+

@@ -200,6 +200,13 @@ def _gen_videos_pairs(encoded_ref_video_obj:object) -> tuple:
                                 qp_obj.gen_qp_param(codec)
                                 , prev_flickering_qp
                             )
+
+        if int(next_distortion_qp) < 10:
+            next_distortion_qp = "0" + str(next_distortion_qp)
+
+        if int(next_flickering_qp) < 10:
+            next_flickering_qp = "0" + str(next_flickering_qp)
+
         
         reference_url = crf_group["reference_url"].format()
         distortion_url = crf_group["distortion_url"].format(qp=next_distortion_qp)
