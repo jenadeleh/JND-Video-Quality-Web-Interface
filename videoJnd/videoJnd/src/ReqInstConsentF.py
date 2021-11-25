@@ -60,6 +60,8 @@ def req_inst_cf(recv_data:dict) -> dict:
                 data["pass_quiz_text"] = interface_text.pass_quiz_text
                 data["pass_training_question_text"] = interface_text.pass_training_question_text
                 data["traing_pass_text_timeout"] = interface_text.traing_pass_text_timeout
+                data["failedQuizNumThr"] = interface_text.failedQuizNumThr
+                
                 
 
                 response_data =  {

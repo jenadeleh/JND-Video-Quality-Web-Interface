@@ -14,7 +14,7 @@ def process_request(request):
                   recv_data = json.loads(request.body)
                   if  recv_data["action"] not in  ["record_result", "record_quiz_result"]:
                       print(recv_data)
-
+                  
                   if recv_data["action"] == "req_inst_cf":
                       response = req_inst_cf(recv_data)
                   

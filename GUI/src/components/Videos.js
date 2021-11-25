@@ -27,6 +27,9 @@ export function reqLoadVideos(workerid, puid, euid) {
                               + globalStatus.videos_pairs["flickering"].length;
       globalStatus.finished_assignment_num = response["data"]["finished_assignment_num"];
 
+      globalStatus.flickering_test_description = globalStatus.flickering_test_description.replace("NUM", globalStatus.task_num/2)
+      globalStatus.quality_test_description = globalStatus.quality_test_description.replace("NUM", globalStatus.task_num/2)
+
       _extract_videos_url(globalStatus.videos_pairs);
       updateProgressBar(0, globalStatus.task_num);
       $("#loading-progress").html("0/" + globalStatus.videos_original_url.length);

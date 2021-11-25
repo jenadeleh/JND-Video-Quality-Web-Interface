@@ -248,7 +248,7 @@ function _sendResult() {
     "px_cm_rate"
   ].forEach((el)=>{cali_info[el] = getLocalData(el);});
 
-  globalStatus.isPassQuiz = (globalStatus.failedQuizNum <=1) ? true:false;
+  globalStatus.isPassQuiz = (globalStatus.failedQuizNum <=globalStatus.failedQuizNumThr) ? true:false;
 
   if (globalStatus.isPassQuiz) {
     $("#hit-end-panel-msg").html(globalStatus.pass_quiz_text);

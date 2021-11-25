@@ -101,6 +101,9 @@ class EncodedRefVideoObj(models.Model):
         },
     }
     """
+    flickering_qp  = jsonfield.JSONField(default={"qp_seq":[]})
+    distortion_qp  = jsonfield.JSONField(default={"qp_seq":[]})
+
     assigments_sequence = jsonfield.JSONField(default={"sequence":[]})
 
 
@@ -263,6 +266,13 @@ class InterfaceText(models.Model):
         default="You passed the quiz session", 
         null=False, 
         blank=False
+    )
+
+    failedQuizNumThr = models.IntegerField(
+        "Maximum failed tasks in the quiz", 
+        default=1, 
+        editable=True, 
+        validators=[MinValueValidator(0)]
     )
 
     pass_training_question_text = models.TextField(

@@ -69,6 +69,7 @@ function _render_interface_text(response_data) {
     fail_quiz_text,
     pass_training_question_text,
     traing_pass_text_timeout,
+    failedQuizNumThr
   } = response_data
 
   storeLocalData("euid", euid);
@@ -89,6 +90,7 @@ function _render_interface_text(response_data) {
   globalStatus.pass_quiz_text = pass_quiz_text;
   globalStatus.pass_training_question_text = pass_training_question_text;
   globalStatus.traing_pass_text_timeout = traing_pass_text_timeout;
+  globalStatus.failedQuizNumThr = failedQuizNumThr;
   
 
   _render_instruction(instruction);
