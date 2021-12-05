@@ -32,6 +32,7 @@ def req_inst_cf(recv_data:dict) -> dict:
                 "flickering_test_description": interface_text.flickering_test_description,
                 "quality_test_description": interface_text.quality_test_description,
                 "no_decision_training_msg": interface_text.no_decision_training_msg,
+                "study_hit_url": interface_text.study_hit_url,
             }
 
             if "quahit" in recv_data:
@@ -61,6 +62,7 @@ def req_inst_cf(recv_data:dict) -> dict:
                 data["pass_training_question_text"] = interface_text.pass_training_question_text
                 data["traing_pass_text_timeout"] = interface_text.traing_pass_text_timeout
                 data["failedQuizNumThr"] = interface_text.failedQuizNumThr
+                data["study_hit_url"] = interface_text.study_hit_url
                 
                 
 

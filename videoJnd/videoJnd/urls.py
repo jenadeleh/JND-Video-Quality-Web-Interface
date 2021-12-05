@@ -27,6 +27,7 @@ urlpatterns = [
     path("quahit/", views.quahit, name="quahit"),
     path("scheduler", views.scheduler, name="scheduler"),
     url(r'^static/(?P<path>.*)$', static.serve,{'document_root': settings.STATIC_ROOT}, name='static'),
+    # url(r'^studyhit/$', views.studyhit, name="studyhit"),
 ]
 
 # handler400 = "videoJnd.views.error_test_400"

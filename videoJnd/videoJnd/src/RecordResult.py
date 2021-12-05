@@ -93,7 +93,7 @@ def _update_video_db(
             video_result["decision"]
         )
 
-        flickering_qp["qp_seq"].append(video_result["qp"])
+        flickering_qp["flickering_qp_seq"].append(video_result["qp"])
         ref_video_obj.flickering_qp = flickering_qp
 
     elif presentation == "distortion":
@@ -101,7 +101,7 @@ def _update_video_db(
             video_result["side_of_reference"], 
             video_result["decision"]
         )
-        distortion_qp["qp_seq"].append(video_result["qp"])
+        distortion_qp["distortion_qp_seq"].append(video_result["qp"])
         ref_video_obj.distortion_qp = distortion_qp
 
     videoGroupsResult = ref_video_obj.videoGroupsResult

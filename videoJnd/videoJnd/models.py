@@ -101,8 +101,8 @@ class EncodedRefVideoObj(models.Model):
         },
     }
     """
-    flickering_qp  = jsonfield.JSONField(default={"qp_seq":[]})
-    distortion_qp  = jsonfield.JSONField(default={"qp_seq":[]})
+    flickering_qp  = jsonfield.JSONField(default={"flickering_qp_seq":[]})
+    distortion_qp  = jsonfield.JSONField(default={"distortion_qp_seq":[]})
 
     assigments_sequence = jsonfield.JSONField(default={"sequence":[]})
 
@@ -134,7 +134,7 @@ class StudyAssignment(models.Model): # study HIT
     operation_system = models.TextField(max_length=40960, default="", editable=False)
     submit_time = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
     paid = models.BooleanField(default=False, editable=False)
-    amount = models.IntegerField("Dollar", default=0, editable=False)
+    payamount = models.IntegerField("Dollar", default=0, editable=False)
     paid_time = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
     comment = models.TextField(max_length=2048, default="", editable=False)
     
@@ -151,7 +151,7 @@ class QuaAssignment(models.Model): # qua HIT
     operation_system = models.TextField(max_length=40960, default="", editable=False)
     submit_time = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
     paid = models.BooleanField(default=False, editable=False)
-    amount = models.IntegerField("Dollar", default=0, editable=False)
+    payamount = models.IntegerField("Dollar", default=0, editable=False)
     paid_time = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
     comment = models.TextField(max_length=2048, default="", editable=False)
 
@@ -330,6 +330,8 @@ class InterfaceText(models.Model):
         null=False, 
         blank=False
     )
+
+    study_hit_url = models.URLField(max_length=200, default="")
 
     def __str__(self):
         return self.title

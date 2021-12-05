@@ -12,6 +12,22 @@
 
  <body>
   <div class="main">
+    <!-- <p id="cali-info"
+      data-availHeight={{ availHeight }}
+      data-availWidth={{ availWidth }} 
+      data-browser_height={{ browser_height }} 
+      data-browser_width_cm={{ browser_width_cm }} 
+      data-cali_time={{ cali_time }} 
+      data-devicePixelRatio={{ devicePixelRatio }} 
+      data-didTraining={{ didTraining }} 
+      data-euid={{ euid }} 
+      data-hasCalibrated={{ hasCalibrated }} 
+      data-outerHeight={{ outerHeight }} 
+      data-outerWidth={{ outerWidth }} 
+      data-px_cm_rate={{ px_cm_rate }} 
+      data-workerid={{ workerid }} 
+    ></p> -->
+
     <div id="warning-cover" class="exp-panel">
         <br/>
         <div id="warning-msg"></div>
@@ -115,13 +131,15 @@
 
             <div id="hit-end-panel">
                 <div id="hit-end-panel-msg">
-                <h4><span style="font-family:Calibri,sans-serif"><span style="font-family:&quot;Arial&quot;,sans-serif">Thank you very much for participating in this study!</span></span></h4>
-                <h4><span style="font-family:Calibri,sans-serif"><strong><span style="font-family:&quot;Arial&quot;,sans-serif">IMPORTANT: Please copy the code below to the experiment page in&nbsp;Mechanical Turk in order to get your compensation!</span></strong></span></h4>
                 </div>
                 </br>
                 <h2 id="hit-end-text"></h2></br>
-                <button id='home-page-btn' onClick="window.location.reload();" class='btn btn-success ctl'>Home Page</button>
+                <a id="main-study-btn" class="btn btn-success" href="#" role="button">Main study</a>
 
+                <button id="show-instruction-btn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#instruction-modal">
+                    Instruction 
+                </button>
+                <button id='hit-end-btn' class='btn btn-danger ctl'></button>
                 <!-- <h4 id="finish-asgm-num"></h4></br>
 
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#instruction-modal">

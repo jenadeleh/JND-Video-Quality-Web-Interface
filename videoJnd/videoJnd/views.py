@@ -10,9 +10,31 @@ from django.utils import timezone
 from videoJnd.src.ProcessRequest import process_request
 from videoJnd.src.ResourceMonitor import wait_release_resources
 
-# studyhit page
 def studyhit(request):
+    # context = {}
+    # context_items = [
+    #   "availHeight", 
+    #   "availWidth", 
+    #   "browser_height_cm", 
+    #   "browser_width_cm", 
+    #   "cali_time", 
+    #   "devicePixelRatio", 
+    #   "didTraining", 
+    #   "euid", 
+    #   "hasCalibrated", 
+    #   "outerHeight", 
+    #   "outerWidth", 
+    #   "px_cm_rate", 
+    #   "puid",
+    #   "workerid"
+    # ]
+
+    # cali_info = request.GET.get('info', None).split("-")
+    # for idx, key in enumerate(context_items):
+    #     context[key] = cali_info[idx]
+
     return render(request,'studyhit.html')
+    # return render(request,'studyhit.html', context)
 
 def quahit(request):
     return render(request,'quahit.html')

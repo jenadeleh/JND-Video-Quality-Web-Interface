@@ -132,6 +132,27 @@ class EncodedRefVideoObjAdmin(admin.ModelAdmin):
     ])
 
     list_per_page = 200
+    actions = ["export_result"]
+
+
+    def export_result(self, request, queryset):
+        try:
+            csv_name = "EncodedRefVideoObj_" + time.strftime("%Y-%m-%d_%H-%M-%S")
+            meta = EncodedRefVideoObj._meta
+            column_names = [field.name for field in meta.fields if field.name not in ["id"]]
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename={}.csv'.format(csv_name)
+            writer = csv.writer(response)
+            writer.writerow(column_names)
+
+            for obj in queryset:
+                writer.writerow([getattr(obj, field) for field in column_names])
+
+            return response
+        except Exception as e:
+            print("admin page got error: " + str(e))
+
+    export_result.short_description = "Export Selected"
 
     def has_add_permission(self, request, obj=None):
         return False
@@ -152,6 +173,26 @@ class StudyParticipantAdmin(admin.ModelAdmin):
 
     list_filter = ("exp", "ongoing")
     list_per_page = 200
+    actions = ["export_result"]
+
+    def export_result(self, request, queryset):
+        try:
+            csv_name = "StudyParticipant_" + time.strftime("%Y-%m-%d_%H-%M-%S")
+            meta = StudyParticipant._meta
+            column_names = [field.name for field in meta.fields if field.name not in ["id"]]
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename={}.csv'.format(csv_name)
+            writer = csv.writer(response)
+            writer.writerow(column_names)
+
+            for obj in queryset:
+                writer.writerow([getattr(obj, field) for field in column_names])
+
+            return response
+        except Exception as e:
+            print("admin page got error: " + str(e))
+
+    export_result.short_description = "Export Selected"
 
     def has_add_permission(self, request, obj=None):
         return False
@@ -165,7 +206,7 @@ class StudyAssignmentAdmin(admin.ModelAdmin):
         # , "result"
         , "submit_time"
         , "paid"
-        , "amount"
+        , "payamount"
         , "paid_time"
         , "comment"
     )
@@ -173,6 +214,26 @@ class StudyAssignmentAdmin(admin.ModelAdmin):
     list_per_page = 200
     # search_fields = ["exp"]
     list_filter = ["exp"]
+    actions = ["export_result"]
+
+    def export_result(self, request, queryset):
+        try:
+            csv_name = "StudyAssignment_" + time.strftime("%Y-%m-%d_%H-%M-%S")
+            meta = StudyAssignment._meta
+            column_names = [field.name for field in meta.fields if field.name not in ["id"]]
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename={}.csv'.format(csv_name)
+            writer = csv.writer(response)
+            writer.writerow(column_names)
+
+            for obj in queryset:
+                writer.writerow([getattr(obj, field) for field in column_names])
+
+            return response
+        except Exception as e:
+            print("admin page got error: " + str(e))
+
+    export_result.short_description = "Export Selected"
 
     def has_add_permission(self, request, obj=None):
         return False
@@ -187,7 +248,7 @@ class QuaAssignmentAdmin(admin.ModelAdmin):
         # , "result"
         , "submit_time"
         , "paid"
-        , "amount"
+        , "payamount"
         , "paid_time"
         , "comment"
     )
@@ -195,6 +256,26 @@ class QuaAssignmentAdmin(admin.ModelAdmin):
     list_per_page = 200
     # search_fields = ["exp", "isPassQuiz"]
     list_filter = ["exp", "isPassQuiz"]
+    actions = ["export_result"]
+
+    def export_result(self, request, queryset):
+        try:
+            csv_name = "QuaAssignment_" + time.strftime("%Y-%m-%d_%H-%M-%S")
+            meta = QuaAssignment._meta
+            column_names = [field.name for field in meta.fields if field.name not in ["id"]]
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename={}.csv'.format(csv_name)
+            writer = csv.writer(response)
+            writer.writerow(column_names)
+
+            for obj in queryset:
+                writer.writerow([getattr(obj, field) for field in column_names])
+
+            return response
+        except Exception as e:
+            print("admin page got error: " + str(e))
+
+    export_result.short_description = "Export Selected"
 
     def has_add_permission(self, request, obj=None):
         return False
