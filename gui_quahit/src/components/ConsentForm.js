@@ -32,7 +32,12 @@ export function passCF_action() {
 function _process_response(response) {
     if (response["status"] == "successful") {
         _render_interface_text(response["data"]);
-        $("#inst-panel").css("display", "inline");
+
+        if (getLocalData("didTraining") != "true") {
+            $("#inst-panel").css("display", "inline");
+        } else {
+            $("#msg-panel").html(globalStatus.no_available_exp).css("display", "inline"); 
+        }
 
     } else if (response["status"] == "failed") {
         $("#msg-panel").html(response["data"]).css("display", "inline");
@@ -69,7 +74,9 @@ function _render_interface_text(response_data) {
     fail_quiz_text,
     pass_training_question_text,
     traing_pass_text_timeout,
-    failedQuizNumThr
+    failedQuizNumThr,
+    study_hit_url,
+    no_available_exp
   } = response_data
 
   storeLocalData("euid", euid);
@@ -77,8 +84,8 @@ function _render_interface_text(response_data) {
   globalStatus.wait_time = wait_time;
   globalStatus.training_description = training_description;
   globalStatus.quiz_description = quiz_description;
-  globalStatus.flickering_test_description = flickering_test_description;
-  globalStatus.quality_test_description = quality_test_description;
+  globalStatus.flickering_test_description_template = flickering_test_description;
+  globalStatus.quality_test_description_template = quality_test_description;
   globalStatus.training_videos = training_videos;
   globalStatus.quiz_videos = quiz_videos;
   globalStatus.download_timeout_msg = download_timeout_msg;
@@ -91,6 +98,8 @@ function _render_interface_text(response_data) {
   globalStatus.pass_training_question_text = pass_training_question_text;
   globalStatus.traing_pass_text_timeout = traing_pass_text_timeout;
   globalStatus.failedQuizNumThr = failedQuizNumThr;
+  globalStatus.study_hit_url = study_hit_url;
+  globalStatus.no_available_exp = no_available_exp;
   
 
   _render_instruction(instruction);
@@ -120,7 +129,7 @@ function _render_consent_form(consent_form) {
 function _render_end_hit_text(text_end_hit, btn_text_end_hit) {
   // $("#hit-end-text").html(text_end_hit);
   // $("#next-hit-btn").html(btn_text_end_hit);
-  $("#home-page-btn").html(btn_text_end_hit);
+  $("#hit-end-btn").html(btn_text_end_hit);
 }
 
 function _render_question_text(question) {

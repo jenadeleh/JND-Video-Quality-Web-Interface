@@ -12,6 +12,7 @@ def process_request(request):
       if request.method == "POST":
           if request.body:
                   recv_data = json.loads(request.body)
+                #   print(recv_data)
                   if  recv_data["action"] not in  ["record_result", "record_quiz_result"]:
                       print(recv_data)
                   

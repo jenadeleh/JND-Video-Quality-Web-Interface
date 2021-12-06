@@ -109,6 +109,8 @@ class EncodedRefVideoObjAdmin(admin.ModelAdmin):
         , "cur_workerid"
         , "target_qp_num"
         , "curr_qp_cnt" 
+        , "flickering_response"
+        , "distortion_response"
         , "flickering_qp"
         , "distortion_qp"
         , "videoGroupsResult"

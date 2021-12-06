@@ -1,7 +1,7 @@
 import * as $ from 'jquery';
 import { globalStatus } from "./GlobalStatus";
 import { updateProgressBar } from "./ProgressBar";
-import { getLocalData } from "../utils/ManageLocalData";
+import { getLocalData, storeLocalData } from "../utils/ManageLocalData";
 import { sendMsg } from "./SendMsg";
 import { passCF_action } from "./ConsentForm";
 import { setTimer } from "./Timer";
@@ -39,9 +39,8 @@ export function actDecisionBtn(e) {
     isCorrect = false;
   }
 
-//   console.log(decision + " gt: " + gt + " isCorrect: " + isCorrect)
-
   if (globalStatus.session=="training") {
+    // processHit(); // remove 
     if (isCorrect==false) {
       coaching(decision);
     } else if (isCorrect==true) {
@@ -61,8 +60,6 @@ export function actDecisionBtn(e) {
     addResultToCurVideo(decision);
     processHit();
   }
-
-//   console.log(globalStatus.failedQuizNum)
 }
 
 export function coaching(decision) {
@@ -181,7 +178,10 @@ function _endHit() {
   if (globalStatus.session=="training") {
     _displatStartQuizMsg();
   } else if (globalStatus.session=="quiz") {
+    storeLocalData("didTraining","true");
     _sendResult();
+    _process_quiz_result();
+    
   } 
 }
 
@@ -223,7 +223,7 @@ function _displatStartTrainingMsg() {
   $("#start-training-btn").css("display", "inline-block");
 }
 
-export function displayEndHitPanel(code) {
+export function displayEndHitPanel() {
   $(".video-cover").remove();
   $(".decision-btn").attr("disabled", true);
   $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "hidden");
@@ -231,11 +231,74 @@ export function displayEndHitPanel(code) {
   $("#hit-end-panel-msg").css("visibility", "visible")
   $("#video-spinner").css("display", "none")
                     .removeClass("d-flex");
-  $("#home-page-btn").css("display", "inline-block");
+  $("#hit-end-btn").css("display", "inline-block");
   $("#next-hit-btn").css("display", "none");
-
-  $("#hit-end-text").html(code);
 }
+
+// function _gen_study_hit_url() {
+//     let study_hit_url = "";
+//     let info = "";
+
+//     const context_items = [
+//       "availHeight", 
+//       "availWidth", 
+//       "browser_height_cm", 
+//       "browser_width_cm", 
+//       "cali_time", 
+//       "devicePixelRatio", 
+//       "didTraining", 
+//       "euid", 
+//       "hasCalibrated", 
+//       "outerHeight", 
+//       "outerWidth", 
+//       "px_cm_rate", 
+//       "puid",
+//       "workerid"
+//     ];
+  
+//     context_items.forEach(function(item,idx)  {
+//       if (info.length == 0) {
+//         info = info + getLocalData(item)
+//       } else {
+//         info = info + "-" + getLocalData(item)
+//       }
+//     });
+//     study_hit_url = globalStatus.study_hit_url + "studyhit/?info=" + info;
+//     return study_hit_url
+//   }
+
+  
+function _process_quiz_result() {
+  // let study_hit_url = _gen_study_hit_url();
+  globalStatus.isPassQuiz = (globalStatus.failedQuizNum <=globalStatus.failedQuizNumThr) ? true:false;
+  if (globalStatus.isPassQuiz) {
+    $("#hit-end-panel-msg").html(globalStatus.pass_quiz_text);
+    $("#hit-end-text").html("");
+    $("#main-study-btn").attr("href", globalStatus.study_hit_url);
+
+    $("#show-instruction-btn, #main-study-btn").css("display", "inline-block");
+    _show_code();
+  } else {
+    $("#hit-end-text").html("");
+    $("#hit-end-panel-msg").html(globalStatus.fail_quiz_text);
+    _show_code();
+  }
+}
+
+function _show_code() {
+  $("#hit-end-btn").html("Show the payment code and quit the experiment");
+  $('#hit-end-btn').on('click', (e)=> {
+    $("#msg-panel").html(
+        globalStatus.text_end_exp 
+        + "</br>" 
+        + "<h2>" + globalStatus.copy_code + "</h2>"
+        + "</br>" + "</br>"
+        + "<h3>" + globalStatus.code + "</h3>"
+    ).css("display", "inline");
+    $("#hit-end-panel, #hit-panel").css("display", "none");
+  });
+}
+
 
 function _sendResult() {
   let cali_info = {};
@@ -247,14 +310,6 @@ function _sendResult() {
     "devicePixelRatio", 
     "px_cm_rate"
   ].forEach((el)=>{cali_info[el] = getLocalData(el);});
-
-  globalStatus.isPassQuiz = (globalStatus.failedQuizNum <=globalStatus.failedQuizNumThr) ? true:false;
-
-  if (globalStatus.isPassQuiz) {
-    $("#hit-end-panel-msg").html(globalStatus.pass_quiz_text);
-  } else {
-    $("#hit-end-panel-msg").html(globalStatus.fail_quiz_text);
-  }
 
   let send_data = {
     "action":"record_quiz_result",
@@ -272,13 +327,14 @@ function _sendResult() {
 
   sendMsg(send_data).then(response => {
     if (response["status"] == "successful") {
-      displayEndHitPanel(response["code"]);
+        globalStatus.code = response["code"];
+      displayEndHitPanel();
       if (globalStatus.isPassQuiz == false) {
-        displayEndHitPanel(response["code"]);
+        displayEndHitPanel();
       }
       
     } else if (response["status"] == "failed") {
-      displayEndHitPanel(response["error"]);
+      displayEndHitPanel();
     }
   });
 }

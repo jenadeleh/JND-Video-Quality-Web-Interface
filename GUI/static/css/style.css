@@ -49,6 +49,7 @@
     font-size: 24px;
 }
 
+#cali-info,
 #msg-panel,
 #inst-panel,
 #cali-panel,
@@ -61,7 +62,9 @@
 #hit-end-panel,
 #decision-timeout-msg,
 #next-hit-btn,
-#home-page-btn,
+#hit-end-btn,
+#main-study-btn,
+#show-instruction-btn,
 #start-training-btn,
 #warning-cover {
     display: none;

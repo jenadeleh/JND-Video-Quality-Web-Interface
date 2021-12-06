@@ -63,8 +63,7 @@ def req_inst_cf(recv_data:dict) -> dict:
                 data["traing_pass_text_timeout"] = interface_text.traing_pass_text_timeout
                 data["failedQuizNumThr"] = interface_text.failedQuizNumThr
                 data["study_hit_url"] = interface_text.study_hit_url
-                
-                
+                data["no_available_exp"] = interface_text.no_available_exp
 
                 response_data =  {
                     "status":"successful", 

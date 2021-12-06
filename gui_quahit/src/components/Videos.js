@@ -20,6 +20,8 @@ export function reqLoadVideos(workerid, euid) {
   globalStatus.task_num = globalStatus.videos_pairs["distortion"].length 
                         + globalStatus.videos_pairs["flickering"].length;
 
+  globalStatus.flickering_test_description = globalStatus.flickering_test_description_template
+  globalStatus.quality_test_description = globalStatus.quality_test_description_template
   globalStatus.flickering_test_description = globalStatus.flickering_test_description.replace("NUM", globalStatus.task_num/2)
   globalStatus.quality_test_description = globalStatus.quality_test_description.replace("NUM", globalStatus.task_num/2)
 

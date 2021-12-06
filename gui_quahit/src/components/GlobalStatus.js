@@ -48,6 +48,8 @@ export const globalStatus = {
     videos_pairs_sequence:[],
     training_description: "",
     quiz_description:"",
+    flickering_test_description_template:"",
+    quality_test_description_template:"",
     flickering_test_description:"",
     quality_test_description:"",
     training_videos: {},
@@ -63,4 +65,8 @@ export const globalStatus = {
     pass_quiz_text: "",
     pass_training_question_text: "",
     traing_pass_text_timeout:0,
+    code:"",
+    copy_code:"IMPORTANT: Please copy the code below to the experiment page in&nbsp;Mechanical Turk in order to get your compensation!",
+    study_hit_url:"",
+    no_available_exp:"",
 }

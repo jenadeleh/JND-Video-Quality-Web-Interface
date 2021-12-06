@@ -3,6 +3,7 @@ import { config } from "./Configuration"
 import { globalStatus } from "./GlobalStatus"
 import { addResultToCurVideo, processHit, coaching } from "./BtnActions"
 
+
 export function setTimer() {
     globalStatus.FIRST_DURATION_TIMER = setTimeout(()=> { 
         _display_warning_info();
@@ -16,6 +17,18 @@ function _SECOND_DURATION_timer() {
           coaching();
         } else {
           addResultToCurVideo("no decision");
+          let decision = "no decision";
+          let gt = globalStatus.cur_video_pair["ground_truth"];
+          let isCorrect = true;
+        
+          if (gt.indexOf(decision) == -1) {
+            isCorrect = false;
+          }
+
+          if (isCorrect==false) {
+            globalStatus.failedQuizNum += 1;
+          } 
+
           processHit();
         }
     }, config.SECOND_DURATION);

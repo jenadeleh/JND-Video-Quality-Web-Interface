@@ -78,7 +78,6 @@ def _update_video_db(
     ref_video_obj:object, 
     auid:str
 ) -> None:
-
     # update videoGroupsResult
     refuid = video_result["refuid"]
     presentation = video_result["presentation"]
@@ -86,6 +85,9 @@ def _update_video_db(
     # update qp sequence
     flickering_qp = ref_video_obj.flickering_qp
     distortion_qp = ref_video_obj.distortion_qp
+
+    flickering_response = ref_video_obj.flickering_response
+    distortion_response = ref_video_obj.distortion_response
 
     if presentation == "flickering":
         decision_code = _encode_decision_flickering(
@@ -96,6 +98,9 @@ def _update_video_db(
         flickering_qp["flickering_qp_seq"].append(video_result["qp"])
         ref_video_obj.flickering_qp = flickering_qp
 
+        flickering_response["flickering_response"].append(decision_code)
+        ref_video_obj.flickering_response = flickering_response
+
     elif presentation == "distortion":
         decision_code = _encode_decision_distortion(
             video_result["side_of_reference"], 
@@ -103,6 +108,9 @@ def _update_video_db(
         )
         distortion_qp["distortion_qp_seq"].append(video_result["qp"])
         ref_video_obj.distortion_qp = distortion_qp
+
+        distortion_response["distortion_response"].append(decision_code)
+        ref_video_obj.distortion_response = distortion_response
 
     videoGroupsResult = ref_video_obj.videoGroupsResult
 

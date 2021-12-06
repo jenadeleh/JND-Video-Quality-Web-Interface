@@ -71,8 +71,7 @@ class EncodedRefVideoObj(models.Model):
     cur_workerid = models.CharField(max_length=50, editable=False, null=True, blank=True)
     cur_worker_uid = models.CharField(max_length=64, editable=False, null=True, blank=True, default="")
     worker_start_date = models.DateTimeField(editable=False, blank=True, null=True)
-    #TODO: qp sequence
-    
+
     # result
     videoGroupsResult  = jsonfield.JSONField(default={})
     """
@@ -103,6 +102,8 @@ class EncodedRefVideoObj(models.Model):
     """
     flickering_qp  = jsonfield.JSONField(default={"flickering_qp_seq":[]})
     distortion_qp  = jsonfield.JSONField(default={"distortion_qp_seq":[]})
+    flickering_response  = jsonfield.JSONField(default={"flickering_response":[]})
+    distortion_response  = jsonfield.JSONField(default={"distortion_response":[]})
 
     assigments_sequence = jsonfield.JSONField(default={"sequence":[]})
 

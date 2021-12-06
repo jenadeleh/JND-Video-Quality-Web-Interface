@@ -3,7 +3,8 @@ import { globalStatus } from "./GlobalStatus";
 import { updateProgressBar } from "./ProgressBar";
 import { getLocalData } from "../utils/ManageLocalData";
 import { sendMsg } from "./SendMsg";
-import { passCF_action } from "./ConsentForm";
+import { passCF_action, submitCf } from "./ConsentForm";
+
 import { 
   displayNextVideo, 
   reqLoadVideos, 
@@ -105,23 +106,25 @@ export function readInst() {
     $("#cf-workerid").val(getLocalData("workerid"))
   }
   
-  $("#cf-panel").css("display", "inline");
+//   $("#cf-panel").css("display", "inline");
+    submitCf(getLocalData("workerid"));
 }
 
 function _endHit() {
   _sendResult();
+  _process_quiz_result();
 }
 
-export function displayEndHitPanel(code) {
+export function displayEndHitPanel() {
   $(".video-cover").remove();
   $(".decision-btn").attr("disabled", true);
   $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "hidden");
   $("#hit-end-panel").css("display", "inline");
+  $("#hit-end-panel-msg").css("visibility", "visible")
   $("#video-spinner").css("display", "none")
                     .removeClass("d-flex");
-
-  $("#hit-end-text").html(code);
-  $("#home-page-btn").css("display", "inline");
+  $("#hit-end-btn").css("display", "inline-block");
+  $("#next-hit-btn").css("display", "none");
 
   // $("#finish-asgm-num").html(
   //   globalStatus.assignment_num_text.replace(
@@ -133,6 +136,30 @@ export function displayEndHitPanel(code) {
   // $("#loading-progress").html(globalStatus.loaded_video_num+ "/" +globalStatus.video_num);
   // updateProgressBar(0, globalStatus.video_num);
 }
+
+
+function _process_quiz_result() {
+  $("#hit-end-panel-msg").html();
+  $("#main-study-btn").html("Next Assignment").attr("href", globalStatus.study_hit_url);
+  $("#show-instruction-btn, #main-study-btn").css("display", "inline-block");
+  _show_code();
+}
+
+function _show_code() {
+  $("#hit-end-btn").html("Show the payment code and quit the experiment");
+                    // .removeClass("btn-danger").addClass("btn-success");
+  $('#hit-end-btn').on('click', (e)=> {
+    $("#msg-panel").html(
+        globalStatus.text_end_exp 
+        + "</br>" 
+        + "<h2>" + globalStatus.copy_code + "</h2>"
+        + "</br>" + "</br>"
+        + "<h3>" + globalStatus.code + "</h3>"
+    ).css("display", "inline");
+    $("#hit-end-panel, #hit-panel").css("display", "none");
+  });
+}
+
 
 function _sendResult() {
   let cali_info = {};
@@ -161,9 +188,10 @@ function _sendResult() {
 
   sendMsg(send_data).then(response => {
     if (response["status"] == "successful") {
-      displayEndHitPanel(response["code"]);
+      globalStatus.code = response["code"];
+      displayEndHitPanel();
     } else if (response["status"] == "failed") {
-      displayEndHitPanel(response["error"]);
+      displayEndHitPanel();
     }
   });
 }

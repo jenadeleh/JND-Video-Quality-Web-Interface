@@ -50,8 +50,14 @@ export const globalStatus = {
     quiz_description:"",
     flickering_test_description:"",
     quality_test_description:"",
+    flickering_test_description_template:"",
+    quality_test_description_template:"",
     coaching: false,
     curVideoDomId:"",
     flickering_question:"",
     distortion_question:"",
+    copy_code:"IMPORTANT: Please copy the code below to the experiment page in&nbsp;Mechanical Turk in order to get your compensation!",
+    code:"",
+    text_end_hit:"",
+    study_hit_url:""
 }

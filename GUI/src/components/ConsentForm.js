@@ -3,6 +3,7 @@ import { sendMsg } from "./SendMsg"
 import { storeLocalData, getLocalData } from "../utils/ManageLocalData"
 import { checkCaliStatus, calibration, passCali } from "./Calibration"
 import { globalStatus } from "./GlobalStatus"
+import { readInst } from "./BtnActions"
 
 export function req_inst_cf() {
     let data = {"action":"req_inst_cf", "puid":getLocalData("puid")};
@@ -46,7 +47,8 @@ function _process_response(response) {
     if (response["status"] == "successful") {
         _render_interface_text(response["data"]);
 
-        $("#inst-panel").css("display", "inline");
+        readInst();
+        // $("#inst-panel").css("display", "inline");
         
         globalStatus.ispexist = response["data"]["ispexist"];
 
@@ -74,6 +76,7 @@ function _render_interface_text(response_data) {
     quiz_description,
     flickering_test_description,
     quality_test_description,
+    study_hit_url,
   } = response_data
 
   globalStatus.training_description = training_description;
@@ -82,6 +85,7 @@ function _render_interface_text(response_data) {
   globalStatus.quality_test_description = quality_test_description;
   globalStatus.flickering_question = flickering_question;
   globalStatus.distortion_question = distortion_question;
+  globalStatus.study_hit_url = study_hit_url;
 
   _render_instruction(instruction);
   _render_consent_form(consent_form);
@@ -108,9 +112,9 @@ function _render_consent_form(consent_form) {
 }
 
 function _render_end_hit_text(text_end_hit, btn_text_end_hit) {
-  // $("#hit-end-text").html(text_end_hit);
+  $("#hit-end-text").html(text_end_hit);
   // $("#next-hit-btn").html(btn_text_end_hit);
-  $("#home-page-btn").html(btn_text_end_hit);
+  $("#hit-end-btn").html(btn_text_end_hit);
 }
 
 function _render_question_text(question) {
