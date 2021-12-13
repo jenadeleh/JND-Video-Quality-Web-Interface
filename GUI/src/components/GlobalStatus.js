@@ -59,5 +59,6 @@ export const globalStatus = {
     copy_code:"IMPORTANT: Please copy the code below to the experiment page in&nbsp;Mechanical Turk in order to get your compensation!",
     code:"",
     text_end_hit:"",
-    study_hit_url:""
+    study_hit_url:"",
+    wrong_browser_msg:"To enable all interface features, please use Firefox.",
 }

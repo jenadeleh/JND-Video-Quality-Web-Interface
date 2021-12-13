@@ -86,6 +86,7 @@ function _render_interface_text(response_data) {
   globalStatus.flickering_question = flickering_question;
   globalStatus.distortion_question = distortion_question;
   globalStatus.study_hit_url = study_hit_url;
+  globalStatus.text_end_hit = text_end_hit;
 
   _render_instruction(instruction);
   _render_consent_form(consent_form);

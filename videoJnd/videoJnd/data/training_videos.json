@@ -1,110 +1,110 @@
 {
-  "flickering":[
-     {
-        "ref_video":"src-001_codec-264",
-        "presentation":"flickering",
-        "crf":"12",
-        "qp":"0",
-        "videos_pair":[
+    "flickering": [
+      {
+        "ref_video": "src-001_codec-264",
+        "presentation": "flickering",
+        "crf": "12",
+        "qp": "0",
+        "videos_pair": [
           "JND_264_640x480/SRC001_640x480_30/crf_12/videoSRC001_640x480_30_qp_00_crf_12.mp4",
           "JND_264_640x480/SRC001_640x480_30/crf_12/videoSRC001_640x480_30_qp_00_crf_12.mp4"
         ],
-        "side_of_reference":"L, R",
-        "ground_truth":"not sure",
+        "side_of_reference": "L, R",
+        "ground_truth": "not sure",
         "message": "Your answer is not correct. There is no flicker effect in either video. If you can't see a flickering effect, please watch the entire 5-second video playback and select the 'not sure' button, which will be activated after the side-by-side video playback is complete."
-     },
-     {
-        "ref_video":"src-006_codec-266",
-        "presentation":"flickering",
-        "crf":"12",
-        "qp":"50",
-        "videos_pair":[
+      },
+      {
+        "ref_video": "src-006_codec-266",
+        "presentation": "flickering",
+        "crf": "12",
+        "qp": "50",
+        "videos_pair": [
           "JND_266_640x480/SRC006_640x480_30/crf_12/videoSRC006_640x480_30_qp_00_50_crf_12.mp4",
           "JND_266_640x480/SRC006_640x480_30/crf_12/videoSRC006_640x480_30_qp_00_crf_12.mp4"
         ],
-        "side_of_reference":"R",
-        "ground_truth":"L",
+        "side_of_reference": "R",
+        "ground_truth": "L",
         "message": "Your answer is not correct. The flickering effect is noticeable in the video on the left side. Please select the video where you see the flickering effect."
-     },
-     {
-        "ref_video":"src-019_codec-264",
-        "presentation":"flickering",
-        "crf":"12",
-        "qp":"27",
-        "videos_pair":[
+      },
+      {
+        "ref_video": "src-019_codec-264",
+        "presentation": "flickering",
+        "crf": "12",
+        "qp": "27",
+        "videos_pair": [
           "JND_264_640x480/SRC019_640x480_30/crf_12/videoSRC019_640x480_30_qp_00_crf_12.mp4",
           "JND_264_640x480/SRC019_640x480_30/crf_12/videoSRC019_640x480_30_qp_00_27_crf_12.mp4"
         ],
-        "side_of_reference":"L",
-        "ground_truth":"R, not sure",
+        "side_of_reference": "L",
+        "ground_truth": "R, not sure",
         "message": "Your answer is not correct. You chose the reference video, but you were supposed to choose the flickering video. If you see a flickering effect, select the video that flickers, or if you don't see a flickering effect in the videos, select the 'not sure' button after the side-by-side videos playback is finished."
-     },
-     {
-        "ref_video":"src-135_codec-266",
-        "presentation":"flickering",
-        "crf":"12",
-        "qp":"33",
-        "videos_pair":[
+      },
+      {
+        "ref_video": "src-135_codec-266",
+        "presentation": "flickering",
+        "crf": "12",
+        "qp": "33",
+        "videos_pair": [
           "JND_266_640x480/SRC135_640x480_30/crf_12/videoSRC135_640x480_30_qp_00_33_crf_12.mp4",
           "JND_266_640x480/SRC135_640x480_30/crf_12/videoSRC135_640x480_30_qp_00_crf_12.mp4"
         ],
-        "side_of_reference":"R",
-        "ground_truth":"L, not sure",
+        "side_of_reference": "R",
+        "ground_truth": "L, not sure",
         "message": "Your answer is not correct. You chose the reference video, but you were supposed to choose the flickering video. If you see a flickering effect, select the video that flickers, or if you don't see a flickering effect in the videos, select the 'not sure' button after the side-by-side videos playback is finished."
-     }
-  ],
-  "distortion":[
-    {
-      "ref_video":"src-207_codec-266",
-      "presentation":"distortion",
-      "crf":"12",
-      "qp":"0",
-      "videos_pair":[
-        "JND_266_640x480/SRC207_640x480_24/crf_12/videoSRC207_640x480_24_qp_00_crf_12.mp4",
-        "JND_266_640x480/SRC207_640x480_24/crf_12/videoSRC207_640x480_24_qp_00_crf_12.mp4"
-      ],
-      "side_of_reference":"L, R",
-      "ground_truth":"not sure",
-      "message": "Your answer is not correct. No compression distortion is visible in either video, and both videos have the same perceptual quality. If both videos have the same perceptual quality, you should watch the entire 5-second videos and then click the 'not sure' button that will be activated after the side-by-side videos playback is completed."
-    },
-    {
-      "ref_video":"src-111_codec-264",
-      "presentation":"distortion",
-      "crf":"12",
-      "qp":"40",
-      "videos_pair":[
-        "JND_264_640x480/SRC111_640x480_24/crf_12/videoSRC111_640x480_24_qp_00_crf_12.mp4",
-        "JND_264_640x480/SRC111_640x480_24/crf_12/videoSRC111_640x480_24_qp_40_crf_12.mp4"
-      ],
-      "side_of_reference":"L",
-      "ground_truth":"L",
-      "message": "Your answer is not correct. The compression distortion is noticeable in the video on the right side, and the video on the left side is of higher quality. Please select the video with higher quality."
-    },
-    {
-      "ref_video":"src-155_codec-264",
-      "presentation":"distortion",
-      "crf":"12",
-      "qp":"25",
-      "videos_pair":[
-        "JND_264_640x480/SRC155_640x480_30/crf_12/videoSRC155_640x480_30_qp_00_crf_12.mp4",
-        "JND_264_640x480/SRC155_640x480_30/crf_12/videoSRC155_640x480_30_qp_25_crf_12.mp4"
-      ],
-      "side_of_reference":"L",
-      "ground_truth":"L, not sure",
-      "message": "Your answer is not correct. You chose the compressed video (the lower quality video) instead of the video with better quality. If you see a quality difference between two videos, please select the video with the higher quality (in this example, the video on the left side). If you can't see a quality difference between the two videos, watch the entire 5-second side-by-side videos and press the 'not sure' button."
-    },
-    {
-      "ref_video":"src-121_codec-266",
-      "presentation":"distortion",
-      "crf":"12",
-      "qp":"32",
-      "videos_pair":[
-        "JND_266_640x480/SRC121_640x480_30/crf_12/videoSRC121_640x480_30_qp_32_crf_12.mp4",
-        "JND_266_640x480/SRC121_640x480_30/crf_12/videoSRC121_640x480_30_qp_00_crf_12.mp4"
-      ],
-      "side_of_reference":"R",
-      "ground_truth":"R, not sure",
-      "message": "Your answer is not correct. You chose the compressed video (the lower quality video) instead of the video with better quality. If you see a quality difference between two side-by-side videos, please select the video with the higher quality (in this example, the video on the right side). If you can't see a quality difference between the two videos, watch the entire 5-second video playback and press the 'not sure' button."
-    }
-  ]
-}
+      }
+    ],
+    "distortion": [
+      {
+        "ref_video": "src-207_codec-266",
+        "presentation": "distortion",
+        "crf": "12",
+        "qp": "0",
+        "videos_pair": [
+          "JND_266_640x480/SRC207_640x480_24/crf_12/videoSRC207_640x480_24_qp_00_crf_12.mp4",
+          "JND_266_640x480/SRC207_640x480_24/crf_12/videoSRC207_640x480_24_qp_00_crf_12.mp4"
+        ],
+        "side_of_reference": "L, R",
+        "ground_truth": "not sure",
+        "message": "Your answer is not correct. No compression distortion is visible in either video, and both videos have the same perceptual quality. If both videos have the same perceptual quality, you should watch the entire 5-second videos and then click the 'not sure' button that will be activated after the side-by-side videos playback is completed."
+      },
+      {
+        "ref_video": "src-111_codec-264",
+        "presentation": "distortion",
+        "crf": "12",
+        "qp": "40",
+        "videos_pair": [
+          "JND_264_640x480/SRC111_640x480_24/crf_12/videoSRC111_640x480_24_qp_00_crf_12.mp4",
+          "JND_264_640x480/SRC111_640x480_24/crf_12/videoSRC111_640x480_24_qp_40_crf_12.mp4"
+        ],
+        "side_of_reference": "L",
+        "ground_truth": "R",
+        "message": "Your answer is not correct. The compression distortion is noticeable in the video on the right side, and the video on the left side is of higher quality. Please select the video with lower quality (the video with noticeable compression distortion-in this example the video on the right side)."
+      },
+      {
+        "ref_video": "src-155_codec-264",
+        "presentation": "distortion",
+        "crf": "12",
+        "qp": "25",
+        "videos_pair": [
+          "JND_264_640x480/SRC155_640x480_30/crf_12/videoSRC155_640x480_30_qp_00_crf_12.mp4",
+          "JND_264_640x480/SRC155_640x480_30/crf_12/videoSRC155_640x480_30_qp_25_crf_12.mp4"
+        ],
+        "side_of_reference": "L",
+        "ground_truth": "R, not sure",
+        "message": "Your answer is not correct. You chose the video with better quality (the reference video) instead of the video with lower quality (the video with noticeable compression distortion). If you see a quality difference between two videos, please select the video with the lower quality (in this example, the video on the right side). If you can't see a quality difference between the two videos, watch the entire 5-second side-by-side videos and press the 'not sure' button."
+      },
+      {
+        "ref_video": "src-121_codec-266",
+        "presentation": "distortion",
+        "crf": "12",
+        "qp": "32",
+        "videos_pair": [
+          "JND_266_640x480/SRC121_640x480_30/crf_12/videoSRC121_640x480_30_qp_32_crf_12.mp4",
+          "JND_266_640x480/SRC121_640x480_30/crf_12/videoSRC121_640x480_30_qp_00_crf_12.mp4"
+        ],
+        "side_of_reference": "R",
+        "ground_truth": "L, not sure",
+        "message": "Your answer is not correct. You chose the video with better quality (the reference video) instead of the video with lower quality (the video with noticeable compression distortion). If you see a quality difference between two videos, please select the video with the lower quality (in this example, the video on the left side). If you can't see a quality difference between the two videos, watch the entire 5-second side-by-side videos and press the 'not sure' button."
+      }
+    ]
+  }

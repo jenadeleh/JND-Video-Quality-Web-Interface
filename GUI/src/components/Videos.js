@@ -291,6 +291,7 @@ function _setExpireTimer(timeout_type) {
   }
 
   globalStatus.EXPIRE_TIMER = setTimeout(()=> {
+    $("#hit-end-text").html("");
     _showTimeoutMsg(timeout_type);
     sendMsg({
       "action":"release_resource", 

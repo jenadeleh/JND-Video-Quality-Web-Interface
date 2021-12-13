@@ -119,7 +119,11 @@ export function displayEndHitPanel() {
   $(".video-cover").remove();
   $(".decision-btn").attr("disabled", true);
   $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "hidden");
-  $("#hit-end-panel").css("display", "inline");
+  globalStatus.text_end_hit.replace(
+    "NUM", globalStatus.finished_assignment_num+1
+  )
+  $("#hit-end-panel").html(globalStatus.text_end_hit).css("display", "inline");
+
   $("#hit-end-panel-msg").css("visibility", "visible")
   $("#video-spinner").css("display", "none")
                     .removeClass("d-flex");

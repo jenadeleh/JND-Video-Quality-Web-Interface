@@ -6,6 +6,7 @@ from videoJnd.src.ReqInstConsentF import req_inst_cf
 from videoJnd.src.UserRegister import user_register
 from videoJnd.src.ResourceMonitor import resource_monitor, add_idle_thread, release_resource
 from videoJnd.src.Log import logger
+from videoJnd.models import InterfaceText
 
 def process_request(request):
     try:
@@ -39,6 +40,13 @@ def process_request(request):
 
                   elif recv_data["action"] == "record_quiz_result":
                     response = record_qua_result(recv_data)
+
+                  elif recv_data["action"] == "get_browser_msg":
+                    interface_text = InterfaceText.objects.all()[0]
+                    response = {
+                        "status":"successful", 
+                        "wrong_browser_msg":interface_text.wrong_browser_msg
+                    }
 
           else:
               response = {"status":"failed", "restype":"request-body", "data":"empty request body"}

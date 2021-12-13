@@ -114,7 +114,12 @@ export function reso_warnings() {
 export function showWarningCover(message) {
     if (globalStatus.warning_status == "env" && globalStatus.exp_status != "inst_panel") {
         $("#warning-cover").css("display", "inline-block").css("visibility", "visible");
-        $("#warning-msg").html(config.WARNING_MESSAGE[message]);
+
+        if (message=="correct_browser") {
+            $("#warning-msg").html(globalStatus.wrong_browser_msg);
+        } else {
+            $("#warning-msg").html(config.WARNING_MESSAGE[message]);
+        }
         globalStatus.isWarning = true;
 
         if (globalStatus.canMakeDecision == true) {

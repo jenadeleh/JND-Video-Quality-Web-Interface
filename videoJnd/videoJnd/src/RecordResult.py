@@ -171,9 +171,9 @@ def _encode_decision_flickering(side_of_reference:str, decision:str) -> str:
 def _encode_decision_distortion(side_of_reference:str, decision:str) -> str:
     if decision == "R" or decision == "L":
         if decision == side_of_reference:
-            return "2"
-        elif decision != side_of_reference:
             return "1"
+        elif decision != side_of_reference:
+            return "2"
     elif decision == "not sure":
         return "3"
     elif decision == "no decision":

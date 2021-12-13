@@ -334,6 +334,14 @@ class InterfaceText(models.Model):
 
     study_hit_url = models.URLField(max_length=200, default="")
 
+    wrong_browser_msg = RichTextField(
+        "Displayed message when workers don't use firefox", 
+        max_length=4096, 
+        default="", 
+        null=False, 
+        blank=False
+    )
+
     def __str__(self):
         return self.title
 
