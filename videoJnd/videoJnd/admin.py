@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.http import HttpResponse
-from .models import Instruction, ConsentForm, Experiment, StudyParticipant, StudyAssignment, InterfaceText, EncodedRefVideoObj, QuaAssignment
+from .models import Instruction, ConsentForm, Experiment, StudyParticipant 
+from .models import StudyAssignment, InterfaceText, EncodedRefVideoObj, QuaAssignment, Survey
 
 admin.site.site_header = "JND Video Study"
 admin.site.site_title = "JND Video Study"
@@ -263,6 +264,41 @@ class QuaAssignmentAdmin(admin.ModelAdmin):
     def export_result(self, request, queryset):
         try:
             csv_name = "QuaAssignment_" + time.strftime("%Y-%m-%d_%H-%M-%S")
+            meta = QuaAssignment._meta
+            column_names = [field.name for field in meta.fields if field.name not in ["id"]]
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename={}.csv'.format(csv_name)
+            writer = csv.writer(response)
+            writer.writerow(column_names)
+
+            for obj in queryset:
+                writer.writerow([getattr(obj, field) for field in column_names])
+
+            return response
+        except Exception as e:
+            print("admin page got error: " + str(e))
+
+    export_result.short_description = "Export Selected"
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+@admin.register(Survey)
+class SurveyAdmin(admin.ModelAdmin):
+    list_display = (
+        "suid"
+        , "exp"
+        , "workerid"
+        , "result"
+        , "submit_date"
+    )
+
+    list_per_page = 200
+    actions = ["export_result"]
+
+    def export_result(self, request, queryset):
+        try:
+            csv_name = "Survey_" + time.strftime("%Y-%m-%d_%H-%M-%S")
             meta = QuaAssignment._meta
             column_names = [field.name for field in meta.fields if field.name not in ["id"]]
             response = HttpResponse(content_type='text/csv')

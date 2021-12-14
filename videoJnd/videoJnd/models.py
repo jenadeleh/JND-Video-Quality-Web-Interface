@@ -160,6 +160,16 @@ class QuaAssignment(models.Model): # qua HIT
     def __str__(self):
         return str(self.auid)
 
+class Survey(models.Model):
+    suid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    workerid = models.CharField(max_length=20, default="", editable=False, null=False, blank=False) # pname
+    exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
+    submit_date = models.DateTimeField(editable=False, blank=True, null=True)
+    result = jsonfield.JSONField(default={})
+    
+    def __str__(self):
+        return self.workerid
+
 class InterfaceText(models.Model):
     title = models.CharField(
         primary_key=True, 
@@ -193,6 +203,13 @@ class InterfaceText(models.Model):
     
     text_end_hit = RichTextField(
         "When the HIT is done, display", 
+        default="", 
+        null=False, 
+        blank=False
+    )
+
+    text_end_hit_no_avl = RichTextField(
+        "When the HIT is done and no available videos, display", 
         default="", 
         null=False, 
         blank=False

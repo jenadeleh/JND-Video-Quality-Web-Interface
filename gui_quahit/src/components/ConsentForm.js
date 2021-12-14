@@ -99,7 +99,6 @@ function _render_interface_text(response_data) {
   globalStatus.traing_pass_text_timeout = traing_pass_text_timeout;
   globalStatus.failedQuizNumThr = failedQuizNumThr;
   globalStatus.study_hit_url = study_hit_url;
-  globalStatus.no_available_exp = no_available_exp;
   
 
   _render_instruction(instruction);

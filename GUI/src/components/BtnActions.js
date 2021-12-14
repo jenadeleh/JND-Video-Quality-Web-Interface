@@ -115,12 +115,19 @@ function _endHit() {
   _process_quiz_result();
 }
 
-export function displayEndHitPanel() {
+export function displayEndHitPanel(avl_next_exp) {
   $(".video-cover").remove();
   $(".decision-btn").attr("disabled", true);
   $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "hidden");
 
-  $("#hit-end-text").html(globalStatus.text_end_hit);
+  if (avl_next_exp=="true") {
+    $("#main-study-btn").html("Next Assignment").attr("href", globalStatus.study_hit_url);
+    $("#show-instruction-btn, #main-study-btn").css("display", "inline-block");
+    $("#hit-end-text").html(globalStatus.text_end_hit);
+  } else if (avl_next_exp=="false") {
+    $("#hit-end-text").html(globalStatus.text_end_hit_no_avl);
+  }
+
   $("#ass-num").html(globalStatus.finished_assignment_num+1);
   $("#hit-end-panel").css("display", "inline");
 
@@ -129,15 +136,22 @@ export function displayEndHitPanel() {
                     .removeClass("d-flex");
   $("#hit-end-btn").css("display", "inline-block");
 //   $("#next-hit-btn").css("display", "none");
-}
 
-
-function _process_quiz_result() {
-//   $("#hit-end-panel-msg").html("");
+ if (avl_next_exp=="true") {
   $("#main-study-btn").html("Next Assignment").attr("href", globalStatus.study_hit_url);
   $("#show-instruction-btn, #main-study-btn").css("display", "inline-block");
+ }
+
   _show_code();
 }
+
+
+// function _process_quiz_result() {
+// //   $("#hit-end-panel-msg").html("");
+//   $("#main-study-btn").html("Next Assignment").attr("href", globalStatus.study_hit_url);
+//   $("#show-instruction-btn, #main-study-btn").css("display", "inline-block");
+//   _show_code();
+// }
 
 function _show_code() {
   $("#hit-end-btn").html("Show the payment code and quit the experiment");
@@ -182,9 +196,10 @@ function _sendResult() {
   sendMsg(send_data).then(response => {
     if (response["status"] == "successful") {
       globalStatus.code = response["code"];
-      displayEndHitPanel();
+      let avl_next_exp = response["avl_next_exp"]
+      displayEndHitPanel(avl_next_exp);
     } else if (response["status"] == "failed") {
-      displayEndHitPanel();
+      displayEndHitPanel("failed");
     }
   });
 }

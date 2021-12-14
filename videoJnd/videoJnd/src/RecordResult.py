@@ -4,11 +4,16 @@ from videoJnd.models import EncodedRefVideoObj, Experiment, StudyParticipant, St
 from videoJnd.src.GetConfig import get_config
 from videoJnd.src.ResourceMonitor import add_idle_thread
 import uuid
+from videoJnd.src.ReqInstConsentF import req_inst_cf
 
 
 config = get_config()
 
 def record_study_result(recv_data:dict) -> dict:
+    
+    # check is available for next assignment
+    cf_response = req_inst_cf({'action': 'req_inst_cf', 'puid': recv_data["puid"]})
+
     p_obj = StudyParticipant.objects.filter(puid=recv_data["puid"])
     if p_obj:
         p_obj = p_obj[0]
@@ -67,8 +72,8 @@ def record_study_result(recv_data:dict) -> dict:
         p_obj.finished_ref_videos = finished_ref_videos
         p_obj.save()
 
-
-        return {"status":"successful", "restype": "record_result", "code":auid}
+        cf_response["avl_next_exp"] = "false"
+        return {"status":"successful", "restype": "record_result", "code":auid, "avl_next_exp":cf_response["avl_next_exp"]}
     else:
         return {"status":"failed", "restype": "record_result", "data":"participant is not exist"}
 

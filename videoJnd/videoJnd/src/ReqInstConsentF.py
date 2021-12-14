@@ -17,8 +17,10 @@ def req_inst_cf(recv_data:dict) -> dict:
             exp_obj = active_exps[0]
 
             text_end_hit = interface_text.text_end_hit
+            text_end_hit_no_avl = interface_text.text_end_hit_no_avl
 
             text_end_hit = text_end_hit.replace("NUM", "<span id='ass-num'></span>")
+            text_end_hit_no_avl = text_end_hit_no_avl.replace("NUM", "<span id='ass-num'></span>")
 
             data = {
                 "instruction":instruction.description, 
@@ -26,6 +28,7 @@ def req_inst_cf(recv_data:dict) -> dict:
                 "flickering_question": interface_text.flickering_question,
                 "distortion_question": interface_text.distortion_question,
                 "text_end_hit": text_end_hit,
+                "text_end_hit_no_avl": text_end_hit_no_avl,
                 "text_end_exp": interface_text.text_end_exp,
                 "btn_text_end_hit": interface_text.btn_text_end_hit,
                 "decision_timeout_msg": interface_text.decision_timeout_msg,
@@ -72,7 +75,8 @@ def req_inst_cf(recv_data:dict) -> dict:
                 response_data =  {
                     "status":"successful", 
                     "restype": "req_inst_cf", 
-                    "data":data
+                    "data":data,
+                    "avl_next_exp":"true"
                 }
 
                 return response_data
@@ -95,14 +99,25 @@ def req_inst_cf(recv_data:dict) -> dict:
                     response_data =  {
                         "status":"successful", 
                         "restype": "req_inst_cf", 
-                        "data":data
+                        "data":data,
+                        "avl_next_exp":"true"
                     }
 
                     return response_data
                 else:
-                    return {"status":"failed", "data":interface_text.no_available_exp, "restype": "req_inst_cf"}
+                    return {
+                        "status":"failed", 
+                        "data":interface_text.no_available_exp, 
+                        "restype": "req_inst_cf", 
+                        "avl_next_exp":"false"
+                    }
         else:
-            return {"status":"failed", "data":interface_text.no_available_exp, "restype": "req_inst_cf"}
+            return {
+                "status":"failed", 
+                "data":interface_text.no_available_exp, 
+                "restype": "req_inst_cf",
+                "avl_next_exp":"false"
+            }
 
     except Exception as e:
         logger.info("req_inst_cf error: %s" % str(e))

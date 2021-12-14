@@ -77,6 +77,7 @@ function _render_interface_text(response_data) {
     flickering_test_description,
     quality_test_description,
     study_hit_url,
+    text_end_hit_no_avl,
   } = response_data
 
   globalStatus.training_description = training_description;
@@ -87,6 +88,7 @@ function _render_interface_text(response_data) {
   globalStatus.distortion_question = distortion_question;
   globalStatus.study_hit_url = study_hit_url;
   globalStatus.text_end_hit = text_end_hit;
+  globalStatus.text_end_hit_no_avl = text_end_hit_no_avl;
 
   _render_instruction(instruction);
   _render_consent_form(consent_form);

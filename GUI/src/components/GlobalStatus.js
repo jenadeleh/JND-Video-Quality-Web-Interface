@@ -61,4 +61,5 @@ export const globalStatus = {
     text_end_hit:"",
     study_hit_url:"",
     wrong_browser_msg:"To enable all interface features, please use Firefox.",
+    text_end_hit_no_avl:"",
 }
