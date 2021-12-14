@@ -119,31 +119,21 @@ export function displayEndHitPanel() {
   $(".video-cover").remove();
   $(".decision-btn").attr("disabled", true);
   $("#guide-panel, #task-progressbar, #instruction-btn").css("visibility", "hidden");
-  globalStatus.text_end_hit.replace(
-    "NUM", globalStatus.finished_assignment_num+1
-  )
-  $("#hit-end-panel").html(globalStatus.text_end_hit).css("display", "inline");
+
+  $("#hit-end-text").html(globalStatus.text_end_hit);
+  $("#ass-num").html(globalStatus.finished_assignment_num+1);
+  $("#hit-end-panel").css("display", "inline");
 
   $("#hit-end-panel-msg").css("visibility", "visible")
   $("#video-spinner").css("display", "none")
                     .removeClass("d-flex");
   $("#hit-end-btn").css("display", "inline-block");
-  $("#next-hit-btn").css("display", "none");
-
-  // $("#finish-asgm-num").html(
-  //   globalStatus.assignment_num_text.replace(
-  //     "placeholder", globalStatus.finished_assignment_num+1
-  //   )
-  // );
-  // globalStatus.exp_status = "next-hit-panel";
-  // globalStatus.loaded_video_num = 0;
-  // $("#loading-progress").html(globalStatus.loaded_video_num+ "/" +globalStatus.video_num);
-  // updateProgressBar(0, globalStatus.video_num);
+//   $("#next-hit-btn").css("display", "none");
 }
 
 
 function _process_quiz_result() {
-  $("#hit-end-panel-msg").html();
+//   $("#hit-end-panel-msg").html("");
   $("#main-study-btn").html("Next Assignment").attr("href", globalStatus.study_hit_url);
   $("#show-instruction-btn, #main-study-btn").css("display", "inline-block");
   _show_code();
@@ -151,7 +141,6 @@ function _process_quiz_result() {
 
 function _show_code() {
   $("#hit-end-btn").html("Show the payment code and quit the experiment");
-                    // .removeClass("btn-danger").addClass("btn-success");
   $('#hit-end-btn').on('click', (e)=> {
     $("#msg-panel").html(
         globalStatus.text_end_exp 

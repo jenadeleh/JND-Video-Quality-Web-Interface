@@ -39,6 +39,10 @@ export function actDecisionBtn(e) {
     isCorrect = false;
   }
 
+//   console.log("decision" + decision);
+//   console.log("gt" + gt);
+//   console.log("isCorrect" + isCorrect);
+
   if (globalStatus.session=="training") {
     // processHit(); // remove 
     if (isCorrect==false) {

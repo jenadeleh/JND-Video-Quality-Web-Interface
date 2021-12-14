@@ -16,12 +16,16 @@ def req_inst_cf(recv_data:dict) -> dict:
         if len(active_exps)>0:
             exp_obj = active_exps[0]
 
+            text_end_hit = interface_text.text_end_hit
+
+            text_end_hit = text_end_hit.replace("NUM", "<span id='ass-num'></span>")
+
             data = {
                 "instruction":instruction.description, 
                 "consent_form": consent_form.description,
                 "flickering_question": interface_text.flickering_question,
                 "distortion_question": interface_text.distortion_question,
-                "text_end_hit": interface_text.text_end_hit,
+                "text_end_hit": text_end_hit,
                 "text_end_exp": interface_text.text_end_exp,
                 "btn_text_end_hit": interface_text.btn_text_end_hit,
                 "decision_timeout_msg": interface_text.decision_timeout_msg,
