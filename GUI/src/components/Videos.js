@@ -5,6 +5,7 @@ import { updateProgressBar } from "./ProgressBar";
 import { setTimer } from "./Timer";
 import { getLocalData } from "../utils/ManageLocalData";
 import { displayEndHitPanel } from "./BtnActions";
+import { storeLocalData } from '../../../gui_quahit/src/utils/ManageLocalData';
 
 
 export function reqLoadVideos(workerid, puid, euid) {
@@ -297,6 +298,14 @@ function _setExpireTimer(timeout_type) {
       "action":"release_resource", 
       "puid":getLocalData("puid")
     });
+
+    $("#hit-end-panel, #hit-panel").css("display", "none");
+    storeLocalData("quitexp", "true");
+    $("#expire-continue-btn").html("Quit Experiment");
+    $("#expire-continue-btn").on("click", ()=>{
+        window.location.reload();
+    });
+    
   }, duration);
 }
 
