@@ -12,6 +12,7 @@ import {
   stopExpireTimer, 
   constructDomId
 } from "./Videos";
+import { storeLocalData } from '../../../gui_quahit/src/utils/ManageLocalData';
 
 export function actStartExpBtn(e) {
   $("#start-exp-btn").attr("disabled", true)
@@ -112,7 +113,7 @@ export function readInst() {
 
 function _endHit() {
   _sendResult();
-  _process_quiz_result();
+  // _process_quiz_result();
 }
 
 export function displayEndHitPanel(avl_next_exp) {
@@ -161,9 +162,15 @@ function _show_code() {
         + "</br>" 
         + "<h2>" + globalStatus.copy_code + "</h2>"
         + "</br>" + "</br>"
+        + "<button class='btn btn-info' type='button' id='display-survey-btn'>" + globalStatus.survey_btn_text + "</button>"
+        + "</br>" + "</br>"
         + "<h3>" + globalStatus.code + "</h3>"
-    ).css("display", "inline");
+    ).css("display", "inline").css("z-index", 1);
     $("#hit-end-panel, #hit-panel").css("display", "none");
+    $("#display-survey-btn").on('click', (e)=> {
+      $("#survey-cover").css("display", "inline-block").css("visibility", "visible");
+    });
+    storeLocalData("quitexp", "true");
   });
 }
 

@@ -164,11 +164,11 @@ class Survey(models.Model):
     suid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     workerid = models.CharField(max_length=20, default="", editable=False, null=False, blank=False) # pname
     exp = models.ForeignKey(Experiment, on_delete=models.CASCADE)
-    submit_date = models.DateTimeField(editable=False, blank=True, null=True)
-    result = jsonfield.JSONField(default={})
+    submit_date = models.DateTimeField(editable=False, blank=True, auto_now=True, null=True)
+    result = jsonfield.JSONField(default={"result":{}})
     
     def __str__(self):
-        return self.workerid
+        return self.suid
 
 class InterfaceText(models.Model):
     title = models.CharField(
@@ -358,6 +358,12 @@ class InterfaceText(models.Model):
         null=False, 
         blank=False
     )
+
+    survey_btn_text = models.TextField(
+        "Text on the survey button", 
+        max_length=4096, 
+        default="Text on the survey button"
+    ) # for hit
 
     def __str__(self):
         return self.title

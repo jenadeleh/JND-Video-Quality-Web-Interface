@@ -70,4 +70,5 @@ export const globalStatus = {
     study_hit_url:"",
     no_available_exp:"",
     wrong_browser_msg:"To enable all interface features, please use Firefox.",
+    survey_btn_text:"",
 }

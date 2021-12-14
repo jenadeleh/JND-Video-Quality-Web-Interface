@@ -290,18 +290,23 @@ function _process_quiz_result() {
 }
 
 function _show_code() {
-  $("#hit-end-btn").html("Show the payment code and quit the experiment");
-  $('#hit-end-btn').on('click', (e)=> {
-    $("#msg-panel").html(
-        globalStatus.text_end_exp 
-        + "</br>" 
-        + "<h2>" + globalStatus.copy_code + "</h2>"
-        + "</br>" + "</br>"
-        + "<h3>" + globalStatus.code + "</h3>"
-    ).css("display", "inline");
-    $("#hit-end-panel, #hit-panel").css("display", "none");
-  });
-}
+    $("#hit-end-btn").html("Show the payment code and quit the experiment");
+    $('#hit-end-btn').on('click', (e)=> {
+      $("#msg-panel").html(
+          globalStatus.text_end_exp 
+          + "</br>" 
+          + "<h2>" + globalStatus.copy_code + "</h2>"
+          + "</br>" + "</br>"
+          + "<button class='btn btn-info' type='button' id='display-survey-btn'>" + globalStatus.survey_btn_text + "</button>"
+          + "</br>" + "</br>"
+          + "<h3>" + globalStatus.code + "</h3>"
+      ).css("display", "inline").css("z-index", 1);
+      $("#hit-end-panel, #hit-panel").css("display", "none");
+      $("#display-survey-btn").on('click', (e)=> {
+        $("#survey-cover").css("display", "inline-block").css("visibility", "visible");
+      });
+    });
+  }
 
 
 function _sendResult() {

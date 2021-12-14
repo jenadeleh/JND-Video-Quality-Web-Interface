@@ -72,7 +72,7 @@ def record_study_result(recv_data:dict) -> dict:
         p_obj.finished_ref_videos = finished_ref_videos
         p_obj.save()
 
-        cf_response["avl_next_exp"] = "false"
+        # cf_response["avl_next_exp"] = "false"
         return {"status":"successful", "restype": "record_result", "code":auid, "avl_next_exp":cf_response["avl_next_exp"]}
     else:
         return {"status":"failed", "restype": "record_result", "data":"participant is not exist"}

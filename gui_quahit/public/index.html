@@ -16,6 +16,167 @@
         <br/>
         <div id="warning-msg"></div>
     </div>
+    <div id="survey-cover" class="exp-panel">
+      </br>
+      <div>
+        <form action="" style="font-size:20px" id="survey-form">
+          <h1>Survey on Video JND Assessment</h1>
+          <p style="font-size:24px">Your answers to the following questions will help us better analyze this experiment's results and improve our future crowdsourcing experiments.</p>
+          <div style="width: 100%; display: flex; justify-content: center;">
+            <table class="table" style="margin: 0 auto; text-align:center">  
+              <thead class="thead-light">
+                <tr >
+                  <th scope="col"></th>
+                  <th scope="col">Excellent</th>
+                  <th scope="col">Very Good</th>
+                  <th scope="col">Good</th>
+                  <th scope="col">Fair</th>
+                  <th scope="col">Poor</th>
+                </tr>
+              </thead>
+
+
+              <tr>
+                <td style="text-align: right">1. Do the instructions provide a clear description of the job?</td>
+                <td>
+                  <input type="radio" value="Excellent" name="description" required/>
+                </td>
+                <td>
+                  <input type="radio" value="Very Good" name="description" required/>
+                </td>
+                <td>
+                  <input type="radio" value="Good" name="description" required/>
+                </td>
+                <td>
+                  <input type="radio" value="Fair" name="description" required/>
+                </td>
+                <td>
+                  <input type="radio" value="Poor" name="description" required/>
+                </td>
+              </tr>
+              <tr>
+                <td style="text-align: right">2. How would you evaluate the fluidity (continuity) of the video playback?</td>
+                <td>
+                  <input type="radio" value="Excellent" name="fluidity" required/>
+                </td>
+                <td>
+                  <input type="radio" value="Very Good" name="fluidity" required/>
+                </td>
+                <td>
+                  <input type="radio" value="Good" name="fluidity" required/>
+                </td>
+                <td>
+                  <input type="radio" value="Fair" name="fluidity" required/>
+                </td>
+                <td>
+                  <input type="radio" value="Poor" name="fluidity" required/>
+                </td>
+              </tr>
+              <tr>
+                <td style="text-align: right">3. How would you evaluate the loading time of the videos for each HIT?</td>
+                <td>
+                  <input type="radio" value="Excellent" name="loading" required/>
+                </td>
+                <td>
+                  <input type="radio" value="Very Good" name="loading" required/>
+                </td>
+                <td>
+                  <input type="radio" value="Good" name="loading" required/>
+                </td>
+                <td>
+                  <input type="radio" value="Fair" name="loading" required/>
+                </td>
+                <td>
+                  <input type="radio" value="Poor" name="loading" required/>
+                </td>
+              </tr>
+              <tr>
+                <td style="text-align: right">4. How would you evaluate the payment for this job (per assignment)?</td>
+                <td>
+                  <input type="radio" value="Excellent" name="payment" required/>
+                </td>
+                <td>
+                  <input type="radio" value="Very Good" name="payment" required/>
+                </td>
+                <td>
+                  <input type="radio" value="Good" name="payment" required/>
+                </td>
+                <td>
+                  <input type="radio" value="Fair" name="payment" required/>
+                </td>
+                <td>
+                  <input type="radio" value="Poor" name="payment" required/>
+                </td>
+              </tr>
+              <thead class="thead-light">
+                <tr>
+                  <th></th>
+                  <th>18 - 29</th>
+                  <th>30 - 39</th>
+                  <th>40 - 49</th>
+                  <th>50 - 59</th>
+                  <th>60 or older</th>
+                </tr>
+              </thead>
+              <tr>
+                <td style="text-align: right">5. Which age group do you belong to?</td>
+                <td>
+                  <input type="radio" value="18-19" name="age" required/>
+                </td>
+                <td>
+                  <input type="radio" value="30-39" name="age" required/>
+                </td>
+                <td>
+                  <input type="radio" value="40-49" name="age" required/>
+                </td>
+                <td>
+                  <input type="radio" value="50-59" name="age" required/>
+                </td>
+                <td>
+                  <input type="radio" value="60 or older" name="age" required/>
+                </td>
+              </tr>
+              <thead class="thead-light">
+                <tr>
+                  <th></th>
+                  <th>Male</th>
+                  <th>Female</th>
+                  <th>Non-binary</th>
+                  <th>Others</th>
+                  <th>I prefer not to say</th>
+                </tr>
+              </thead>
+              <tr>
+                <td style="text-align: right">6. Which gender identity do you most identify with?</td>
+                <td>
+                  <input type="radio" value="Male" name="gender" required/>
+                </td>
+                <td>
+                  <input type="radio" value="Female" name="gender" required/>
+                </td>
+                <td>
+                  <input type="radio" value="Non-binary" name="gender" required/>
+                </td>
+                <td>
+                  <input type="radio" value="Others" name="gender" required/>
+                </td>
+                <td>
+                  <input type="radio" value="I prefer not to say" name="gender" required/>
+                </td>
+              </tr>
+            </table>
+          </div>
+          </br>
+          <p class="speed">What is your actual Internet speed in Mb/s (it may be slower than the advertised Internet speed)?</p>
+          <input type="number" id="speed" name="speed" min="0" max="10000" required>
+          <p class="comments">Do you have any suggestions to improve our future experiments?</p>
+          <textarea rows="3" cols="60" required></textarea>
+          <div>
+            <button class="btn btn-success" type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
     <br/>
     <div id="msg-panel" class="exp-panel"></div>
     <div id="inst-panel" class="exp-panel">
@@ -23,6 +184,7 @@
         <div class="instruction-content"></div>
         <div id="read-inst-div">
             <button id="read-inst-btn" type="button" class="btn btn-primary"></button>
+            <button id="cancel-survey-btn" class="btn btn-danger">Cancel</button>
         </div>
         </br>
     </div>

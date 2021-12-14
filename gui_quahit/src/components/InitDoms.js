@@ -1,9 +1,10 @@
 import * as $ from 'jquery';
 import { readInst, actStartExpBtn, actDecisionBtn, actNextHitBtn, adjustDist, tryAgainAction} from "./BtnActions"
 import { submitCf } from "./ConsentForm"
-import { storeLocalData } from "../utils/ManageLocalData"
+import { storeLocalData, getLocalData } from "../utils/ManageLocalData"
 import { globalStatus } from "./GlobalStatus";
 import { startTraining } from "./BtnActions";
+import { sendMsg } from './SendMsg';
 
 export function initDoms() {
     $('#start-exp-btn').on('click', (e)=> {
@@ -50,5 +51,26 @@ export function initDoms() {
         submitCf(params.workerid);
         return false;
     })
+
+    let $survey_form = $("#survey-form");
+    $survey_form.on("submit", () =>{
+        let params = {};
+        $survey_form.serializeArray().forEach((element)=>{
+            params[element.name] = element.value;
+        });
+        getLocalData("workerid");
+        params["hit"] = "qua"
+        let send_data = {
+            "action": "survey",
+            "workerid": getLocalData("workerid"),
+            "result": params,
+            "euid": getLocalData("euid"),
+        }
+        $("#survey-cover").css("display", "none");
+        $("#display-survey-btn").css("display", "none");
+        sendMsg(send_data).then(response => {});
+        return false;
+    })
+
 }
 

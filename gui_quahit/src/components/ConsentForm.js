@@ -76,7 +76,7 @@ function _render_interface_text(response_data) {
     traing_pass_text_timeout,
     failedQuizNumThr,
     study_hit_url,
-    no_available_exp
+    survey_btn_text,
   } = response_data
 
   storeLocalData("euid", euid);
@@ -99,6 +99,7 @@ function _render_interface_text(response_data) {
   globalStatus.traing_pass_text_timeout = traing_pass_text_timeout;
   globalStatus.failedQuizNumThr = failedQuizNumThr;
   globalStatus.study_hit_url = study_hit_url;
+  globalStatus.survey_btn_text = survey_btn_text;
   
 
   _render_instruction(instruction);

@@ -40,6 +40,7 @@ def req_inst_cf(recv_data:dict) -> dict:
                 "quality_test_description": interface_text.quality_test_description,
                 "no_decision_training_msg": interface_text.no_decision_training_msg,
                 "study_hit_url": interface_text.study_hit_url,
+                "survey_btn_text":interface_text.survey_btn_text,
             }
 
             if "quahit" in recv_data:

@@ -16,8 +16,10 @@ import { keyboardControl } from "./KeyboardControl";
 import { initLocalData } from "./InitLocalData";
 import { actionCloseTabBrowser } from "./ActionCloseTabBrowser"
 import { sendMsg } from "./SendMsg";
+import { getLocalData } from '../../../gui_quahit/src/utils/ManageLocalData';
 
 export function initGUI() {
+
     let send_data = {
       "action":"get_browser_msg",
     };
@@ -35,12 +37,15 @@ export function initGUI() {
           } else {
               checkEnvBackground();
               if (!globalStatus.isNotMaximizedBrowser) {
-                  // initLocalData();
-                  actionCloseTabBrowser();
-                  getBrowserInfo();
-                  initDoms();
-                  keyboardControl();
-                  req_inst_cf();
+                  if (getLocalData("quitexp")!="true") {
+                    actionCloseTabBrowser();
+                    getBrowserInfo();
+                    initDoms();
+                    keyboardControl();
+                    req_inst_cf();
+                  } else {
+                    $(".main").html("<h2>You already participated in the experiment. No experiment is availale now.<h2>")
+                  }
               }
           }
         }

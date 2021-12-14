@@ -5,6 +5,7 @@ from videoJnd.src.RecordQuaResult import record_qua_result
 from videoJnd.src.ReqInstConsentF import req_inst_cf
 from videoJnd.src.UserRegister import user_register
 from videoJnd.src.ResourceMonitor import resource_monitor, add_idle_thread, release_resource
+from videoJnd.src.RecordSurvey import record_survey
 from videoJnd.src.Log import logger
 from videoJnd.models import InterfaceText
 
@@ -47,6 +48,8 @@ def process_request(request):
                         "status":"successful", 
                         "wrong_browser_msg":interface_text.wrong_browser_msg
                     }
+                  elif recv_data["action"] == "survey":
+                        record_survey(recv_data)
 
           else:
               response = {"status":"failed", "restype":"request-body", "data":"empty request body"}
