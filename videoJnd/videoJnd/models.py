@@ -168,7 +168,7 @@ class Survey(models.Model):
     result = jsonfield.JSONField(default={"result":{}})
     
     def __str__(self):
-        return self.suid
+        return self.workerid
 
 class InterfaceText(models.Model):
     title = models.CharField(
