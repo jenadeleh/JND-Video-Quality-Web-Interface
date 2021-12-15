@@ -299,7 +299,7 @@ class SurveyAdmin(admin.ModelAdmin):
     def export_result(self, request, queryset):
         try:
             csv_name = "Survey_" + time.strftime("%Y-%m-%d_%H-%M-%S")
-            meta = QuaAssignment._meta
+            meta = Survey._meta
             column_names = [field.name for field in meta.fields if field.name not in ["id"]]
             response = HttpResponse(content_type='text/csv')
             response['Content-Disposition'] = 'attachment; filename={}.csv'.format(csv_name)
