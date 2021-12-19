@@ -3,7 +3,7 @@ import { sendMsg } from "./SendMsg";
 import { globalStatus } from "./GlobalStatus";
 import { updateProgressBar } from "./ProgressBar";
 import { setTimer } from "./Timer";
-import { getLocalData } from "../utils/ManageLocalData";
+import { getLocalData, storeLocalData } from "../utils/ManageLocalData";
 import { displayEndHitPanel } from "./BtnActions";
 import {shuffle} from "../utils/Shuffle"
 
@@ -273,6 +273,12 @@ function _setExpireTimer(timeout_type) {
 
   globalStatus.EXPIRE_TIMER = setTimeout(()=> {
     _showTimeoutMsg(timeout_type);
+    $("#hit-end-panel, #hit-panel").css("display", "none");
+    storeLocalData("didTraining", "true");
+    $("#expire-continue-btn").html("Quit Experiment");
+    $("#expire-continue-btn").on("click", ()=>{
+        window.location.reload();
+    });
   }, duration);
 }
 

@@ -9,27 +9,35 @@ import uuid
 config = get_config()
 
 def record_qua_result(recv_data:dict) -> dict:
-	try:
-		exp_obj = Experiment.objects.filter(euid=recv_data["euid"])[0]
+    try:
+        exp_obj = Experiment.objects.filter(euid=recv_data["euid"])[0]
+        auid = uuid.uuid4()
+    
+        recv_isPassQuiz = recv_data["data"]["isPassQuiz"]
 
-		auid = uuid.uuid4()
-		QuaAssignment(
-			auid = auid
-			, exp = exp_obj
-			, workerid = recv_data["workerid"]
-			, result = {"result": recv_data["data"]["result"]}
-			, calibration = recv_data["data"]["cali_info"]
-			, operation_system = recv_data["data"]["os_info"]
-      , isPassQuiz = recv_data["data"]["isPassQuiz"]
-		).save()
+        if recv_isPassQuiz == "true":
+            isPassQuiz = True
+        elif recv_isPassQuiz == "false":
+            isPassQuiz = False
 
-		exp_obj.qua_hit_count = exp_obj.qua_hit_count + 1
-		exp_obj.save()
+        QuaAssignment(
+            auid = auid
+            , exp = exp_obj
+            , workerid = recv_data["workerid"]
+            , result = {"result": recv_data["data"]["result"]}
+            , calibration = recv_data["data"]["cali_info"]
+            , operation_system = recv_data["data"]["os_info"]
+            , isPassQuiz = isPassQuiz
+        ).save()
 
-		return {"status":"successful", "restype": "record_result", "code":auid}
+        exp_obj.qua_hit_count = exp_obj.qua_hit_count + 1
+        exp_obj.save()
+
+
+        return {"status":"successful", "restype": "record_result", "code":auid}
 	
-	except Exception as e:
-		return {"status":"failed", "restype": "record_result", "error":"record_result error"}
+    except Exception as e:
+        return {"status":"failed", "restype": "record_result", "error":"record_result error"}
 
 
 def _encode_decision(side_of_reference:str, decision:str) -> str:

@@ -3,10 +3,8 @@ import { sendMsg } from "./SendMsg";
 import { globalStatus } from "./GlobalStatus";
 import { updateProgressBar } from "./ProgressBar";
 import { setTimer } from "./Timer";
-import { getLocalData } from "../utils/ManageLocalData";
+import { getLocalData, storeLocalData } from "../utils/ManageLocalData";
 import { displayEndHitPanel } from "./BtnActions";
-import { storeLocalData } from '../../../gui_quahit/src/utils/ManageLocalData';
-
 
 export function reqLoadVideos(workerid, puid, euid) {
   $("#video-pool, #video-spinner").css("height", globalStatus.video_h)

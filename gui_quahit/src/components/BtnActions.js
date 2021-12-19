@@ -183,6 +183,7 @@ function _endHit() {
     _displatStartQuizMsg();
   } else if (globalStatus.session=="quiz") {
     storeLocalData("didTraining","true");
+    globalStatus.isPassQuiz = (globalStatus.failedQuizNum <=globalStatus.failedQuizNumThr) ? true:false;
     _sendResult();
     _process_quiz_result();
     
@@ -320,13 +321,21 @@ function _sendResult() {
     "px_cm_rate"
   ].forEach((el)=>{cali_info[el] = getLocalData(el);});
 
+  let tmp_isPassQuiz = "false"
+
+  if (globalStatus.isPassQuiz == true) {
+    tmp_isPassQuiz = "true"
+  } else if (globalStatus.isPassQuiz == false) {
+    tmp_isPassQuiz = "false"
+  }
+
   let send_data = {
     "action":"record_quiz_result",
     "euid":getLocalData("euid"),
     "workerid": getLocalData("workerid"),
     "data": {
       "result":globalStatus.result,
-      "isPassQuiz": globalStatus.isPassQuiz,
+      "isPassQuiz": tmp_isPassQuiz,
       "os_info": globalStatus.os_info,
       "cali_info": cali_info
     }
