@@ -1,3 +1,6 @@
+## Goal
+please read issue [#56](https://github.com/angchen-dev/video_jnd/issues/56).
+
 ## Set up the environment
 Clone repo
 ```
