@@ -44,7 +44,7 @@ In directory ../video_jnd/videoJnd
 ../video_jnd/GUI is for study HIT <br/>
 ../video_jnd/gui_quahit is for qualification HIT <br/>
 
-    The development of two HITs are separately. Most of the functions are the same. The better way is to store the same parts in the same folder. 
+   I developed the two HITs separately. However, most of the functions are the same. So the better way refactor the code.
 
     To run the two interfaces, run the following commands in ../video_jnd/GUI and ../video_jnd/gui_quahit, respectively.
     ```
@@ -72,5 +72,5 @@ In directory ../video_jnd/videoJnd
 
 
 ## The whole program should be refactored.
-Use React.js for front-end.
+The requirements of the project were changed frequently during the development and the project had a tight deadline such that the architecture of the whole was not well-designed. To extend the project, the whole program should be refactored. 
 
