@@ -72,5 +72,5 @@ In directory ../video_jnd/videoJnd
 
 
 ## The whole program should be refactored.
-The requirements of the project were changed frequently during the development and the project had a tight deadline such that the architecture of the whole was not well-designed. To extend the project, the whole program should be refactored. 
+The requirements of the project were changed frequently during the development and the project had a tight deadline such that the architecture of the whole program was not well-designed. To extend the project, the whole program should be refactored. 
 
