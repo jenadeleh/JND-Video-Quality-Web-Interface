@@ -1,10 +1,9 @@
 ## Goal
-please read issue [#56](https://github.com/angchen-dev/video_jnd/issues/56).
-
+ 
 ## Set up the environment
 Clone repo
 ```
-git clone git@github.com:angchen-dev/video_jnd.git
+git git@github.com:jenadeleh/JND-Video-Quality-Web-Interface.git
 ```
 
 Add a SECRET_KEY of Django to ~/.bashrc <br />
