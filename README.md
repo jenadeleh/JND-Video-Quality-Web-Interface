@@ -30,7 +30,7 @@ Configure Django project <br />
 In directory ../video_jnd/videoJnd
 ```
 > python3 manage.py makemigrations
-> python3 manage.py migrate
+> python3 manage.py migrate --run-syncdb
 > python3 manage.py createsuperuser # for admin page
 ```
 
