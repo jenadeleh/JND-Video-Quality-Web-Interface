@@ -349,12 +349,12 @@ class InterfaceText(models.Model):
         blank=False
     )
 
-    # quality_test_description = RichTextField(
-    #     "Quality test description", 
-    #     default="Quality test description", 
-    #     null=False, 
-    #     blank=False
-    # )
+    quality_test_description = RichTextField(
+        "Quality test description", 
+        default='<p><span style="font-size:22px">The following NUM&nbsp;questions are from the &quot;<span style="color:#2980b9">Quality Test</span>&quot; experiment. Please determine which video if of lower quality.</span></p>', 
+         null=False, 
+         blank=False
+      )
 
     study_hit_url = models.URLField(max_length=200, default="http://localhost:8000/studyhit/")
 
